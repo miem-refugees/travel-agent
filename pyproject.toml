@@ -1,0 +1,22 @@
+[project]
+name = "travel-agent"
+version = "0.1.0"
+description = "LLM agent with retrieval"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastembed>=0.1.1",
+    "huggingface-hub>=0.28.1",
+    "python-dotenv>=1.0.1",
+    "qdrant-client[fastembed]>=1.7.3",
+    "sentence-transformers>=2.6.1",
+    "smolagents>=1.9.2",
+]
+
+[dependency-groups]
+dev = [
+    "ipywidgets>=8.1.5",
+    "jupyter>=1.1.1",
+    "notebook>=7.3.2",
+    "pre-commit>=4.1.0",
+]
