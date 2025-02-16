@@ -11,4 +11,4 @@ class Qdrant:
         return getattr(self.client, name)
 
     def add_places_collection(self, documents: list):
-        self.client.add(collection=self.places_collection, documents=documents)
+        self.client.add(collection_name=self.places_collection, documents=documents)
