@@ -1,7 +1,6 @@
 import logging
 
 from tqdm import tqdm
-
 from qdrant_client.models import PointStruct
 
 from travel_agent.qdrant.qdrant import BATCH_SIZE, QdrantUploader
