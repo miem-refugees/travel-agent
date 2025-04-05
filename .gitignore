@@ -278,4 +278,6 @@ pyrightconfig.json
 
 # Qdrant
 /qdrant_data
-/travel_agent/tools/local_cache/
+
+# DVC-managed
+/data
