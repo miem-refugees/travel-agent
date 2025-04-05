@@ -3,7 +3,6 @@
 **Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**  
 **Dataset:** [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023)
 
-
 ## ✅ **Чеклист: Retrieval в RAG**
 
 ### 1. 📌 **Анализ текущей dense-модели**
@@ -64,7 +63,11 @@
 ## 🛠️ **Tech Stack**
 
 - **Python** 3.13  
-- **Qdrant** – Vector database for efficient dense retrieval  
-- **FastEmbed** – Lightweight embedding generation with HuggingFace models  
+- **DVC** - Data Version Control: https://dvc.org/doc/install 
+- **Qdrant** – Vector database for efficient dense retrieval: https://qdrant.tech
+- **FastEmbed** – Lightweight embedding generation with HuggingFace models
 - **SmolAgents** – Compact agent framework for orchestrating RAG flows
 
+## **Dev install**
+
+Установите **DVC**, **AWS CLI** и настройте для работы с яндекс облаком: https://yandex.cloud/ru/docs/storage/tools/aws-cli 
