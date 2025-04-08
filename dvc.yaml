@@ -1,0 +1,11 @@
+stages:
+  prepare:
+    cmd: uv run travel_agent/pipeline/prepare.py -o data/prepared data/raw/geo-reviews-dataset-2023.csv
+    deps:
+    - data/raw/geo-reviews-dataset-2023.csv
+    - travel_agent/pipeline/prepare.py
+    params:
+    - prepare.seed
+    - prepare.split
+    outs:
+    - data/prepared
