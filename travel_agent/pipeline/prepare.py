@@ -9,6 +9,14 @@ logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
 
+def preprocess_df(df):
+    processed_df = df.dropna(subset=["name_ru"])
+
+    logger.info("Removed %d NaN rows", processed_df.shape[0] - df.shape[0])
+
+    return processed_df
+
+
 def save_split_dataset(df, split_ratio, seed, out_dir):
     train_df, test_df = train_test_split(df, test_size=split_ratio, random_state=seed)
 
@@ -42,6 +50,8 @@ def main():
     args = parser.parse_args()
 
     df = pd.read_csv(args.dataset)
+
+    df = preprocess_df(df)
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)

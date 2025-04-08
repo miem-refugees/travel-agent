@@ -9,8 +9,8 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: 2430d6a21e18fcddccaafa9407b0cc6b
-      size: 1516
+      md5: bb4076c3e1f9f60f0d33794121c4dc9b
+      size: 1720
     params:
       params.yaml:
         prepare.seed: 2025
@@ -18,6 +18,6 @@ stages:
     outs:
     - path: data/prepared
       hash: md5
-      md5: d98bc197a11a45971ad5e340ddca2197.dir
-      size: 442246599
+      md5: 39d50c9b74cc0224800f59cdfe5d29fc.dir
+      size: 441390904
       nfiles: 3
