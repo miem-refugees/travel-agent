@@ -279,5 +279,6 @@ pyrightconfig.json
 # Qdrant
 /qdrant_data
 
-# DVC-managed
-/data
+# DVC
+data/prepared
+data/raw
