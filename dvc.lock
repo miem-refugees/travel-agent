@@ -30,8 +30,8 @@ stages:
       size: 78122812
     - path: travel_agent/pipeline/generate_questions.py
       hash: md5
-      md5: b04924f01b1132a77b80c52516726cc3
-      size: 4214
+      md5: c93404cc2324d4687794be6169492990
+      size: 4244
     params:
       params.yaml:
         generate_questions:
