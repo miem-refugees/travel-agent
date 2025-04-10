@@ -5,8 +5,8 @@ stages:
     deps:
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: 8484dd6a5f0f22727b20d50c0c0d3ae8
-      size: 1100
+      md5: 069e9fb0bc762ad5e08177338e92e70e
+      size: 1101
     params:
       params.yaml:
         prepare:
@@ -24,18 +24,27 @@ stages:
   generate_questions:
     cmd: uv run travel_agent/pipeline/generate_questions.py
     deps:
+    - path: data/prepared/moskva.csv
+      hash: md5
+      md5: 5b2d8f87fff971ff2ac381eea6d362c8
+      size: 78122812
     - path: travel_agent/pipeline/generate_questions.py
       hash: md5
-      md5: 8930afc5a82368167ffdb1d4f42e0eef
-      size: 3036
+      md5: b04924f01b1132a77b80c52516726cc3
+      size: 4214
     params:
       params.yaml:
         generate_questions:
           seed: 2025
-          dataset: data/raw/geo-reviews-dataset-2023.csv
-          n_questions: 20
+          dataset: data/prepared/moskva.csv
           out_dir: data/questions
           out_filename: questions.csv
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            keyword: 5
+            rating: 3
           keywords:
           - вкусный кофе
           - удобное расположение
@@ -45,6 +54,6 @@ stages:
     outs:
     - path: data/questions
       hash: md5
-      md5: 153a69dfb84cbb2205dbb68f76916eb3.dir
-      size: 9006669
+      md5: d5be186a08faf037a083f50a9a0e6b7f.dir
+      size: 2948213
       nfiles: 1
