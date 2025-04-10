@@ -1,11 +1,18 @@
 stages:
   prepare:
-    cmd: uv run travel_agent/pipeline/prepare.py -o data/prepared data/raw/geo-reviews-dataset-2023.csv
+    cmd: uv run travel_agent/pipeline/prepare.py
     deps:
-    - data/raw/geo-reviews-dataset-2023.csv
     - travel_agent/pipeline/prepare.py
     params:
-    - prepare.seed
-    - prepare.split
+    - prepare
     outs:
     - data/prepared
+  generate_questions:
+    cmd: uv run travel_agent/pipeline/generate_questions.py
+    deps:
+    - data/prepared/moskva.csv
+    - travel_agent/pipeline/generate_questions.py
+    params:
+    - generate_questions
+    outs:
+    - data/questions
