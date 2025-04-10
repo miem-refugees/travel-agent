@@ -26,4 +26,5 @@ dependencies = [
     "pre-commit>=4.1.0",
     "huggingface>=0.0.1",
     "tqdm>=4.67.1",
+    "transliterate>=1.10.2",
 ]

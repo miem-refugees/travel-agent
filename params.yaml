@@ -1,3 +1,20 @@
 prepare:
-  split: 0.20
+  dataset: data/raw/geo-reviews-dataset-2023.csv
+  out_dir: data/prepared
+  cities:
+    - Москва
+    - Санкт-Петербург
+
+generate_questions:
   seed: 2025
+  dataset: data/raw/geo-reviews-dataset-2023.csv
+  n_questions: 20
+  out_dir: data/questions
+  out_filename: questions.csv
+
+  keywords:
+    - "вкусный кофе"
+    - "удобное расположение"
+    - "онлайн-сервис"
+    - "атмосфера"
+    - "объёмные ресницы"
