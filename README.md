@@ -3,6 +3,10 @@
 **Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**  
 **Dataset:** [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023)
 
+## ✅ **Чеклист: Data**
+
+TODO
+
 ## ✅ **Чеклист: Retrieval в RAG**
 
 ### 1. 📌 **Анализ текущей dense-модели**
