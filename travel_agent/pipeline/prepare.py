@@ -1,8 +1,8 @@
-import yaml
-import pandas as pd
-from loguru import logger
 from pathlib import Path
 
+import pandas as pd
+import yaml
+from loguru import logger
 from pydantic import BaseModel
 from transliterate import slugify
 

@@ -9,7 +9,7 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: ffb5e2e394209ae909c8bc29e3f80015
+      md5: b3d23a73a33e74f523e67f1fa9da4115
       size: 1124
     params:
       params.yaml:
@@ -34,8 +34,8 @@ stages:
       size: 78122812
     - path: travel_agent/pipeline/generate_questions.py
       hash: md5
-      md5: 90c08f98a8c297dc5236967bd05b4951
-      size: 4269
+      md5: 37b8fa5f5c919b76bfa817436c14ef41
+      size: 4444
     params:
       params.yaml:
         generate_questions:
@@ -47,19 +47,18 @@ stages:
             rubric: 20
             address: 20
             rating_and_rubric: 10
-            keyword: 5
             rating: 3
           keywords:
           - вкусный кофе
           - удобное расположение
           - онлайн-сервис
           - атмосфера
-          - объёмные ресницы
+          - ресницы
     outs:
     - path: data/questions/questions.csv
       hash: md5
-      md5: 938087e5b93f9d2544bb25e1b2ceb0ed
-      size: 2947093
+      md5: 8ed323619cfda0ebd4999cc2f75dcf27
+      size: 3048487
   embed:
     cmd: uv run -m travel_agent.pipeline.embed
     deps:

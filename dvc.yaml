@@ -17,9 +17,3 @@ stages:
     - generate_questions
     outs:
     - data/questions/questions.csv
-  embed:
-    cmd: uv run -m travel_agent.pipeline.embed
-    deps:
-      - data/questions/questions.csv
-    params:
-      - embed
