@@ -6,10 +6,9 @@ prepare:
     - Санкт-Петербург
 
 generate_questions:
-  seed: 2025
   dataset: data/prepared/moskva.csv
   out_dir: data/questions
-  out_filename: questions.csv
+  out_filename: moscow-questions.csv
 
   n_questions:
     rubric: 20

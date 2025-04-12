@@ -11,7 +11,6 @@ expected_places_col = "expected_places"
 
 
 class Params(BaseModel):
-    seed: int  # Now unused, but kept for compatibility
     dataset: str
     out_dir: str
     out_filename: str

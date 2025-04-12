@@ -8,7 +8,7 @@ stages:
     - prepare
     outs:
     - data/prepared
-  generate_questions:
+  generate_moscow_questions:
     cmd: uv run -m travel_agent.pipeline.generate_questions
     deps:
     - data/prepared/moskva.csv
@@ -16,4 +16,4 @@ stages:
     params:
     - generate_questions
     outs:
-    - data/questions/questions.csv
+    - data/questions/moscow-questions.csv
