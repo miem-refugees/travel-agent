@@ -1,12 +1,16 @@
 schema: '2.0'
 stages:
   prepare:
-    cmd: uv run travel_agent/pipeline/prepare.py
+    cmd: uv run -m travel_agent.pipeline.prepare
     deps:
+    - path: data/raw/geo-reviews-dataset-2023.csv
+      hash: md5
+      md5: fc32c6fb5c1efecdc836f2749e1c4673
+      size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: 10ac490e3ac739618134d9eace8eec90
-      size: 1125
+      md5: b3d23a73a33e74f523e67f1fa9da4115
+      size: 1124
     params:
       params.yaml:
         prepare:
@@ -22,7 +26,7 @@ stages:
       size: 116892430
       nfiles: 2
   generate_questions:
-    cmd: uv run travel_agent/pipeline/generate_questions.py
+    cmd: uv run -m travel_agent.pipeline.generate_questions
     deps:
     - path: data/prepared/moskva.csv
       hash: md5
@@ -30,8 +34,8 @@ stages:
       size: 78122812
     - path: travel_agent/pipeline/generate_questions.py
       hash: md5
-      md5: 0fe330ead52fc83acd2cd6d16256675d
-      size: 4253
+      md5: 37b8fa5f5c919b76bfa817436c14ef41
+      size: 4444
     params:
       params.yaml:
         generate_questions:
@@ -43,17 +47,59 @@ stages:
             rubric: 20
             address: 20
             rating_and_rubric: 10
-            keyword: 5
             rating: 3
           keywords:
           - вкусный кофе
           - удобное расположение
           - онлайн-сервис
           - атмосфера
-          - объёмные ресницы
+          - ресницы
     outs:
-    - path: data/questions
+    - path: data/questions/moscow-questions.csv
       hash: md5
-      md5: d6c4c34d48468dabc489c7b9d2458d03.dir
+      md5: 8ed323619cfda0ebd4999cc2f75dcf27
+      size: 3048487
+  embed:
+    cmd: uv run -m travel_agent.pipeline.embed
+    deps:
+    - path: data/questions/moscow-questions.csv
+      hash: md5
+      md5: 938087e5b93f9d2544bb25e1b2ceb0ed
       size: 2947093
-      nfiles: 1
+    params:
+      params.yaml:
+        embed:
+          todo: true
+  generate_moscow_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_questions
+    deps:
+    - path: data/prepared/moskva.csv
+      hash: md5
+      md5: 5b2d8f87fff971ff2ac381eea6d362c8
+      size: 78122812
+    - path: travel_agent/pipeline/generate_questions.py
+      hash: md5
+      md5: 810d4429d7fe019e66359933353823d9
+      size: 4425
+    params:
+      params.yaml:
+        generate_questions:
+          dataset: data/prepared/moskva.csv
+          out_dir: data/questions
+          out_filename: moscow-questions.csv
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            rating: 3
+          keywords:
+          - вкусный кофе
+          - удобное расположение
+          - онлайн-сервис
+          - атмосфера
+          - ресницы
+    outs:
+    - path: data/questions/moscow-questions.csv
+      hash: md5
+      md5: 8ed323619cfda0ebd4999cc2f75dcf27
+      size: 3048487

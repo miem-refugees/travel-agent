@@ -1,20 +1,16 @@
-import random
-from pydantic import BaseModel
-import yaml
-import pandas as pd
 from pathlib import Path
-from loguru import logger
-from tqdm import tqdm, trange
 
+import pandas as pd
+import yaml
+from loguru import logger
+from pydantic import BaseModel
+from tqdm import tqdm, trange
 
 question_col = "question"
 expected_places_col = "expected_places"
 
-question_types = {"rubric", "rating", "address", "keyword", "rating_and_rubric"}
-
 
 class Params(BaseModel):
-    seed: int
     dataset: str
     out_dir: str
     out_filename: str
@@ -23,30 +19,35 @@ class Params(BaseModel):
 
 
 def generate_questions_df(df, params) -> pd.DataFrame:
-    assert question_types == set(params.n_questions.keys())
-
-    random.seed(params.seed)
+    assert set(params.n_questions.keys()) == {
+        "rubric",
+        "rating",
+        "address",
+        "rating_and_rubric",
+    }
 
     unique_rubrics = set()
     for row in df["rubrics"].dropna():
-        unique_rubrics.update(r.strip().lower() for r in row.split(";"))
-    unique_rubrics = sorted(
-        unique_rubrics
-    )  # обратно в list, чтобы избежать рандомного порядка
+        unique_rubrics.update(r.strip() for r in row.split(";"))
+    unique_rubrics = sorted(unique_rubrics)
 
     addresses = sorted(df["address"].dropna().unique().tolist())
     ratings = [i for i in range(1, 6)]
+    keywords = params.keywords
+    params.n_questions["keyword"] = len(keywords)
 
     logger.info("Unique rubrics: {}", len(unique_rubrics))
     logger.info("Unique addresses: {}", len(addresses))
+    logger.info("Keywords: {}", len(keywords))
 
     questions_data = []
 
     for question_type, count in tqdm(params.n_questions.items(), leave=False):
-        for _ in trange(count, desc=f"Question type {question_type}", leave=False):
+        for i in trange(count, desc=f"Question type {question_type}", leave=False):
             if question_type == "rubric":
-                rubric = random.choice(unique_rubrics)
-                unique_rubrics.remove(rubric)
+                if i >= len(unique_rubrics):
+                    continue
+                rubric = unique_rubrics[i]
 
                 q = f"Какие {rubric} ты знаешь?"
                 expected = (
@@ -56,25 +57,25 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                 )
 
             elif question_type == "rating":
-                rating = random.choice(ratings)
-                ratings.remove(rating)
-
-                if len(ratings) == 0:
+                if i >= len(ratings):
                     continue
+                rating = ratings[i]
 
                 q = f"Покажи заведения с рейтингом {rating} и больше."
                 expected = df[df["rating"] >= rating]["name_ru"].unique().tolist()
 
             elif question_type == "address":
-                addr = random.choice(addresses)
-                addresses.remove(addr)
+                if i >= len(addresses):
+                    continue
+                addr = addresses[i]
 
                 q = f"Какие заведения есть по адресу {addr}?"
                 expected = df[df["address"] == addr]["name_ru"].unique().tolist()
 
             elif question_type == "keyword":
-                kw = random.choice(params.keywords)
-                params.keywords.remove(kw)
+                if i >= len(keywords):
+                    continue
+                kw = keywords[i].strip().lower()
 
                 q = f"Где в отзывах упоминается «{kw}»?"
                 expected = (
@@ -84,8 +85,10 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                 )
 
             elif question_type == "rating_and_rubric":
-                rating = random.randint(1, 5)
-                rubric = random.choice(unique_rubrics).lower()
+                if len(unique_rubrics) == 0:
+                    continue
+                rating = 1 + (i % 5)
+                rubric = unique_rubrics[i % len(unique_rubrics)]
 
                 q = f"Найди заведения {rubric} с рейтингом не ниже {rating}."
                 subset = df[
@@ -96,6 +99,10 @@ def generate_questions_df(df, params) -> pd.DataFrame:
 
             else:
                 logger.error("unknown question_type: {}", question_type)
+                continue
+
+            if len(expected) == 0:
+                logger.warning("No expected places for question: {}", q)
                 continue
 
             questions_data.append({question_col: q, expected_places_col: expected})
@@ -118,7 +125,6 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
 
     output_path = f"{params.out_dir}/{params.out_filename}"
-
     questions_df.to_csv(output_path, index=False)
     logger.info("Saved questions to {}", output_path)
 
