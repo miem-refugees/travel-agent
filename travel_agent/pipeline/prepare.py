@@ -1,44 +1,48 @@
 import yaml
-import logging
 import pandas as pd
+from loguru import logger
 from pathlib import Path
+
+from pydantic import BaseModel
 from transliterate import slugify
 
 
-logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
+class Params(BaseModel):
+    dataset: str
+    out_dir: str
+    cities: list[str]
 
 
 def preprocess_df(df):
     processed_df = df.dropna(subset=["name_ru"])
 
-    logger.info("Removed %d NaN rows", processed_df.shape[0] - df.shape[0])
+    logger.info("Removed {} NaN rows", processed_df.shape[0] - df.shape[0])
 
     return processed_df
 
 
 def save_city_prefix_dataset(df, city, out_dir):
-    logger.info("Creating '%s'-prefix dataset", city)
+    logger.info("Creating '{}'-prefix dataset", city)
 
     city_df = df[df["address"].str.startswith(city, na=False)]
 
     filename = f"{slugify(city)}.csv"
     city_df.to_csv(out_dir / filename, index=False)
 
-    logger.info("Created %s", filename)
+    logger.info("Created {}", filename)
 
 
 def main():
-    params = yaml.safe_load(open("params.yaml"))["prepare"]
-    logger.debug("Loaded params: %s", params)
+    params = Params.model_validate(yaml.safe_load(open("params.yaml"))["prepare"])
+    logger.debug("Loaded params: {}", params)
 
-    df = pd.read_csv(params["dataset"])
+    df = pd.read_csv(params.dataset)
     df = preprocess_df(df)
 
-    out_dir = Path(params["out_dir"])
+    out_dir = Path(params.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    for city in params["cities"]:
+    for city in params.cities:
         save_city_prefix_dataset(df, city, out_dir)
 
 
