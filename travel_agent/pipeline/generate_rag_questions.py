@@ -133,7 +133,7 @@ def main():
     questions_df.to_csv(output_path, index=False)
     logger.info("Saved questions to {}", output_path)
 
-    logger.info(
+    logger.debug(
         "Logging result: \n- {}", "\n- ".join(questions_df[question_col].to_list())
     )
 

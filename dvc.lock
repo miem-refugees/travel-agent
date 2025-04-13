@@ -9,8 +9,8 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: 13f3a306456e050c68a332101d87ff47
-      size: 2338
+      md5: 5c5f460ae55706e0c1451f861813bcb8
+      size: 2336
     params:
       params.yaml:
         prepare:
@@ -113,12 +113,12 @@ stages:
       size: 78122812
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: f691650c70aff04f62232a617e651077
-      size: 4609
+      md5: f50b1f79fe159e91f43a16c05e5633c6
+      size: 4610
     params:
       params.yaml:
         generate_rag_questions:
-          out_dir: data/questions
+          out_dir: data/questions/rag
           n_questions:
             rubric: 20
             address: 20
@@ -126,15 +126,16 @@ stages:
             rating: 3
           keywords:
           - вкусный кофе
+          - японская кухня
           - удобное расположение
-          - онлайн-сервис
-          - атмосфера
-          - ресницы
+          - качественный сервис
+          - приятная атмосфера
+          - ноготочки
     outs:
-    - path: data/questions/moskva.csv
+    - path: data/questions/rag/moskva.csv
       hash: md5
-      md5: 8ed323619cfda0ebd4999cc2f75dcf27
-      size: 3048487
+      md5: 4ceb2897041def9ab622e85d8f54e843
+      size: 2970446
   generate_saint_petersburg_rag_questions:
     cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
     deps:
@@ -144,12 +145,12 @@ stages:
       size: 38769618
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: f691650c70aff04f62232a617e651077
-      size: 4609
+      md5: f50b1f79fe159e91f43a16c05e5633c6
+      size: 4610
     params:
       params.yaml:
         generate_rag_questions:
-          out_dir: data/questions
+          out_dir: data/questions/rag
           n_questions:
             rubric: 20
             address: 20
@@ -157,12 +158,69 @@ stages:
             rating: 3
           keywords:
           - вкусный кофе
+          - японская кухня
           - удобное расположение
-          - онлайн-сервис
-          - атмосфера
-          - ресницы
+          - качественный сервис
+          - приятная атмосфера
+          - ноготочки
     outs:
-    - path: data/questions/sankt-peterburg.csv
+    - path: data/questions/rag/sankt-peterburg.csv
       hash: md5
-      md5: c460ec849ff19a213ed9065ac6583668
-      size: 1480528
+      md5: 81298009071e9588320b15816a958256
+      size: 1446462
+  generate_norm_rubrics_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_embed_questions --dataset data/prepared/normal_rubrics_15886.csv
+    deps:
+    - path: data/prepared/normal_rubrics_15886.csv
+      hash: md5
+      md5: 90656d87bb070ca65222f922e3a501ea
+      size: 12544673
+    - path: travel_agent/pipeline/generate_embed_questions.py
+      hash: md5
+      md5: e4d28761331638c366c92df6c00b8f2c
+      size: 1553
+    params:
+      params.yaml:
+        generate_embed_questions:
+          out_dir: data/questions/embed
+          rubric_to_query:
+            Кафе: Где можно вкусно поесть в городе?
+            Кофейня: Где попить хороший кофе?
+            Салон красоты: Где можно сделать стрижку или укладку?
+            Ремонт телефонов: Где починить телефон?
+            Фитнес-клуб: Где позаниматься спортом?
+            Бассейн: Где есть бассейны или аквапарки?
+            Пейнтбол: Где поиграть в пейнтбол или лазертаг?
+            Окна: Где заказать окна?
+            Подарки: Где купить необычный подарок?
+    outs:
+    - path: data/questions/embed/normal_rubrics_15886.csv
+      hash: md5
+      md5: 8d7e039b5ab6452ca94f0d3a8af1c989
+      size: 974
+  analyze:
+    cmd: uv run -m travel_agent.pipeline.analyze
+    deps:
+    - path: data/raw/geo-reviews-dataset-2023.csv
+      hash: md5
+      md5: fc32c6fb5c1efecdc836f2749e1c4673
+      size: 363459109
+    - path: travel_agent/pipeline/analyze.py
+      hash: md5
+      md5: de373260cdc64550388caeb1b322ae85
+      size: 1139
+    params:
+      params.yaml:
+        prepare:
+          random_state: 42
+          dataset: data/raw/geo-reviews-dataset-2023.csv
+          out_dir: data/prepared
+          cities:
+          - Москва
+          - Санкт-Петербург
+    outs:
+    - path: data/analyze
+      hash: md5
+      md5: f10221a78d50a24a47365cecc33d3b99.dir
+      size: 59210
+      nfiles: 1
