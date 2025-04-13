@@ -207,8 +207,8 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/analyze.py
       hash: md5
-      md5: ef77547d454fc7feb0e82fde8e977920
-      size: 2309
+      md5: 19c8044c6fdf1e534b3dc22c07d75ca9
+      size: 2360
     params:
       params.yaml:
         analyze:
@@ -216,11 +216,11 @@ stages:
           out_dir: data/analyze
           top_n_phrases: 50
           top_n_phrases_ngram:
-          - 2
-          - 4
+          - 3
+          - 6
     outs:
     - path: data/analyze
       hash: md5
-      md5: 68740a669b2e55955fdb7b87a46a5153.dir
-      size: 61565
+      md5: ec1ce9b146afd04edcdd72260f6084db.dir
+      size: 62299
       nfiles: 2

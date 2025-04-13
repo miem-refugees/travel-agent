@@ -11,8 +11,8 @@ analyze:
   out_dir: data/analyze
   top_n_phrases: 50
   top_n_phrases_ngram:
-    - 2
-    - 4
+    - 3
+    - 6
 
 generate_rag_questions:
   out_dir: data/questions/rag

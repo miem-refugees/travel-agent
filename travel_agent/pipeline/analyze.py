@@ -27,24 +27,26 @@ def extract_unique_rubrics(df) -> pd.DataFrame:
     return unique_rubrics_df
 
 
-def extract_top_phrases(df, top_n_phrases: int, ngrap_range: tuple):
+def extract_top_phrases(df, top_n_phrases: int, ngram_range: tuple):
     logger.info("Downloading nltk russian stopwords")
-    nltk.download("stopwords")
+    nltk.download("stopwords", quiet=True)
     russian_stopwords = stopwords.words("russian")
 
     vectorizer = TfidfVectorizer(
         stop_words=russian_stopwords,
-        ngram_range=ngrap_range,
+        ngram_range=ngram_range,
         lowercase=True,
         min_df=3,
         max_df=0.8,  # Filter too popular phrases
     )
 
+    logger.info("Fitting vectorizer")
     X = vectorizer.fit_transform(df["text"].astype(str).tolist())
     ngram_freq = zip(vectorizer.get_feature_names_out(), X.sum(axis=0).tolist()[0])
 
     sorted_ngrams = sorted(ngram_freq, key=lambda x: x[1], reverse=True)[:top_n_phrases]
     result_df = pd.DataFrame(sorted_ngrams, columns=["phrase", "count"])
+
     return result_df
 
 
