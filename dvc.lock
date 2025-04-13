@@ -9,11 +9,12 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: b3d23a73a33e74f523e67f1fa9da4115
-      size: 1124
+      md5: 13f3a306456e050c68a332101d87ff47
+      size: 2338
     params:
       params.yaml:
         prepare:
+          random_state: 42
           dataset: data/raw/geo-reviews-dataset-2023.csv
           out_dir: data/prepared
           cities:
@@ -22,9 +23,9 @@ stages:
     outs:
     - path: data/prepared
       hash: md5
-      md5: 08a719dcf6213956344112c4ed39e0ef.dir
-      size: 116892430
-      nfiles: 2
+      md5: e4d0623137ca2ac5970cbc8b79616968.dir
+      size: 129437103
+      nfiles: 3
   generate_questions:
     cmd: uv run -m travel_agent.pipeline.generate_questions
     deps:

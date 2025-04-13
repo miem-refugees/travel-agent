@@ -1,4 +1,5 @@
 prepare:
+  random_state: 42
   dataset: data/raw/geo-reviews-dataset-2023.csv
   out_dir: data/prepared
   cities:
