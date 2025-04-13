@@ -207,16 +207,20 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/analyze.py
       hash: md5
-      md5: 065eb6897c89e6cf243b5524a9d6ca4b
-      size: 1136
+      md5: ef77547d454fc7feb0e82fde8e977920
+      size: 2309
     params:
       params.yaml:
         analyze:
           dataset: data/raw/geo-reviews-dataset-2023.csv
           out_dir: data/analyze
+          top_n_phrases: 50
+          top_n_phrases_ngram:
+          - 2
+          - 4
     outs:
     - path: data/analyze
       hash: md5
-      md5: f10221a78d50a24a47365cecc33d3b99.dir
-      size: 59210
-      nfiles: 1
+      md5: 68740a669b2e55955fdb7b87a46a5153.dir
+      size: 61565
+      nfiles: 2

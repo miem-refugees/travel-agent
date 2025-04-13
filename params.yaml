@@ -9,6 +9,10 @@ prepare:
 analyze:
   dataset: data/raw/geo-reviews-dataset-2023.csv
   out_dir: data/analyze
+  top_n_phrases: 50
+  top_n_phrases_ngram:
+    - 2
+    - 4
 
 generate_rag_questions:
   out_dir: data/questions/rag
