@@ -8,12 +8,21 @@ stages:
     - prepare
     outs:
     - data/prepared
-  generate_moscow_questions:
-    cmd: uv run -m travel_agent.pipeline.generate_questions
+  generate_moscow_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/moskva.csv
     deps:
     - data/prepared/moskva.csv
-    - travel_agent/pipeline/generate_questions.py
+    - travel_agent/pipeline/generate_rag_questions.py
     params:
-    - generate_questions
+    - generate_rag_questions
     outs:
-    - data/questions/moscow-questions.csv
+    - data/questions/moskva.csv
+  generate_saint_petersburg_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
+    deps:
+    - data/prepared/sankt-peterburg.csv
+    - travel_agent/pipeline/generate_rag_questions.py
+    params:
+    - generate_rag_questions
+    outs:
+    - data/questions/sankt-peterburg.csv

@@ -103,3 +103,65 @@ stages:
       hash: md5
       md5: 8ed323619cfda0ebd4999cc2f75dcf27
       size: 3048487
+  generate_moscow_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/moskva.csv
+    deps:
+    - path: data/prepared/moskva.csv
+      hash: md5
+      md5: 5b2d8f87fff971ff2ac381eea6d362c8
+      size: 78122812
+    - path: travel_agent/pipeline/generate_rag_questions.py
+      hash: md5
+      md5: f691650c70aff04f62232a617e651077
+      size: 4609
+    params:
+      params.yaml:
+        generate_rag_questions:
+          out_dir: data/questions
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            rating: 3
+          keywords:
+          - вкусный кофе
+          - удобное расположение
+          - онлайн-сервис
+          - атмосфера
+          - ресницы
+    outs:
+    - path: data/questions/moskva.csv
+      hash: md5
+      md5: 8ed323619cfda0ebd4999cc2f75dcf27
+      size: 3048487
+  generate_saint_petersburg_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
+    deps:
+    - path: data/prepared/sankt-peterburg.csv
+      hash: md5
+      md5: 0475bb59086c4c10b131400d1ef5254e
+      size: 38769618
+    - path: travel_agent/pipeline/generate_rag_questions.py
+      hash: md5
+      md5: f691650c70aff04f62232a617e651077
+      size: 4609
+    params:
+      params.yaml:
+        generate_rag_questions:
+          out_dir: data/questions
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            rating: 3
+          keywords:
+          - вкусный кофе
+          - удобное расположение
+          - онлайн-сервис
+          - атмосфера
+          - ресницы
+    outs:
+    - path: data/questions/sankt-peterburg.csv
+      hash: md5
+      md5: c460ec849ff19a213ed9065ac6583668
+      size: 1480528

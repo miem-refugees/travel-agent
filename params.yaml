@@ -5,10 +5,8 @@ prepare:
     - Москва
     - Санкт-Петербург
 
-generate_questions:
-  dataset: data/prepared/moskva.csv
+generate_rag_questions:
   out_dir: data/questions
-  out_filename: moscow-questions.csv
 
   n_questions:
     rubric: 20
