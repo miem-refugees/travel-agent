@@ -1952,18 +1952,6 @@ wheels = [
 ]
 
 [[package]]
-name = "rake-nltk"
-version = "1.0.6"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "nltk" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/da/b1/53392b9ba76fdb1e9de3198f63eb1cb92529c80201e0709162d140134b30/rake-nltk-1.0.6.tar.gz", hash = "sha256:7813d680b2ce77b51cdac1757f801a87ff47682c9dbd2982aea3b66730346122", size = 9089 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3b/e5/18876d587142df57b1c70ef752da34664bb7dd383710ccf3ccaefba2aa0c/rake_nltk-1.0.6-py3-none-any.whl", hash = "sha256:1c1ffdb64cae8cb99d169d53a5ffa4635f1c4abd3a02c6e22d5d083136bdc5c1", size = 9103 },
-]
-
-[[package]]
 name = "referencing"
 version = "0.36.2"
 source = { registry = "https://pypi.org/simple" }
@@ -2464,7 +2452,6 @@ dependencies = [
     { name = "pydantic" },
     { name = "python-dotenv" },
     { name = "qdrant-client" },
-    { name = "rake-nltk" },
     { name = "seaborn" },
     { name = "sentence-transformers" },
     { name = "smolagents" },
@@ -2491,7 +2478,6 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "qdrant-client", specifier = ">=1.12.1" },
-    { name = "rake-nltk", specifier = ">=1.0.6" },
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "sentence-transformers", specifier = ">=2.6.1" },
     { name = "smolagents", specifier = ">=1.9.2" },

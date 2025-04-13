@@ -1,5 +1,3 @@
-import re
-from collections import Counter
 from pathlib import Path
 
 import nltk
@@ -8,15 +6,14 @@ import yaml
 from loguru import logger
 from nltk.corpus import stopwords
 from pydantic import BaseModel
-from rake_nltk import Rake
-from tqdm import tqdm
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 class Params(BaseModel):
     dataset: str
     out_dir: str
     top_n_phrases: int
-    min_words: int
+    top_n_phrases_ngram: set[int]
 
 
 def extract_unique_rubrics(df) -> pd.DataFrame:
@@ -30,34 +27,24 @@ def extract_unique_rubrics(df) -> pd.DataFrame:
     return unique_rubrics_df
 
 
-def extract_top_phrases(df, top_n: int, min_words=3):
+def extract_top_phrases(df, top_n_phrases: int, ngrap_range: tuple):
     logger.info("Downloading nltk russian stopwords")
-    nltk.download("stopwords", quiet=True)
+    nltk.download("stopwords")
     russian_stopwords = stopwords.words("russian")
 
-    rake = Rake(language="russian", stopwords=russian_stopwords)
+    vectorizer = TfidfVectorizer(
+        stop_words=russian_stopwords,
+        ngram_range=ngrap_range,
+        lowercase=True,
+        min_df=3,
+        max_df=0.8,  # Filter too popular phrases
+    )
 
-    phrase_counter = Counter()
+    X = vectorizer.fit_transform(df["text"].astype(str).tolist())
+    ngram_freq = zip(vectorizer.get_feature_names_out(), X.sum(axis=0).tolist()[0])
 
-    for text in tqdm(
-        df["text"].astype(str).tolist(),
-        leave=False,
-        desc="Extracting phrases with RAKE",
-    ):
-        rake.extract_keywords_from_text(text)
-        raw_phrases = rake.get_ranked_phrases()
-
-        cleaned_phrases = [
-            re.sub(r"[^\w\s]", "", phrase).strip().lower()
-            for phrase in raw_phrases
-            if len(phrase.split()) >= min_words
-        ]
-
-        phrase_counter.update(cleaned_phrases)
-
-    top_phrases = phrase_counter.most_common(top_n)
-    result_df = pd.DataFrame(top_phrases, columns=["phrase", "count"])
-
+    sorted_ngrams = sorted(ngram_freq, key=lambda x: x[1], reverse=True)[:top_n_phrases]
+    result_df = pd.DataFrame(sorted_ngrams, columns=["phrase", "count"])
     return result_df
 
 
@@ -71,7 +58,9 @@ def main():
     unique_rubrics_df = extract_unique_rubrics(df)
     logger.info("Unique rubrics: {}", len(unique_rubrics_df))
 
-    top_phrases_df = extract_top_phrases(df, params.top_n_phrases, params.min_words)
+    top_phrases_df = extract_top_phrases(
+        df, params.top_n_phrases, tuple(params.top_n_phrases_ngram)
+    )
     print(f"Extracted top {params.top_n_phrases} phrases")
 
     out_dir = Path(params.out_dir)
