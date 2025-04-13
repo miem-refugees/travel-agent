@@ -1,4 +1,6 @@
 import argparse
+import re
+from collections import defaultdict
 from pathlib import Path
 
 import pandas as pd
@@ -9,7 +11,7 @@ from pydantic import BaseModel
 
 class Params(BaseModel):
     out_dir: str
-    rubric_to_query: dict[str, str]
+    phrases_to_find: list[str]
 
 
 def main():
@@ -26,27 +28,27 @@ def main():
 
     df = pd.read_csv(input_data_path)
 
-    df = df[df["text"].notna() & (df["text"].str.len() > 50)].copy()
-    df["rubric_list"] = df["rubrics"].str.split(";")
+    df["text"] = (
+        df["text"]
+        .str.lower()
+        .apply(lambda text: re.sub(r"[^а-яa-z0-9ё\s.,!?-]", " ", text))
+    )
 
-    rows = []
+    query_to_places = defaultdict(set)
 
-    for rubric, query in params.rubric_to_query.items():
-        matched = df[
-            df["rubric_list"].apply(
-                lambda lst: any(rubric.lower() in r.lower() for r in lst)
-            )
-        ]
-        top_names = matched["name_ru"].dropna().unique()
+    for phrase in params.phrases_to_find:
+        for _, row in df.iterrows():
+            if phrase in row["text"]:
+                query_to_places[phrase].add(row["name_ru"])
 
-        if len(top_names) == 0:
-            logger.warning("Rubric {} has no matches", rubric)
-            continue
+        if len(query_to_places[phrase]) == 0:
+            logger.warning("No expected places for phrase: {}", phrase)
 
-        logger.info("Rubric {} matched {} places", rubric, len(top_names))
-
-        if len(top_names):
-            rows.append({"query": query, "expected_places": ";".join(top_names)})
+    rows = [
+        {"query": phrase, "expected_places": ";".join(sorted(list(places)))}
+        for phrase, places in query_to_places.items()
+        if places
+    ]
 
     eval_df = pd.DataFrame(rows)
 

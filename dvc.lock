@@ -177,27 +177,47 @@ stages:
       size: 12544673
     - path: travel_agent/pipeline/generate_embed_questions.py
       hash: md5
-      md5: eae0fa022f87489a39ff37b826961d18
-      size: 1601
+      md5: d487afc18c5354c0cf4b6586e12095a6
+      size: 1542
     params:
       params.yaml:
         generate_embed_questions:
-          out_dir: data/questions/embed
-          rubric_to_query:
-            Кафе: Где можно вкусно поесть в городе?
-            Кофейня: Где попить хороший кофе?
-            Салон красоты: Где можно сделать стрижку или укладку?
-            Ремонт телефонов: Где починить телефон?
-            Фитнес-клуб: Где позаниматься спортом?
-            Бассейн: Где есть бассейны или аквапарки?
-            Пейнтбол: Где поиграть в пейнтбол или лазертаг?
-            Окна: Где заказать окна?
-            Подарки: Где купить необычный подарок?
+          out_dir: data/questions/embed_eval
+          phrases_to_find:
+          - вкусный кофе
+          - быстрое обслуживание
+          - чистый зал
+          - приятная атмосфера
+          - японская
+          - маникюр
+          - отличный выбор цветов
+          - обслуживание на высшем уровне
+          - медленное обслуживание
+          - высокое качество
+          - быстрая доставка
+          - профессиональная консультация
+          - иконы
+          - кальян
+          - мастер своего дела
+          - коктейли
+          - столовая
+          - тренажеры
+          - пункт выдачи
+          - авто
+          - банкомат
+          - дети
+          - бани
+          - спортивный
+          - бытовая техника
+          - консульство
+          - адвокат
+          - нотариус
+          - аптека
     outs:
-    - path: data/questions/embed/normal_rubrics_15886.csv
+    - path: data/questions/embed_eval/normal_rubrics_15886.csv
       hash: md5
-      md5: 62f4cd7d5cae54eeb77490b996a8adad
-      size: 16086
+      md5: 982fc0b95b81525bb73c51079c07cb0e
+      size: 46193
   analyze:
     cmd: uv run -m travel_agent.pipeline.analyze
     deps:
@@ -207,20 +227,17 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/analyze.py
       hash: md5
-      md5: 19c8044c6fdf1e534b3dc22c07d75ca9
-      size: 2360
+      md5: 092ffba11842c94fa99f30f48dd6767a
+      size: 3678
     params:
       params.yaml:
         analyze:
           dataset: data/raw/geo-reviews-dataset-2023.csv
           out_dir: data/analyze
-          top_n_phrases: 50
-          top_n_phrases_ngram:
-          - 3
-          - 6
+          top_n: 5
     outs:
     - path: data/analyze
       hash: md5
-      md5: ec1ce9b146afd04edcdd72260f6084db.dir
-      size: 62299
+      md5: f343fa89a5a540ee114ef7e3a46e3794.dir
+      size: 220515
       nfiles: 2

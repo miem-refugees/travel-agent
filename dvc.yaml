@@ -43,4 +43,4 @@ stages:
     params:
       - generate_embed_questions
     outs:
-      - data/questions/embed/normal_rubrics_15886.csv
+      - data/questions/embed_eval/normal_rubrics_15886.csv
