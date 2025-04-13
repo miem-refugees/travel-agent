@@ -57,6 +57,7 @@ def main():
 
     output_path = f"{params.out_dir}/{Path(input_data_path).name}"
     eval_df.to_csv(output_path, index=False)
+    logger.info("Saved to {}", output_path)
 
 
 if __name__ == "__main__":

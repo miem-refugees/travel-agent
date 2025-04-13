@@ -177,18 +177,16 @@ stages:
       size: 12544673
     - path: travel_agent/pipeline/generate_embed_questions.py
       hash: md5
-      md5: 60fbd17d0d75edc401f0f85e9f9b4c3b
-      size: 1576
+      md5: 377d355327f21ec3873bd4a33fef096e
+      size: 1620
     params:
       params.yaml:
         generate_embed_questions:
           out_dir: data/questions/embed_eval
           phrases_to_find:
-          - вкусный кофе
           - быстрое обслуживание
           - чистый зал
           - приятная атмосфера
-          - японская
           - маникюр
           - отличный выбор цветов
           - обслуживание на высшем уровне
@@ -199,13 +197,12 @@ stages:
           - иконы
           - кальян
           - мастер своего дела
-          - коктейли
+          - вкусные коктейли
           - столовая
           - тренажеры
           - пункт выдачи
           - авто
           - банкомат
-          - дети
           - бани
           - спортивный
           - бытовая техника
@@ -216,8 +213,8 @@ stages:
     outs:
     - path: data/questions/embed_eval/normal_rubrics_15886.csv
       hash: md5
-      md5: 982fc0b95b81525bb73c51079c07cb0e
-      size: 46193
+      md5: 7c4a5997a55935616dc05f954c20bb3e
+      size: 36218
   analyze:
     cmd: uv run -m travel_agent.pipeline.analyze
     deps:
