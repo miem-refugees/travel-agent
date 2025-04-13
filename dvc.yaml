@@ -14,7 +14,7 @@ stages:
       - data/raw/geo-reviews-dataset-2023.csv
       - travel_agent/pipeline/analyze.py
     params:
-      - prepare
+      - analyze
     outs:
       - data/analyze
   generate_moscow_rag_questions:

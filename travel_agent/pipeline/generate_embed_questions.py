@@ -37,7 +37,7 @@ def main():
                 lambda lst: any(rubric.lower() in r.lower() for r in lst)
             )
         ]
-        top_names = matched["name_ru"].dropna().unique()[:3]
+        top_names = matched["name_ru"].dropna().unique()
 
         if len(top_names) == 0:
             logger.warning("Rubric {} has no matches", rubric)

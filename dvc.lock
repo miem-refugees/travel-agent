@@ -177,8 +177,8 @@ stages:
       size: 12544673
     - path: travel_agent/pipeline/generate_embed_questions.py
       hash: md5
-      md5: e4d28761331638c366c92df6c00b8f2c
-      size: 1553
+      md5: eae0fa022f87489a39ff37b826961d18
+      size: 1601
     params:
       params.yaml:
         generate_embed_questions:
@@ -196,8 +196,8 @@ stages:
     outs:
     - path: data/questions/embed/normal_rubrics_15886.csv
       hash: md5
-      md5: 8d7e039b5ab6452ca94f0d3a8af1c989
-      size: 974
+      md5: 62f4cd7d5cae54eeb77490b996a8adad
+      size: 16086
   analyze:
     cmd: uv run -m travel_agent.pipeline.analyze
     deps:
@@ -207,17 +207,13 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/analyze.py
       hash: md5
-      md5: de373260cdc64550388caeb1b322ae85
-      size: 1139
+      md5: 065eb6897c89e6cf243b5524a9d6ca4b
+      size: 1136
     params:
       params.yaml:
-        prepare:
-          random_state: 42
+        analyze:
           dataset: data/raw/geo-reviews-dataset-2023.csv
-          out_dir: data/prepared
-          cities:
-          - Москва
-          - Санкт-Петербург
+          out_dir: data/analyze
     outs:
     - path: data/analyze
       hash: md5
