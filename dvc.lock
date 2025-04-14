@@ -177,44 +177,18 @@ stages:
       size: 12544673
     - path: travel_agent/pipeline/generate_embed_questions.py
       hash: md5
-      md5: 377d355327f21ec3873bd4a33fef096e
-      size: 1620
+      md5: bffbf884b23f1cae2eefc4e750ade412
+      size: 9245
     params:
       params.yaml:
         generate_embed_questions:
+          dataset: data/prepared/normal_rubrics_15886.csv
           out_dir: data/questions/embed_eval
-          phrases_to_find:
-          - быстрое обслуживание
-          - чистый зал
-          - приятная атмосфера
-          - маникюр
-          - отличный выбор цветов
-          - обслуживание на высшем уровне
-          - медленное обслуживание
-          - высокое качество
-          - быстрая доставка
-          - профессиональная консультация
-          - иконы
-          - кальян
-          - мастер своего дела
-          - вкусные коктейли
-          - столовая
-          - тренажеры
-          - пункт выдачи
-          - авто
-          - банкомат
-          - бани
-          - спортивный
-          - бытовая техника
-          - консульство
-          - адвокат
-          - нотариус
-          - аптека
     outs:
     - path: data/questions/embed_eval/normal_rubrics_15886.csv
       hash: md5
-      md5: 7c4a5997a55935616dc05f954c20bb3e
-      size: 36218
+      md5: 70bfda80e366b34fd3058878350e9a0f
+      size: 18939
   analyze:
     cmd: uv run -m travel_agent.pipeline.analyze
     deps:
