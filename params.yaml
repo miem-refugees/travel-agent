@@ -1,15 +1,18 @@
 prepare:
+  random_state: 42
   dataset: data/raw/geo-reviews-dataset-2023.csv
   out_dir: data/prepared
   cities:
     - Москва
     - Санкт-Петербург
 
-generate_questions:
-  dataset: data/prepared/moskva.csv
-  out_dir: data/questions
-  out_filename: moscow-questions.csv
+analyze:
+  dataset: data/raw/geo-reviews-dataset-2023.csv
+  out_dir: data/analyze
+  top_n: 5
 
+generate_rag_questions:
+  out_dir: data/questions/rag
   n_questions:
     rubric: 20
     address: 20
@@ -17,7 +20,12 @@ generate_questions:
     rating: 3
   keywords:
     - "вкусный кофе"
+    - "японская кухня"
     - "удобное расположение"
-    - "онлайн-сервис"
-    - "атмосфера"
-    - "ресницы"
+    - "качественный сервис"
+    - "приятная атмосфера"
+    - "ноготочки"
+
+generate_embed_questions:
+  dataset: data/prepared/normal_rubrics_15886.csv
+  out_dir: data/questions/embed_eval

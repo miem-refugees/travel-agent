@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -11,9 +12,7 @@ expected_places_col = "expected_places"
 
 
 class Params(BaseModel):
-    dataset: str
     out_dir: str
-    out_filename: str
     n_questions: dict[str, int]
     keywords: list[str]
 
@@ -112,23 +111,29 @@ def generate_questions_df(df, params) -> pd.DataFrame:
 
 def main():
     params = Params.model_validate(
-        yaml.safe_load(open("params.yaml"))["generate_questions"]
+        yaml.safe_load(open("params.yaml"))["generate_rag_questions"]
     )
     logger.debug("Loaded params: {}", params)
 
-    df = pd.read_csv(params.dataset).dropna()
-    logger.info("Read dataset from {}", params.dataset)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, required=True, help="csv-dataset path")
+
+    args = parser.parse_args()
+    input_data_path = args.dataset
+
+    df = pd.read_csv(input_data_path).dropna()
+    logger.info("Read dataset from {}", input_data_path)
 
     questions_df = generate_questions_df(df, params)
 
     out_dir = Path(params.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    output_path = f"{params.out_dir}/{params.out_filename}"
+    output_path = f"{params.out_dir}/{Path(input_data_path).name}"
     questions_df.to_csv(output_path, index=False)
     logger.info("Saved questions to {}", output_path)
 
-    logger.info(
+    logger.debug(
         "Logging result: \n- {}", "\n- ".join(questions_df[question_col].to_list())
     )
 

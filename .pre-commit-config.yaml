@@ -1,4 +1,29 @@
 repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+    - id: check-added-large-files
+      args: [--maxkb=5000]
+    - id: check-ast
+    - id: check-builtin-literals
+    - id: check-case-conflict
+    - id: check-docstring-first
+    - id: check-executables-have-shebangs
+    - id: check-json
+    - id: check-shebang-scripts-are-executable
+    - id: check-toml
+    - id: check-yaml
+    - id: debug-statements
+    - id: detect-aws-credentials
+      args: [--allow-missing-credentials]
+    - id: detect-private-key
+    - id: end-of-file-fixer
+    - id: fix-byte-order-marker
+    - id: fix-encoding-pragma
+      args: [--remove]
+    - id: mixed-line-ending
+    - id: name-tests-test
+    - id: trailing-whitespace
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.9.6
   hooks:
@@ -27,3 +52,9 @@ repos:
     stages:
     - post-checkout
     always_run: true
+
+# tokens and secrets
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.18.4
+  hooks:
+    - id: gitleaks

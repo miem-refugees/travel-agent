@@ -9,11 +9,12 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: b3d23a73a33e74f523e67f1fa9da4115
-      size: 1124
+      md5: 5c5f460ae55706e0c1451f861813bcb8
+      size: 2336
     params:
       params.yaml:
         prepare:
+          random_state: 42
           dataset: data/raw/geo-reviews-dataset-2023.csv
           out_dir: data/prepared
           cities:
@@ -22,9 +23,9 @@ stages:
     outs:
     - path: data/prepared
       hash: md5
-      md5: 08a719dcf6213956344112c4ed39e0ef.dir
-      size: 116892430
-      nfiles: 2
+      md5: e4d0623137ca2ac5970cbc8b79616968.dir
+      size: 129437103
+      nfiles: 3
   generate_questions:
     cmd: uv run -m travel_agent.pipeline.generate_questions
     deps:
@@ -103,3 +104,111 @@ stages:
       hash: md5
       md5: 8ed323619cfda0ebd4999cc2f75dcf27
       size: 3048487
+  generate_moscow_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/moskva.csv
+    deps:
+    - path: data/prepared/moskva.csv
+      hash: md5
+      md5: 5b2d8f87fff971ff2ac381eea6d362c8
+      size: 78122812
+    - path: travel_agent/pipeline/generate_rag_questions.py
+      hash: md5
+      md5: f50b1f79fe159e91f43a16c05e5633c6
+      size: 4610
+    params:
+      params.yaml:
+        generate_rag_questions:
+          out_dir: data/questions/rag
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            rating: 3
+          keywords:
+          - вкусный кофе
+          - японская кухня
+          - удобное расположение
+          - качественный сервис
+          - приятная атмосфера
+          - ноготочки
+    outs:
+    - path: data/questions/rag/moskva.csv
+      hash: md5
+      md5: 4ceb2897041def9ab622e85d8f54e843
+      size: 2970446
+  generate_saint_petersburg_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
+    deps:
+    - path: data/prepared/sankt-peterburg.csv
+      hash: md5
+      md5: 0475bb59086c4c10b131400d1ef5254e
+      size: 38769618
+    - path: travel_agent/pipeline/generate_rag_questions.py
+      hash: md5
+      md5: f50b1f79fe159e91f43a16c05e5633c6
+      size: 4610
+    params:
+      params.yaml:
+        generate_rag_questions:
+          out_dir: data/questions/rag
+          n_questions:
+            rubric: 20
+            address: 20
+            rating_and_rubric: 10
+            rating: 3
+          keywords:
+          - вкусный кофе
+          - японская кухня
+          - удобное расположение
+          - качественный сервис
+          - приятная атмосфера
+          - ноготочки
+    outs:
+    - path: data/questions/rag/sankt-peterburg.csv
+      hash: md5
+      md5: 81298009071e9588320b15816a958256
+      size: 1446462
+  generate_norm_rubrics_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_embed_questions --dataset data/prepared/normal_rubrics_15886.csv
+    deps:
+    - path: data/prepared/normal_rubrics_15886.csv
+      hash: md5
+      md5: 90656d87bb070ca65222f922e3a501ea
+      size: 12544673
+    - path: travel_agent/pipeline/generate_embed_questions.py
+      hash: md5
+      md5: bffbf884b23f1cae2eefc4e750ade412
+      size: 9245
+    params:
+      params.yaml:
+        generate_embed_questions:
+          dataset: data/prepared/normal_rubrics_15886.csv
+          out_dir: data/questions/embed_eval
+    outs:
+    - path: data/questions/embed_eval/normal_rubrics_15886.csv
+      hash: md5
+      md5: 70bfda80e366b34fd3058878350e9a0f
+      size: 18939
+  analyze:
+    cmd: uv run -m travel_agent.pipeline.analyze
+    deps:
+    - path: data/raw/geo-reviews-dataset-2023.csv
+      hash: md5
+      md5: fc32c6fb5c1efecdc836f2749e1c4673
+      size: 363459109
+    - path: travel_agent/pipeline/analyze.py
+      hash: md5
+      md5: a3b0916a1697020578f1d1945e75cb5d
+      size: 3822
+    params:
+      params.yaml:
+        analyze:
+          dataset: data/raw/geo-reviews-dataset-2023.csv
+          out_dir: data/analyze
+          top_n: 5
+    outs:
+    - path: data/analyze
+      hash: md5
+      md5: f343fa89a5a540ee114ef7e3a46e3794.dir
+      size: 220515
+      nfiles: 2
