@@ -39,12 +39,8 @@ def clean_review(text: str) -> str:
         return ""
     text = text.lower()
     text = re.sub(r"http\S+|www\S+|<.*?>", " ", text)  # Removing URLs
-    text = (
-        text.replace("\\n", " ").replace("\\r", " ").replace("\\t", " ")
-    )  # Handling escaped characters
-    text = re.sub(
-        r"[^а-яa-zё0-9\s]", " ", text
-    )  # Remove non-Russian and non-alphanumeric characters
+    text = text.replace("\\n", " ").replace("\\r", " ").replace("\\t", " ")  # Handling escaped characters
+    text = re.sub(r"[^а-яa-zё0-9\s]", " ", text)  # Remove non-Russian and non-alphanumeric characters
     text = re.sub(r"\s+", " ", text).strip()  # Normalize whitespace
     return text
 
@@ -76,9 +72,7 @@ def extract_top_by_rubrics(df, top_n_words) -> pd.DataFrame:
 
     def count_words(text: str):
         words = re.findall(r"\b[а-яё]+\b", text)
-        words = [
-            word for word in words if word not in russian_stopwords and len(word) > 1
-        ]
+        words = [word for word in words if word not in russian_stopwords and len(word) > 1]
         return Counter(words)
 
     rubric_word_counts = []

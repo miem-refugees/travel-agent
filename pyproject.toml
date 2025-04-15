@@ -45,5 +45,16 @@ travel-agent = "travel_agent:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+line_length = 120
+float_to_top = true
+known_third_party = ["wandb"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I"]

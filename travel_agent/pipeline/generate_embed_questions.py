@@ -21,9 +21,7 @@ class SearchParams(BaseModel):
 
 
 keywords_by_phrases = [
-    SearchParams(
-        question="Где поесть вкусную пиццу?", keywords="вкусн", rubrics="Пиццерия"
-    ),
+    SearchParams(question="Где поесть вкусную пиццу?", keywords="вкусн", rubrics="Пиццерия"),
     SearchParams(
         question="Салоны красоты с хорошими мастерами",
         keywords="спасибо",
@@ -34,20 +32,14 @@ keywords_by_phrases = [
         keywords="(недорого|дешево)",
         rubrics="Гостиница",
     ),
-    SearchParams(
-        question="Лучшие бары с коктейлями", keywords="коктейли", rubrics="Бар, паб"
-    ),
-    SearchParams(
-        question="Где быстро купить продукты?", rubrics="Магазин продуктов|Супермаркет"
-    ),
+    SearchParams(question="Лучшие бары с коктейлями", keywords="коктейли", rubrics="Бар, паб"),
+    SearchParams(question="Где быстро купить продукты?", rubrics="Магазин продуктов|Супермаркет"),
     SearchParams(
         question="Доставка суши с хорошими отзывами",
         keywords="доставка",
         rubrics="Суши-бар",
     ),
-    SearchParams(
-        question="Рестораны куда можно с детьми", keywords="дети", rubrics="Ресторан"
-    ),
+    SearchParams(question="Рестораны куда можно с детьми", keywords="дети", rubrics="Ресторан"),
     SearchParams(question="Кофейни с десертами", keywords="десерты", rubrics="Кофейня"),
     SearchParams(
         question="Где купить подарки на праздник?",
@@ -69,9 +61,7 @@ keywords_by_phrases = [
         keywords="акции",
         rubrics="Магазин хозтоваров и бытовой химии",
     ),
-    SearchParams(
-        question="Пиццерии с доставкой", keywords="доставк", rubrics="Пиццерия"
-    ),
+    SearchParams(question="Пиццерии с доставкой", keywords="доставк", rubrics="Пиццерия"),
     SearchParams(question="Супермаркеты рядом с домом", rubrics="Супермаркет"),
     SearchParams(
         question="Где вкусно пообедать недорого?",
@@ -83,15 +73,9 @@ keywords_by_phrases = [
         keywords="спасибо",
         rubrics="Стоматологическая клиника",
     ),
-    SearchParams(
-        question="Музеи, где интересно детям", keywords="дети", rubrics="Музей"
-    ),
-    SearchParams(
-        question="Салоны сделать брови", keywords="бров", rubrics="Ногтевая студия"
-    ),
-    SearchParams(
-        question="Где заказать торт на день рождения?", rubrics="Кондитерская"
-    ),
+    SearchParams(question="Музеи, где интересно детям", keywords="дети", rubrics="Музей"),
+    SearchParams(question="Салоны сделать брови", keywords="бров", rubrics="Ногтевая студия"),
+    SearchParams(question="Где заказать торт на день рождения?", rubrics="Кондитерская"),
     SearchParams(question="Лучшие шиномонтажи в районе", rubrics="Шиномонтаж"),
     SearchParams(question="Где можно заказать бизнес-ланч?", keywords="бизнес.?ланч"),
     SearchParams(
@@ -104,25 +88,19 @@ keywords_by_phrases = [
         keywords="фуд-?корт",
         rubrics="Торговый центр",
     ),
-    SearchParams(
-        question="Фитнес-клубы с бассейном", keywords="бассейн", rubrics="Фитнес-клуб"
-    ),
+    SearchParams(question="Фитнес-клубы с бассейном", keywords="бассейн", rubrics="Фитнес-клуб"),
     SearchParams(
         question="Парикмахерские с детскими мастерами",
         keywords="(дет|ребен)",
         rubrics="Парикмахерская",
     ),
-    SearchParams(
-        question="Где есть магазины электроники?", rubrics="Магазин электроники"
-    ),
+    SearchParams(question="Где есть магазины электроники?", rubrics="Магазин электроники"),
     SearchParams(
         question="Магазины алкоголя с широким выбором",
         keywords="выбор",
         rubrics="Магазин алкогольных напитков",
     ),
-    SearchParams(
-        question="Кальянные с уютной атмосферой", keywords="уют", rubrics="Кальян-бар"
-    ),
+    SearchParams(question="Кальянные с уютной атмосферой", keywords="уют", rubrics="Кальян-бар"),
     SearchParams(
         question="Клиники с консультацией терапевта",
         keywords="терапевт",
@@ -140,9 +118,7 @@ keywords_by_phrases = [
         keywords="примерочные",
         rubrics="Магазин одежды",
     ),
-    SearchParams(
-        question="Спа-салоны с массажем", keywords="массаж", rubrics="Спа-салон"
-    ),
+    SearchParams(question="Спа-салоны с массажем", keywords="массаж", rubrics="Спа-салон"),
     SearchParams(question="Покажи авто детейлинги", keywords="детейлинг"),
     SearchParams(
         question="Автосалоны с тест-драйвом",
@@ -166,12 +142,8 @@ keywords_by_phrases = [
         keywords="УЗИ",
         rubrics="Диагностический центр",
     ),
-    SearchParams(
-        question="Пекарни со свежим хлебом", keywords="свежее", rubrics="Пекарня"
-    ),
-    SearchParams(
-        question="Где можно поесть роллы?", keywords="роллы", rubrics="Суши-бар"
-    ),
+    SearchParams(question="Пекарни со свежим хлебом", keywords="свежее", rubrics="Пекарня"),
+    SearchParams(question="Где можно поесть роллы?", keywords="роллы", rubrics="Суши-бар"),
     SearchParams(question="Пункты выдачи", rubrics="Пункт выдачи"),
     SearchParams(
         question="Где есть развлечения для детей?",
@@ -192,9 +164,7 @@ keywords_by_phrases = [
 
 
 def main():
-    params = Params.model_validate(
-        yaml.safe_load(open("params.yaml"))["generate_embed_questions"]
-    )
+    params = Params.model_validate(yaml.safe_load(open("params.yaml"))["generate_embed_questions"])
     logger.debug("Loaded params: {}", params)
 
     parser = argparse.ArgumentParser()
@@ -205,9 +175,7 @@ def main():
 
     df = pd.read_csv(input_data_path)
 
-    df["text"] = df["text"].apply(
-        lambda s: "".join(ch for ch in s if ch not in set(string.punctuation))
-    )
+    df["text"] = df["text"].apply(lambda s: "".join(ch for ch in s if ch not in set(string.punctuation)))
 
     not_found_keywords = []
     low_results = []
@@ -218,17 +186,9 @@ def main():
         searchres = df
 
         if item.rubrics:
-            searchres = searchres[
-                searchres["rubrics"].str.contains(
-                    item.rubrics, regex=True, case=False, na=False
-                )
-            ]
+            searchres = searchres[searchres["rubrics"].str.contains(item.rubrics, regex=True, case=False, na=False)]
         if item.keywords:
-            searchres = searchres[
-                searchres["text"].str.contains(
-                    item.keywords, regex=True, case=False, na=False
-                )
-            ]
+            searchres = searchres[searchres["text"].str.contains(item.keywords, regex=True, case=False, na=False)]
 
         if len(searchres) == 0:
             not_found_keywords.append(item.keywords or item.rubrics)
