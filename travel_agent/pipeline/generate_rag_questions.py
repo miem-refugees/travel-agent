@@ -49,11 +49,7 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                 rubric = unique_rubrics[i]
 
                 q = f"Какие {rubric} ты знаешь?"
-                expected = (
-                    df[df["rubrics"].str.contains(rubric, na=False)]["name_ru"]
-                    .unique()
-                    .tolist()
-                )
+                expected = df[df["rubrics"].str.contains(rubric, na=False)]["name_ru"].unique().tolist()
 
             elif question_type == "rating":
                 if i >= len(ratings):
@@ -77,11 +73,7 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                 kw = keywords[i].strip().lower()
 
                 q = f"Где в отзывах упоминается «{kw}»?"
-                expected = (
-                    df[df["text"].str.contains(kw, case=False, na=False)]["name_ru"]
-                    .unique()
-                    .tolist()
-                )
+                expected = df[df["text"].str.contains(kw, case=False, na=False)]["name_ru"].unique().tolist()
 
             elif question_type == "rating_and_rubric":
                 if len(unique_rubrics) == 0:
@@ -90,10 +82,7 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                 rubric = unique_rubrics[i % len(unique_rubrics)]
 
                 q = f"Найди заведения {rubric} с рейтингом не ниже {rating}."
-                subset = df[
-                    (df["rating"] >= rating)
-                    & (df["rubrics"].str.contains(rubric, na=False))
-                ]
+                subset = df[(df["rating"] >= rating) & (df["rubrics"].str.contains(rubric, na=False))]
                 expected = subset["name_ru"].unique().tolist()
 
             else:
@@ -110,9 +99,7 @@ def generate_questions_df(df, params) -> pd.DataFrame:
 
 
 def main():
-    params = Params.model_validate(
-        yaml.safe_load(open("params.yaml"))["generate_rag_questions"]
-    )
+    params = Params.model_validate(yaml.safe_load(open("params.yaml"))["generate_rag_questions"])
     logger.debug("Loaded params: {}", params)
 
     parser = argparse.ArgumentParser()
@@ -133,9 +120,7 @@ def main():
     questions_df.to_csv(output_path, index=False)
     logger.info("Saved questions to {}", output_path)
 
-    logger.debug(
-        "Logging result: \n- {}", "\n- ".join(questions_df[question_col].to_list())
-    )
+    logger.debug("Logging result: \n- {}", "\n- ".join(questions_df[question_col].to_list()))
 
 
 if __name__ == "__main__":

@@ -1,3 +1,6 @@
+default_language_version:
+  python: python3.13
+
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v5.0.0
@@ -24,12 +27,21 @@ repos:
     - id: mixed-line-ending
     - id: name-tests-test
     - id: trailing-whitespace
+
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.9.1
+  hooks:
+    - id: nbqa-isort
+
 - repo: https://github.com/astral-sh/ruff-pre-commit
   rev: v0.9.6
   hooks:
   - id: ruff
     args: [--fix]
+    types_or: [python, pyi, jupyter]
   - id: ruff-format
+    types_or: [python, pyi, jupyter]
+
 - repo: https://github.com/iterative/dvc
   rev: 3.59.1
   hooks:

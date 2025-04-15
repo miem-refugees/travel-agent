@@ -1,6 +1,6 @@
-# **Travel Agent 🕵🏾**  
+# **Travel Agent 🕵🏾**
 
-**Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**  
+**Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**
 **Dataset:** [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023)
 
 ## ✅ **Чеклист: Data**
@@ -66,12 +66,12 @@ TODO
 
 ## 🛠️ **Tech Stack**
 
-- **Python** 3.13  
-- **DVC** - Data Version Control: https://dvc.org/doc/install 
+- **Python** 3.13
+- **DVC** - Data Version Control: https://dvc.org/doc/install
 - **Qdrant** – Vector database for efficient dense retrieval: https://qdrant.tech
 - **FastEmbed** – Lightweight embedding generation with HuggingFace models
 - **SmolAgents** – Compact agent framework for orchestrating RAG flows
 
 ## **Dev install**
 
-Установите **DVC**, **AWS CLI** и настройте для работы с яндекс облаком: https://yandex.cloud/ru/docs/storage/tools/aws-cli 
+Установите **DVC**, **AWS CLI** и настройте для работы с яндекс облаком: https://yandex.cloud/ru/docs/storage/tools/aws-cli
