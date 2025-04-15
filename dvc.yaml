@@ -1,18 +1,46 @@
 stages:
   prepare:
-    cmd: uv run travel_agent/pipeline/prepare.py
+    cmd: uv run -m travel_agent.pipeline.prepare
     deps:
-    - travel_agent/pipeline/prepare.py
+      - data/raw/geo-reviews-dataset-2023.csv
+      - travel_agent/pipeline/prepare.py
     params:
-    - prepare
+      - prepare
     outs:
-    - data/prepared
-  generate_questions:
-    cmd: uv run travel_agent/pipeline/generate_questions.py
+      - data/prepared
+  analyze:
+    cmd: uv run -m travel_agent.pipeline.analyze
     deps:
-    - data/prepared/moskva.csv
-    - travel_agent/pipeline/generate_questions.py
+      - data/raw/geo-reviews-dataset-2023.csv
+      - travel_agent/pipeline/analyze.py
     params:
-    - generate_questions
+      - analyze
     outs:
-    - data/questions
+      - data/analyze
+  generate_moscow_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/moskva.csv
+    deps:
+      - data/prepared/moskva.csv
+      - travel_agent/pipeline/generate_rag_questions.py
+    params:
+      - generate_rag_questions
+    outs:
+      - data/questions/rag/moskva.csv
+  generate_saint_petersburg_rag_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
+    deps:
+      - data/prepared/sankt-peterburg.csv
+      - travel_agent/pipeline/generate_rag_questions.py
+    params:
+      - generate_rag_questions
+    outs:
+      - data/questions/rag/sankt-peterburg.csv
+  generate_norm_rubrics_questions:
+    cmd: uv run -m travel_agent.pipeline.generate_embed_questions --dataset data/prepared/normal_rubrics_15886.csv
+    deps:
+      - data/prepared/normal_rubrics_15886.csv
+      - travel_agent/pipeline/generate_embed_questions.py
+    params:
+      - generate_embed_questions
+    outs:
+      - data/questions/embed_eval/normal_rubrics_15886.csv
