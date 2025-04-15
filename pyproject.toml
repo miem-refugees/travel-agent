@@ -15,6 +15,7 @@ dependencies = [
     "nltk>=3.9.1",
     "numpy>=2.2.4",
     "pandas>=2.2.3",
+    "plotly>=6.0.1",
     "pyarrow>=19.0.1",
     "pydantic>=2.11.3",
     "python-dotenv>=1.1.0",
@@ -26,6 +27,7 @@ dependencies = [
     "tqdm>=4.67.1",
     "transformers>=4.51.2",
     "transliterate>=1.10.2",
+    "umap-learn>=0.5.7",
     "wordcloud>=1.9.4",
 ]
 
