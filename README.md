@@ -1,6 +1,9 @@
 # **Travel Agent 🕵🏾**
 
 **Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**
+
+See github pages: https://miem-refugees.github.io/travel-agent
+
 **Dataset:** [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023)
 
 ## ✅ **Чеклист: Retrieval в RAG**
