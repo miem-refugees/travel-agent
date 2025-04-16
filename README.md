@@ -1,11 +1,13 @@
+[![Ruff lint](https://github.com/miem-refugees/travel-agent/actions/workflows/ruff.yml/badge.svg)](https://github.com/miem-refugees/travel-agent/actions/workflows/ruff.yml)
+[![Github Pages](https://github.com/miem-refugees/travel-agent/actions/workflows/docs.yml/badge.svg)](https://github.com/miem-refugees/travel-agent/actions/workflows/docs.yml)
+
 # **Travel Agent 🕵🏾**
 
 **Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**
+
+See github pages: https://miem-refugees.github.io/travel-agent
+
 **Dataset:** [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023)
-
-## ✅ **Чеклист: Data**
-
-TODO
 
 ## ✅ **Чеклист: Retrieval в RAG**
 
