@@ -9,7 +9,6 @@ services:
     expose:
       - 6333
       - 6334
-      - 6335
     configs:
       - source: qdrant_config
         target: /qdrant/config/production.yaml
