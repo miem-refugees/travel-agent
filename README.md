@@ -1,3 +1,6 @@
+[![Ruff lint](https://github.com/miem-refugees/travel-agent/actions/workflows/ruff.yml/badge.svg)](https://github.com/miem-refugees/travel-agent/actions/workflows/ruff.yml)
+[![Github Pages](https://github.com/miem-refugees/travel-agent/actions/workflows/docs.yml/badge.svg)](https://github.com/miem-refugees/travel-agent/actions/workflows/docs.yml)
+
 # **Travel Agent 🕵🏾**
 
 **Enhancing Trip Planning with Retrieval-Augmented Generation (RAG)**
