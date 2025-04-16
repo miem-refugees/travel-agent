@@ -2,8 +2,8 @@
 
 Docs: https://docs.rs/qdrant-client/latest/qdrant_client
 
-```bash
-export QDRANT_URL=http://localhost:6334
+Ensure `QDRANT_URL` and optional `QDRANT_API_KEY` is set
 
-cargo run --release -- --dataset ../data/embedding/moskva-with-embeddings.parquet
+```bash
+cargo run --release -- --dataset ../../data/embedding/moskva-with-embeddings.parquet
 ```
