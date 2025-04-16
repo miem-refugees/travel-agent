@@ -186,7 +186,7 @@ async fn main() -> Result<()> {
                         ),
                         (
                             "rating",
-                            extract_f32(batch.column(rating_idx), row_idx)
+                            extract_f64(batch.column(rating_idx), row_idx)
                                 .unwrap_or(0.0)
                                 .into(),
                         ),
@@ -261,11 +261,9 @@ fn extract_string(array: &ArrayRef, row_idx: usize) -> String {
     String::new()
 }
 
-fn extract_f32(array: &ArrayRef, row_idx: usize) -> Option<f32> {
-    if let Some(float_array) = array.as_any().downcast_ref::<Float32Array>() {
-        if float_array.is_valid(row_idx) {
-            return Some(float_array.value(row_idx));
-        }
+fn extract_f64(array: &ArrayRef, row_idx: usize) -> Option<f64> {
+    if let Some(float64_array) = array.as_any().downcast_ref::<arrow::array::Float64Array>() {
+        return Some(float64_array.value(row_idx));
     }
     None
 }
