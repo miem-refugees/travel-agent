@@ -8,9 +8,9 @@ from loguru import logger
 from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-
+import sys
 from travel_agent.utils import seed_everything
-
+import gc
 MODELS_PROMPTS = {
     "cointegrated/rubert-tiny2": {"query": None, "passage": None},
     "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
@@ -64,11 +64,15 @@ def preprocess_text(text: str) -> str:
     return text
 
 
-def mean_pool_sentence_embeddings(texts: list[str], model: SentenceTransformer, prompt: Optional[str]) -> np.ndarray:
+def mean_pool_sentence_embeddings(
+    texts: list[str], model: SentenceTransformer, prompt: Optional[str]
+) -> np.ndarray:
     all_embeddings = []
     for text in tqdm(texts):
         sentences = sent_tokenize(text, language="russian")
-        sentence_embeddings = model.encode(sentences, convert_to_numpy=True, batch_size=32, prompt=prompt)
+        sentence_embeddings = model.encode(
+            sentences, convert_to_numpy=True, batch_size=32, prompt=prompt
+        )
         mean_embedding = np.mean(sentence_embeddings, axis=0)
         all_embeddings.append(mean_embedding)
     return np.array(all_embeddings)
@@ -89,9 +93,14 @@ def generate_embeddings(
         logger.info(f"Embedding column {embedding_col} already exists, skipping")
 
     else:
-        logger.info(f"Generating embeddings for {doc_col} and saving to {embedding_col} column")
+        logger.info(
+            f"Generating embeddings for {doc_col} and saving to {embedding_col} column"
+        )
         doc_embeddings = model.encode(
-            df[doc_col].to_list(), batch_size=get_dynamic_batch_size(model), prompt=prompt, show_progress_bar=True
+            df[doc_col].to_list(),
+            batch_size=get_dynamic_batch_size(model),
+            prompt=prompt,
+            show_progress_bar=True,
         )
         # doc_embeddings = mean_pool_sentence_embeddings(df[doc_col].tolist(), model)
         df[embedding_col] = list(doc_embeddings)
@@ -107,45 +116,35 @@ if __name__ == "__main__":
 
     doc_col = "text"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    k = [1, 3, 5, 10, 20]
 
     dataset_path = Path("data") / "prepared" / "moskva.csv"
     dataset_name = dataset_path.stem
     embeddings_path = Path("data") / "embedding" / f"embeddings_{dataset_name}.parquet"
 
-    import sys
-
-    logger.remove()
-    logger.add(sys.stdout, level="INFO")
-
-    seed = 42
-    seed_everything(seed)
-
-    doc_col = "text"
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    k = [1, 3, 5, 10, 20]
-
-    dataset_name = "moskva"
-
-    embeddings_path = Path("data") / "embedding" / f"{dataset_name}-with-embeddings.parquet"
     if embeddings_path.exists():
         logger.info(f"Loading embeddings from {str(embeddings_path)}")
         df = pd.read_parquet(embeddings_path)
     else:
         logger.info(f"Existing {str(embeddings_path)} not found, using raw")
-        df_path = Path("data") / "prepared" / f"{dataset_name}.csv"
-        df = pd.read_csv(df_path)
+        df = pd.read_csv(dataset_path)
         df[doc_col] = df[doc_col].apply(preprocess_text)
 
-    for model_name in MODELS:
+    for model_name in MODELS_PROMPTS:
         logger.info(f"Generating embeddings using {model_name}")
         model = SentenceTransformer(model_name, device=device)
         embedding_col = f"{doc_col}_{model_name}"
-        df = generate_embeddings(df=df, doc_col=doc_col, embedding_col=embedding_col, model=model)
+        df = generate_embeddings(
+            df=df,
+            doc_col=doc_col,
+            embedding_col=embedding_col,
+            model=model,
+            prompt=MODELS_PROMPTS[model_name]["passage"],
+        )
 
-        logger.info(f"Benchmarking model: {model_name}")
-
+        del model
+        gc.collect()
         torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
 
     embeddings_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(embeddings_path, index=False)
