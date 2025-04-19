@@ -1,3 +1,5 @@
+import gc
+import sys
 from pathlib import Path
 from typing import Optional
 
@@ -8,9 +10,9 @@ from loguru import logger
 from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
-import sys
+
 from travel_agent.utils import seed_everything
-import gc
+
 MODELS_PROMPTS = {
     "cointegrated/rubert-tiny2": {"query": None, "passage": None},
     "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
@@ -117,7 +119,7 @@ if __name__ == "__main__":
     doc_col = "text"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    dataset_path = Path("data") / "prepared" / "moskva.csv"
+    dataset_path = Path("data") / "prepared" / "sankt-peterburg.csv"
     dataset_name = dataset_path.stem
     embeddings_path = Path("data") / "embedding" / f"embeddings_{dataset_name}.parquet"
 
