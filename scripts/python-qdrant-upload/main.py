@@ -5,10 +5,11 @@ import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 from loguru import logger
-from qdrant_client import QdrantClient
 from qdrant_client.http import models
 from qdrant_client.http.exceptions import UnexpectedResponse
 from tqdm import tqdm
+
+from travel_agent.qdrant import client as qdrant_client
 
 
 def load_dataframe(file_path):
@@ -19,22 +20,6 @@ def load_dataframe(file_path):
         return df
     except Exception as e:
         logger.error("Failed to load dataframe: {}", e)
-        raise
-
-
-def connect_to_qdrant(url, api_key=None):
-    try:
-        logger.info("Connecting to Qdrant at {}", url)
-
-        if api_key:
-            client = QdrantClient(url=url, api_key=api_key)
-        else:
-            client = QdrantClient(url=url)
-
-        logger.success("Successfully connected to Qdrant")
-        return client
-    except Exception as e:
-        logger.error("Failed to connect to Qdrant: {}", e)
         raise
 
 
@@ -138,6 +123,7 @@ def upload_data_to_collection(client, df, collection_name, embedding_column, bat
 def main():
     parser = argparse.ArgumentParser(description="Upload embeddings from parquet file to Qdrant")
     parser.add_argument("--dataset", required=True, help="Path to parquet file with embeddings")
+    parser.add_argument("--ask", required=False, action=argparse.BooleanOptionalAction, help="Ask for each upload")
     args = parser.parse_args()
 
     load_dotenv()
@@ -147,17 +133,18 @@ def main():
     try:
         df = load_dataframe(args.dataset)
 
-        client = connect_to_qdrant(os.getenv("QDRANT_URL", "http://localhost:6333"), os.getenv("QDRANT_API_KEY", None))
-
         embedding_columns = [col for col in df.columns if col.startswith("text_")]
         logger.info("Found {} embedding models to process", len(embedding_columns))
 
         for embed_col in embedding_columns:
+            if args.ask and not input(f"process {embed_col}? type 'y/n': ").strip() == "y":
+                continue
+
             model_name = embed_col.replace("text_", "").replace("/", "_").replace("-", "_")
             collection_name = f"{os.getenv('COLLECTION_PREFIX', 'moskva')}_{model_name}"
 
             upload_data_to_collection(
-                client=client,
+                client=qdrant_client,
                 df=df,
                 collection_name=collection_name,
                 embedding_column=embed_col,

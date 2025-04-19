@@ -57,6 +57,15 @@ def get_dynamic_batch_size(model: SentenceTransformer) -> int:
         return 64
 
 
+def embed(model: SentenceTransformer, prompt: str) -> np.ndarray:
+    return model.encode(
+        df[doc_col].to_list(),
+        batch_size=get_dynamic_batch_size(model),
+        prompt=prompt,
+        show_progress_bar=True,
+    )
+
+
 def preprocess_text(text: str) -> str:
     text = text.replace("\n", " ")
     text = text.replace("\\n", " ")
@@ -134,7 +143,7 @@ if __name__ == "__main__":
             doc_col=doc_col,
             embedding_col=embedding_col,
             model=model,
-            prompt=MODELS_PROMPTS[model_name]["passage"],
+            prompt=MODELS_PROMPTS[model_name].get("passage"),
         )
 
         del model
