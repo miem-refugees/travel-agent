@@ -123,6 +123,7 @@ def upload_data_to_collection(client, df, collection_name, embedding_column, bat
 def main():
     parser = argparse.ArgumentParser(description="Upload embeddings from parquet file to Qdrant")
     parser.add_argument("--dataset", required=True, help="Path to parquet file with embeddings")
+    parser.add_argument("--ask", required=False, action=argparse.BooleanOptionalAction, help="Ask for each upload")
     args = parser.parse_args()
 
     load_dotenv()
@@ -136,6 +137,9 @@ def main():
         logger.info("Found {} embedding models to process", len(embedding_columns))
 
         for embed_col in embedding_columns:
+            if args.ask and not input(f"process {embed_col}? type 'y/n': ").strip() == "y":
+                continue
+
             model_name = embed_col.replace("text_", "").replace("/", "_").replace("-", "_")
             collection_name = f"{os.getenv('COLLECTION_PREFIX', 'moskva')}_{model_name}"
 

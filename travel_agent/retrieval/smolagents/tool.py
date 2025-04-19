@@ -1,6 +1,10 @@
+import torch
+from loguru import logger
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 from smolagents import Tool
+
+from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
 
 
 class TravelReviewQueryTool(Tool):
@@ -16,7 +20,7 @@ class TravelReviewQueryTool(Tool):
 
     def __init__(
         self,
-        embed_model: SentenceTransformer,
+        embed_model_name: str,
         qdrant_client: QdrantClient,
         collection_name: str,
         retrieve_limit: int = 5,
@@ -26,7 +30,17 @@ class TravelReviewQueryTool(Tool):
 
         self.collection_name = collection_name
         self.client = qdrant_client
-        self.embedder = embed_model
+
+        device = torch.device(
+            "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
+        )
+        logger.info("Using device: {}", device)
+
+        if embed_model_name not in MODELS_PROMPTS.keys():
+            raise Exception(f"Model f{embed_model_name} is not supported in MODELS_PROMPTS")
+
+        self.embedder = SentenceTransformer(embed_model_name, device=device)
+        self.embed_prompt = MODELS_PROMPTS[embed_model_name].get("passage")
         self.retrieve_limit = retrieve_limit
 
         # sanity checks
@@ -38,7 +52,11 @@ class TravelReviewQueryTool(Tool):
             raise Exception(f"Collection f{self.collection_name} is empty")
 
     def forward(self, query: str) -> str:
-        query_embedding = self.embedder.encode(query, normalize_embeddings=True)
+        query_embedding = self.embedder.encode(
+            query,
+            normalize_embeddings=True,
+            prompt=self.embed_prompt,
+        )
         points = self.client.search(
             collection_name=self.collection_name, query_vector=query_embedding, limit=self.retrieve_limit
         )
@@ -52,6 +70,6 @@ class TravelReviewQueryTool(Tool):
             results += f"Адрес: {point.payload['address']}\n"
             results += f"Рейтинг: {point.payload['rating']}\n"
             results += f"Категории: {point.payload['rubrics']}\n"
-            results += f"Отзыв: {point.payload['text']}\n\n"
+            results += f"Текст: {point.payload['text']}\n\n"
 
         return results
