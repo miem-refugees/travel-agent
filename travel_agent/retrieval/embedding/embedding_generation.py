@@ -66,15 +66,11 @@ def preprocess_text(text: str) -> str:
     return text
 
 
-def mean_pool_sentence_embeddings(
-    texts: list[str], model: SentenceTransformer, prompt: Optional[str]
-) -> np.ndarray:
+def mean_pool_sentence_embeddings(texts: list[str], model: SentenceTransformer, prompt: Optional[str]) -> np.ndarray:
     all_embeddings = []
     for text in tqdm(texts):
         sentences = sent_tokenize(text, language="russian")
-        sentence_embeddings = model.encode(
-            sentences, convert_to_numpy=True, batch_size=32, prompt=prompt
-        )
+        sentence_embeddings = model.encode(sentences, convert_to_numpy=True, batch_size=32, prompt=prompt)
         mean_embedding = np.mean(sentence_embeddings, axis=0)
         all_embeddings.append(mean_embedding)
     return np.array(all_embeddings)
@@ -95,9 +91,7 @@ def generate_embeddings(
         logger.info(f"Embedding column {embedding_col} already exists, skipping")
 
     else:
-        logger.info(
-            f"Generating embeddings for {doc_col} and saving to {embedding_col} column"
-        )
+        logger.info(f"Generating embeddings for {doc_col} and saving to {embedding_col} column")
         doc_embeddings = model.encode(
             df[doc_col].to_list(),
             batch_size=get_dynamic_batch_size(model),
