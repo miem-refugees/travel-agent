@@ -2,18 +2,19 @@ import torch
 from loguru import logger
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
-from smolagents import Tool
 
+from smolagents import Tool
 from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
 
 
 class TravelReviewQueryTool(Tool):
     name = "travel_review_query"
-    description = "Использует семантический поиск для извлечения отзывов о местах из коллекции Qdrant."
+    description = "Использует семантический поиск для извлечения отзывов о местах только в Москве."
     inputs = {
         "query": {
             "type": "string",
-            "description": "Запрос для поиска. Должен быть семантически близок к искомым отзывам.",
+            "description": "Запрос для поиска отзыва. Должен быть семантически близок к искомым отзывам, например: посоветуй хорошую кофейню в Москве.\n"
+            + "Важно: не упоминайте весь текст отзыва в ответе. Разрешено использовать только смысл содержания, например: 'Посетители отмечают, что в заведении чисто и комфортно'",
         }
     }
     output_type = "string"
