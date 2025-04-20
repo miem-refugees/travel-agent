@@ -11,6 +11,7 @@ use qdrant_client::qdrant::{
 };
 use std::env;
 use std::fs::File;
+use std::io::{self, Write};
 use std::time::Instant;
 
 #[derive(Parser, Debug)]
@@ -21,6 +22,8 @@ use std::time::Instant;
 struct Args {
     #[clap(long, required = true, help = "Path to parquet file with embeddings")]
     dataset: String,
+    #[clap(long, required = false, help = "Ask for each dataset upload")]
+    ask: bool,
 }
 
 #[tokio::main]
@@ -60,10 +63,21 @@ async fn main() -> Result<()> {
     info!("Connecting to qdrant: {}", qdrant_url);
 
     let client = Qdrant::from_url(&qdrant_url)
-        .api_key(env::var("QDRANT_API_KEY"))
+        .api_key(env::var("QDRANT_API_KEY").ok())
         .build()?;
 
     for embed_col in &embedding_columns {
+        if args.ask {
+            print!("Upload '{}' model? (y/n): ", embed_col);
+            io::stdout().flush()?;
+            let mut input = String::new();
+            io::stdin().read_line(&mut input)?;
+            if !input.trim().eq_ignore_ascii_case("y") {
+                info!("Skipped {} model", embed_col);
+                continue;
+            }
+        }
+
         let model_name = embed_col
             .replace("text_", "")
             .replace("/", "_")
@@ -192,7 +206,12 @@ async fn main() -> Result<()> {
                         ),
                         (
                             "rubrics",
-                            extract_string(batch.column(rubrics_idx), row_idx).into(),
+                            extract_string(batch.column(rubrics_idx), row_idx)
+                                .split(';')
+                                .map(|s| s.trim().to_string())
+                                .filter(|s| !s.is_empty())
+                                .collect()
+                                .into(),
                         ),
                         (
                             "text",

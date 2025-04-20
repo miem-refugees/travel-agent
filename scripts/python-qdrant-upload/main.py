@@ -93,7 +93,7 @@ def upload_data_to_collection(client, df, collection_name, embedding_column, bat
                     "address": str(row["address"]) if pd.notna(row["address"]) else "",
                     "name": str(row["name_ru"]) if pd.notna(row["name_ru"]) else "",
                     "rating": float(row["rating"]) if pd.notna(row["rating"]) else 0.0,
-                    "rubrics": str(row["rubrics"]) if pd.notna(row["rubrics"]) else "",
+                    "rubrics": [rubric for rubric in str(row["rubrics"]).split(";") if pd.notna(row["rubrics"])],
                     "text": str(row["text"]) if pd.notna(row["text"]) else "",
                 },
             )
