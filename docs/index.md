@@ -77,18 +77,6 @@ We've benchmarked several multilingual embedding models on our dataset to measur
 | sergeyzh/BERTA                                              |  0.45 |  0.53 |  0.54 |   0.52 |   0.48 |                  244.3 |                  25.45 |             269.75 |
 | tfidf                                                       |     0 |     0 |     0 |      0 |      0 |                   0.31 |                1067.18 |             1067.5 |
 
-#### Visual Comparison
-
-```
-MAP@10 Performance Comparison
-----------------------------------
-paraphrase-multilingual-MiniLM-L12-v2  ██████████████████████████████  0.326
-paraphrase-multilingual-mpnet-base-v2  ██████████████████████████████  0.324
-distiluse-base-multilingual-cased-v2   █████████████████████████       0.248
-distiluse-base-multilingual-cased-v1   ███████████████████             0.224
-DeepPavlov/rubert-base-cased-sentence  ███████████████                 0.150
-```
-
 #### Key Findings
 
 - **Best Overall Performance**: The `paraphrase-multilingual-MiniLM-L12-v2` model demonstrates the highest MAP scores across most k values, making it our top performer.
