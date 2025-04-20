@@ -1,21 +1,55 @@
+from typing import Optional
+
 import torch
 from loguru import logger
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
+from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
 from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
+
+
+class GetExistingAvailableRubricsTool(Tool):
+    name = "get_existing_travel_review_rubrics"
+    description = 'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics"'
+    inputs = {}
+    output_type = "string"
+
+    def __init__(**kwargs):
+        super().__init__(**kwargs)
+
+    def forward(self):
+        return ", ".join(ALL_RUBRICS)
 
 
 class TravelReviewQueryTool(Tool):
     name = "travel_review_query"
-    description = "Использует семантический поиск для извлечения отзывов о местах только в Москве."
+    description = (
+        "Использует семантический поиск для извлечения отзывов на различные заведения. "
+        + 'Важно: не упоминайте весь текст отзыва в ответе. Разрешено использовать только смысл содержания, например: "Посетители отмечают, что в заведении чисто и комфортно"'
+    )
     inputs = {
         "query": {
             "type": "string",
-            "description": "Запрос для поиска отзыва. Должен быть семантически близок к искомым отзывам, например: посоветуй хорошую кофейню в Москве.\n"
-            + "Важно: не упоминайте весь текст отзыва в ответе. Разрешено использовать только смысл содержания, например: 'Посетители отмечают, что в заведении чисто и комфортно'",
-        }
+            "description": "Запрос для поиска отзыва. Должен быть семантически близок к искомым отзывам, например: посоветуй хорошую кофейню в Москве.",
+        },
+        "min_rating": {
+            "type": "integer",
+            "description": "Опциональное поле, фильтр минимального рейтинга (от 1 до 5)",
+            "nullable": True,
+        },
+        "address": {
+            "type": "string",
+            "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва", "улица Энгельса"',
+            "nullable": True,
+        },
+        "rubrics": {
+            "type": "string",
+            "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
+            + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
+            "nullable": True,
+        },
     }
     output_type = "string"
 
@@ -52,13 +86,31 @@ class TravelReviewQueryTool(Tool):
         if collection_info.vectors_count == 0:
             raise Exception(f"Collection f{self.collection_name} is empty")
 
-    def forward(self, query: str) -> str:
+    def forward(
+        self,
+        query: str,
+        min_rating: Optional[int] = None,
+        address: Optional[str] = None,
+        rubrics: Optional[str] = None,
+    ):
         query_embedding = self.embedder.encode(
             query,
             prompt=self.embed_prompt,
         )
+
+        filters = []
+        if min_rating:
+            filters.append(models.FieldCondition(key="rating", range=models.Range(gte=min_rating)))
+        if address:
+            filters.append(models.FieldCondition(key="address", match=models.MatchText(value=address)))
+        if rubrics:
+            filters.append(models.FieldCondition(key="rubrics", match=models.MatchValue(value=rubrics)))
+
         points = self.client.search(
-            collection_name=self.collection_name, query_vector=query_embedding, limit=self.retrieve_limit
+            collection_name=self.collection_name,
+            query_vector=query_embedding,
+            limit=self.retrieve_limit,
+            query_filter=models.Filter(must=filters),
         )
 
         if not points:
