@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from dotenv import load_dotenv
 from loguru import logger
+from qdrant_client import QdrantClient
 from qdrant_client.http import models
 from qdrant_client.http.exceptions import UnexpectedResponse
 from tqdm import tqdm
@@ -23,7 +24,9 @@ def load_dataframe(file_path):
         raise
 
 
-def create_collection(client, collection_name, vector_size, multivector_config: models.MultiVectorConfig = None):
+def create_collection(
+    client: QdrantClient, collection_name, vector_size, multivector_config: models.MultiVectorConfig = None
+):
     try:
         client.get_collection(collection_name)
         logger.info("Collection '{}' already exists", collection_name)
@@ -32,8 +35,7 @@ def create_collection(client, collection_name, vector_size, multivector_config: 
         existing_size = collection_info.config.params.vectors.size
         if existing_size != vector_size:
             logger.warning("Existing collection has vector size {}, but input has size {}", existing_size, vector_size)
-
-        return False
+            raise RuntimeError("Mismatch collection size")
 
     except UnexpectedResponse:
         logger.info("Creating collection '{}' with vector size {}", collection_name, vector_size)
@@ -44,15 +46,21 @@ def create_collection(client, collection_name, vector_size, multivector_config: 
             ),
         )
         logger.success("Created new collection '{}'", collection_name)
-        return True
     except Exception as e:
         logger.error("Error checking/creating collection '{}': {}", collection_name, e)
         raise
 
+    # see https://qdrant.tech/documentation/concepts/indexing/#payload-index for index types
+
+    client.create_payload_index(collection_name=collection_name, field_name="name", field_schema="text")
+    client.create_payload_index(collection_name=collection_name, field_name="address", field_schema="text")
+    client.create_payload_index(collection_name=collection_name, field_name="rubrics", field_schema="keyword")
+    client.create_payload_index(collection_name=collection_name, field_name="rating", field_schema="float")
+
 
 @logger.catch
 def upload_multiembeddings_sized(
-    client, df, embedding_columns: list, vector_size: int, collection_name: str, batch_size=100
+    client: QdrantClient, df, embedding_columns: list, vector_size: int, collection_name: str, batch_size=100
 ):
     selected_embed_cols = [embed_col for embed_col in embedding_columns if df[embed_col].iloc[0].shape[0] == 1024]
 
@@ -111,7 +119,7 @@ def upload_multiembeddings_sized(
     return True
 
 
-def upload_data_to_collection(client, df, collection_name, embedding_column, batch_size=100):
+def upload_data_to_collection(client: QdrantClient, df, collection_name, embedding_column, batch_size=100):
     logger.info("Processing data for collection '{}' using embedding column '{}'", collection_name, embedding_column)
 
     sample_vector = None
