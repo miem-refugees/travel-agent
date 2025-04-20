@@ -40,7 +40,7 @@ class TravelReviewQueryTool(Tool):
             raise Exception(f"Model f{embed_model_name} is not supported in MODELS_PROMPTS")
 
         self.embedder = SentenceTransformer(embed_model_name, device=device)
-        self.embed_prompt = MODELS_PROMPTS[embed_model_name].get("passage")
+        self.embed_prompt = MODELS_PROMPTS[embed_model_name]["query"]
         self.retrieve_limit = retrieve_limit
 
         # sanity checks
@@ -54,7 +54,6 @@ class TravelReviewQueryTool(Tool):
     def forward(self, query: str) -> str:
         query_embedding = self.embedder.encode(
             query,
-            normalize_embeddings=True,
             prompt=self.embed_prompt,
         )
         points = self.client.search(
