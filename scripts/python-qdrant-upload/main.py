@@ -58,7 +58,6 @@ def create_collection(
     client.create_payload_index(collection_name=collection_name, field_name="rating", field_schema="float")
 
 
-@logger.catch
 def upload_multiembeddings_sized(
     client: QdrantClient, df, embedding_columns: list, vector_size: int, collection_name: str, batch_size=100
 ):
@@ -191,6 +190,7 @@ def upload_data_to_collection(client: QdrantClient, df, collection_name, embeddi
     return True
 
 
+@logger.catch
 def main():
     parser = argparse.ArgumentParser(description="Upload embeddings from parquet file to Qdrant")
     parser.add_argument("--dataset", required=True, help="Path to parquet file with embeddings")
