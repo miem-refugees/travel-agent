@@ -10,6 +10,8 @@ requires-python = ">=3.13"
 dependencies = [
     "fastembed>=0.6.1",
     "huggingface-hub[hf-xet]>=0.30.2",
+    "langchain-ollama>=0.3.2",
+    "langchain>=0.3.24",
     "loguru>=0.7.3",
     "matplotlib>=3.10.1",
     "nltk>=3.9.1",
