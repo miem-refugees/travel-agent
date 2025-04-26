@@ -1548,6 +1548,20 @@ wheels = [
 ]
 
 [[package]]
+name = "langchain-qdrant"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "langchain-core" },
+    { name = "pydantic" },
+    { name = "qdrant-client" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f2/8c/f006636b4cc2d95ba072a57df3f2f99d8cf7cb47a79cc447a7e3e391f7ee/langchain_qdrant-0.2.0.tar.gz", hash = "sha256:41b8573cbb1b4706f76dc769251d8e6b3e4107ecd5fa97c58141977ec19fba75", size = 21429 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/68/01/22dad84373ba282237a3351547443c9c94c39fe75f71a1759f97cfa89725/langchain_qdrant-0.2.0-py3-none-any.whl", hash = "sha256:8eab5b8a553204ddb809d8183a6f1bc12fc265688592d9d897388f6939c79bf8", size = 23406 },
+]
+
+[[package]]
 name = "langchain-text-splitters"
 version = "0.3.8"
 source = { registry = "https://pypi.org/simple" }
@@ -3723,6 +3737,7 @@ dependencies = [
     { name = "huggingface-hub", extra = ["hf-xet"] },
     { name = "langchain" },
     { name = "langchain-ollama" },
+    { name = "langchain-qdrant" },
     { name = "loguru" },
     { name = "matplotlib" },
     { name = "nltk" },
@@ -3761,6 +3776,7 @@ requires-dist = [
     { name = "huggingface-hub", extras = ["hf-xet"], specifier = ">=0.30.2" },
     { name = "langchain", specifier = ">=0.3.24" },
     { name = "langchain-ollama", specifier = ">=0.3.2" },
+    { name = "langchain-qdrant", specifier = ">=0.2.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "matplotlib", specifier = ">=3.10.1" },
     { name = "nltk", specifier = ">=3.9.1" },
