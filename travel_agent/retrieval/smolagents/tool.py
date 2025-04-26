@@ -9,18 +9,27 @@ from smolagents import Tool
 from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
 from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
 
+DEFAULT_LIMIT = 20
+
 
 class GetExistingAvailableRubricsTool(Tool):
     name = "get_existing_travel_review_rubrics"
     description = 'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics"'
-    inputs = {}
+    inputs = {
+        "limit": {
+            "type": "integer",
+            "description": f"Лимит рубрик в ответе. По-умолчанию {DEFAULT_LIMIT}",
+            "nullable": True,
+        },
+        "offset": {"type": "integer", "description": "Отступ", "nullable": True},
+    }
     output_type = "string"
 
-    def __init__(**kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def forward(self):
-        return ", ".join(ALL_RUBRICS)
+    def forward(self, limit: Optional[int] = DEFAULT_LIMIT, offset: Optional[int] = 0):
+        return ", ".join(ALL_RUBRICS[offset:limit])
 
 
 class TravelReviewQueryTool(Tool):
