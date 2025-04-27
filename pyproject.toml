@@ -33,6 +33,7 @@ dependencies = [
     "transliterate>=1.10.2",
     "umap-learn>=0.5.7",
     "wordcloud>=1.9.4",
+    "ragas>=0.2.15",
 ]
 
 [dependency-groups]
