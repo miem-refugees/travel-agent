@@ -1,5 +1,5 @@
 ---
-title: Gradio Chatbot
+title: Travel Agent
 emoji: 💬
 colorFrom: yellow
 colorTo: purple
