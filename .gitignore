@@ -280,3 +280,4 @@ pyrightconfig.json
 .qdrant_data
 
 .gradio
+gcp-creds.json
