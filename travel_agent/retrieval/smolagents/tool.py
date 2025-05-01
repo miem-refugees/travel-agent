@@ -13,15 +13,19 @@ DEFAULT_LIMIT = 20
 
 
 class GetExistingAvailableRubricsTool(Tool):
-    name = "get_existing_travel_review_rubrics"
-    description = 'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics"'
+    name = "get_available_rubrics"
+    description = 'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics".'
     inputs = {
         "limit": {
             "type": "integer",
             "description": f"Лимит рубрик в ответе. По-умолчанию {DEFAULT_LIMIT}",
             "nullable": True,
         },
-        "offset": {"type": "integer", "description": "Отступ", "nullable": True},
+        "offset": {
+            "type": "integer",
+            "description": "Отступ. Передать, если недостаточно полученных данных.",
+            "nullable": True,
+        },
     }
     output_type = "string"
 
@@ -34,10 +38,7 @@ class GetExistingAvailableRubricsTool(Tool):
 
 class TravelReviewQueryTool(Tool):
     name = "travel_review_query"
-    description = (
-        "Использует семантический поиск для извлечения отзывов на различные заведения. "
-        + 'Важно: не упоминайте весь текст отзыва в ответе. Разрешено использовать только смысл содержания, например: "Посетители отмечают, что в заведении чисто и комфортно"'
-    )
+    description = "Использует семантический поиск для извлечения отзывов на различные заведения."
     inputs = {
         "query": {
             "type": "string",
@@ -48,17 +49,17 @@ class TravelReviewQueryTool(Tool):
             "description": "Опциональное поле, фильтр минимального рейтинга (от 1 до 5)",
             "nullable": True,
         },
-        "address": {
-            "type": "string",
-            "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва", "улица Энгельса"',
-            "nullable": True,
-        },
-        "rubrics": {
-            "type": "string",
-            "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
-            + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
-            "nullable": True,
-        },
+        # "address": {
+        #     "type": "string",
+        #     "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва", "улица Энгельса"',
+        #     "nullable": True,
+        # },
+        # "rubrics": {
+        #     "type": "string",
+        #     "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
+        #     + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
+        #     "nullable": True,
+        # },
     }
     output_type = "string"
 
@@ -99,8 +100,8 @@ class TravelReviewQueryTool(Tool):
         self,
         query: str,
         min_rating: Optional[int] = None,
-        address: Optional[str] = None,
-        rubrics: Optional[str] = None,
+        # address: Optional[str] = None,
+        # rubrics: Optional[str] = None,
     ):
         query_embedding = self.embedder.encode(
             query,
@@ -110,10 +111,10 @@ class TravelReviewQueryTool(Tool):
         filters = []
         if min_rating:
             filters.append(models.FieldCondition(key="rating", range=models.Range(gte=min_rating)))
-        if address:
-            filters.append(models.FieldCondition(key="address", match=models.MatchText(value=address)))
-        if rubrics:
-            filters.append(models.FieldCondition(key="rubrics", match=models.MatchValue(value=rubrics)))
+        # if address:
+        #     filters.append(models.FieldCondition(key="address", match=models.MatchText(value=address)))
+        # if rubrics:
+        #     filters.append(models.FieldCondition(key="rubrics", match=models.MatchValue(value=rubrics)))
 
         points = self.client.search(
             collection_name=self.collection_name,

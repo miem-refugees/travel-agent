@@ -278,3 +278,5 @@ pyrightconfig.json
 
 # Qdrant
 .qdrant_data
+
+.gradio
