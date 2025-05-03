@@ -14,10 +14,9 @@ analyze:
 generate_rag_questions:
   out_dir: data/questions/rag
   n_questions:
-    rubric: 20
-    address: 20
-    rating_and_rubric: 10
-    rating: 3
+    rubric: 30
+    address: 5
+    rating_and_rubric: 20
   keywords:
     - "вкусный кофе"
     - "японская кухня"
@@ -25,6 +24,13 @@ generate_rag_questions:
     - "качественный сервис"
     - "приятная атмосфера"
     - "ноготочки"
+    - "увлекательная экскурсия"
+    - "интересное представление"
+    - "удобный доступ"
+    - "красивый вид"
+    - "лучшие завтраки"
+    - "ужас!"
+    - "огромная благодарность"
 
 generate_embed_questions:
   dataset: data/prepared/normal_rubrics_15886.csv

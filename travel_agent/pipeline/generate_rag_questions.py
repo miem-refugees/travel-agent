@@ -7,6 +7,8 @@ from loguru import logger
 from pydantic import BaseModel
 from tqdm import tqdm, trange
 
+from .analyze import extract_unique_rubrics
+
 question_col = "question"
 expected_places_col = "expected_places"
 
@@ -18,17 +20,7 @@ class Params(BaseModel):
 
 
 def generate_questions_df(df, params) -> pd.DataFrame:
-    assert set(params.n_questions.keys()) == {
-        "rubric",
-        "rating",
-        "address",
-        "rating_and_rubric",
-    }
-
-    unique_rubrics = set()
-    for row in df["rubrics"].dropna():
-        unique_rubrics.update(r.strip() for r in row.split(";"))
-    unique_rubrics = sorted(unique_rubrics)
+    unique_rubrics = extract_unique_rubrics(df).rubrics.tolist()
 
     addresses = sorted(df["address"].dropna().unique().tolist())
     ratings = [i for i in range(1, 6)]
@@ -72,7 +64,7 @@ def generate_questions_df(df, params) -> pd.DataFrame:
                     continue
                 kw = keywords[i].strip().lower()
 
-                q = f"Где в отзывах упоминается «{kw}»?"
+                q = f"Покажи мне места, в которых упоминается {kw}"
                 expected = df[df["text"].str.contains(kw, case=False, na=False)]["name_ru"].unique().tolist()
 
             elif question_type == "rating_and_rubric":
@@ -118,9 +110,7 @@ def main():
 
     output_path = f"{params.out_dir}/{Path(input_data_path).name}"
     questions_df.to_csv(output_path, index=False)
-    logger.info("Saved questions to {}", output_path)
-
-    logger.debug("Logging result: \n- {}", "\n- ".join(questions_df[question_col].to_list()))
+    logger.info("Saved {} questions to {}", questions_df.size, output_path)
 
 
 if __name__ == "__main__":
