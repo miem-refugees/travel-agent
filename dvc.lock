@@ -113,17 +113,16 @@ stages:
       size: 78122812
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: dd56b955440ca988adbc283a2643d4cb
-      size: 4360
+      md5: 44e759b7bcb059a26250ea40e9e35269
+      size: 4103
     params:
       params.yaml:
         generate_rag_questions:
           out_dir: data/questions/rag
           n_questions:
-            rubric: 20
-            address: 20
-            rating_and_rubric: 10
-            rating: 3
+            rubric: 30
+            address: 5
+            rating_and_rubric: 20
           keywords:
           - вкусный кофе
           - японская кухня
@@ -131,11 +130,18 @@ stages:
           - качественный сервис
           - приятная атмосфера
           - ноготочки
+          - увлекательная экскурсия
+          - интересное представление
+          - удобный доступ
+          - красивый вид
+          - лучшие завтраки
+          - ужас!
+          - огромная благодарность
     outs:
     - path: data/questions/rag/moskva.csv
       hash: md5
-      md5: 4ceb2897041def9ab622e85d8f54e843
-      size: 2970446
+      md5: 9209ca71b50c3d7af83e34a04d6091c2
+      size: 1194625
   generate_saint_petersburg_rag_questions:
     cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
     deps:
@@ -145,17 +151,16 @@ stages:
       size: 38769618
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: dd56b955440ca988adbc283a2643d4cb
-      size: 4360
+      md5: 44e759b7bcb059a26250ea40e9e35269
+      size: 4103
     params:
       params.yaml:
         generate_rag_questions:
           out_dir: data/questions/rag
           n_questions:
-            rubric: 20
-            address: 20
-            rating_and_rubric: 10
-            rating: 3
+            rubric: 30
+            address: 5
+            rating_and_rubric: 20
           keywords:
           - вкусный кофе
           - японская кухня
@@ -163,6 +168,13 @@ stages:
           - качественный сервис
           - приятная атмосфера
           - ноготочки
+          - увлекательная экскурсия
+          - интересное представление
+          - удобный доступ
+          - красивый вид
+          - лучшие завтраки
+          - ужас!
+          - огромная благодарность
     outs:
     - path: data/questions/rag/sankt-peterburg.csv
       hash: md5
