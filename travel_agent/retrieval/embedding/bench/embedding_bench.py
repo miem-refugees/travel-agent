@@ -14,7 +14,7 @@ from travel_agent.retrieval.embedding.bench.tf_idf import benchmark_tfidf_simila
 from travel_agent.retrieval.embedding.bench.utils import (
     average_precision_at_k,
 )
-from travel_agent.retrieval.embedding.embedding_generation import (
+from travel_agent.retrieval.embedding.generation.st import (
     MODELS_PROMPTS,
     generate_embeddings,
     preprocess_text,

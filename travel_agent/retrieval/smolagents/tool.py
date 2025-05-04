@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
 from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
-from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
+from travel_agent.retrieval.embedding.generation.st import MODELS_PROMPTS
 
 DEFAULT_LIMIT = 20
 
