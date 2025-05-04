@@ -57,13 +57,13 @@ def get_dynamic_batch_size(model: SentenceTransformer) -> int:
         return 64
 
 
-def embed(model: SentenceTransformer, prompt: str) -> np.ndarray:
-    return model.encode(
-        df[doc_col].to_list(),
-        batch_size=get_dynamic_batch_size(model),
-        prompt=prompt,
-        show_progress_bar=True,
-    )
+# def embed(model: SentenceTransformer, prompt: str) -> np.ndarray:
+#     return model.encode(
+#         df[doc_col].to_list(),
+#         batch_size=get_dynamic_batch_size(model),
+#         prompt=prompt,
+#         show_progress_bar=True,
+#     )
 
 
 def preprocess_text(text: str) -> str:
@@ -107,7 +107,7 @@ def generate_embeddings(
             prompt=prompt,
             show_progress_bar=True,
         )
-        # doc_embeddings = mean_pool_sentence_embeddings(df[doc_col].tolist(), model)
+        # doc_embeddings = mean_pool_sentence_embeddings(df[doc_col].tolist(), model) # mean_pooling makes results worse
         df[embedding_col] = list(doc_embeddings)
     return df
 
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     seed_everything(seed)
 
     doc_col = "text"
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
     dataset_path = Path("data") / "prepared" / "sankt-peterburg.csv"
     dataset_name = dataset_path.stem
@@ -148,8 +148,9 @@ if __name__ == "__main__":
 
         del model
         gc.collect()
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
+        if device.lower().startswith("cuda"):
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
 
     embeddings_path.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(embeddings_path, index=False)
