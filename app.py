@@ -1,15 +1,16 @@
 from loguru import logger
 from smolagents import LiteLLMModel, ToolCallingAgent
 
-from travel_agent.retrieval.smolagents.tool import GetExistingAvailableRubricsTool, TravelReviewQueryTool
-from travel_agent.ui.gradio import TravelGradioUI
+from tool import GetExistingAvailableRubricsTool, TravelReviewQueryTool
+from ui import TravelGradioUI
+from qdrant import create_client
 
 
 @logger.catch
 def init_agent():
     logger.info("Init app dependencies...")
 
-    from travel_agent.qdrant import client as qdrant_client
+    qdrant_client = create_client()
 
     llm = LiteLLMModel(
         model_id="deepseek/deepseek-chat",

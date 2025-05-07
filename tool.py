@@ -6,7 +6,7 @@ from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
-from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
+from rubrics import ALL_RUBRICS
 
 DEFAULT_LIMIT = 20
 
