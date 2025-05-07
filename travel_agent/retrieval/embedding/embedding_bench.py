@@ -18,7 +18,7 @@ from travel_agent.retrieval.embedding.embedding_generation import (
     generate_embeddings,
     preprocess_text,
 )
-from travel_agent.utils import seed_everything
+from travel_agent.retrieval.embedding.utils import seed_everything
 
 nltk.download("stopwords")
 

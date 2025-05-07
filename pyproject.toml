@@ -17,7 +17,7 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "qdrant-client>=1.13.3",
     "sentence-transformers>=4.0.2",
-    "smolagents[gradio,litellm,telemetry]>=1.13.0",
+    "smolagents[gradio,litellm,telemetry]>=1.15.0",
     "torch>=2.6.0",
     "tqdm>=4.67.1",
     "transformers>=4.51.2",
@@ -48,7 +48,7 @@ langchain = [
 ]
 
 [project.scripts]
-travel-agent = "travel_agent:main"
+travel-agent = "travel_agent:app.main"
 
 [build-system]
 requires = ["hatchling"]
