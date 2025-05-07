@@ -1,5 +1,4 @@
 import gc
-import sys
 from pathlib import Path
 from typing import Optional
 
@@ -7,9 +6,7 @@ import numpy as np
 import pandas as pd
 import torch
 from loguru import logger
-from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
 
 from travel_agent.utils import seed_everything
 
@@ -44,6 +41,21 @@ MODELS_PROMPTS = {
     # "ai-forever/FRIDA": {"query": "search_query: ", "passage": "search_document: "},
     "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
 }
+from transformers import AutoModel
+
+
+def get_models_params_embedding_dim(
+    models_prompts: dict[str, dict[str, Optional[str]]],
+) -> dict[str, dict[str, str | int]]:
+    models_params_embedding_dim = {}
+    for model_name in models_prompts:
+        model = AutoModel.from_pretrained(model_name)
+        embedding_dim = model.config.hidden_size
+        num_params = sum(p.numel() for p in model.parameters())
+        models_params_embedding_dim[model_name] = {}
+        models_params_embedding_dim[model_name]["embedding_dim"] = embedding_dim
+        models_params_embedding_dim[model_name]["num_params"] = num_params
+    return models_params_embedding_dim
 
 
 def get_dynamic_batch_size(model: SentenceTransformer) -> int:
@@ -57,9 +69,11 @@ def get_dynamic_batch_size(model: SentenceTransformer) -> int:
         return 64
 
 
-def embed_st(
-    model: SentenceTransformer, sentences: str | list[str], prompt: str
-) -> np.ndarray:
+def embed_st(model: SentenceTransformer, sentences: str | list[str], prompt: str) -> np.ndarray:
+    if isinstance(sentences, str):
+        sentences = preprocess_text(sentences)
+    elif isinstance(sentences, list):
+        sentences = [preprocess_text(sentence) for sentence in sentences]
     return model.encode(
         sentences,
         batch_size=get_dynamic_batch_size(model),
@@ -102,9 +116,7 @@ def generate_st_embeddings(
         logger.info(f"Embedding column {embedding_col} already exists, skipping")
 
     else:
-        logger.info(
-            f"Generating embeddings for {doc_col} and saving to {embedding_col} column"
-        )
+        logger.info(f"Generating embeddings for {doc_col} and saving to {embedding_col} column")
         doc_embeddings = model.encode(
             df[doc_col].to_list(),
             batch_size=get_dynamic_batch_size(model),
@@ -149,9 +161,7 @@ if __name__ == "__main__":
 
     dataset_path = Path("data") / "prepared" / "sankt-peterburg.csv"
     dataset_name = dataset_path.stem
-    embeddings_path = (
-        Path("data") / "embedding" / f"st_embeddings_{dataset_name}.parquet"
-    )
+    embeddings_path = Path("data") / "embedding" / f"st_embeddings_{dataset_name}.parquet"
 
     if embeddings_path.exists():
         logger.info(f"Loading embeddings from {str(embeddings_path)}")

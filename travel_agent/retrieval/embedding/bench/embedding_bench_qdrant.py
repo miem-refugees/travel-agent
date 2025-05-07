@@ -1,4 +1,3 @@
-
 qdrant_client.create_collection(
     collection_name="movies",
     vectors_config=models.VectorParams(

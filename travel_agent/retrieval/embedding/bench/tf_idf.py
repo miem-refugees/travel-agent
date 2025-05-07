@@ -23,8 +23,7 @@ def benchmark_tfidf_similarity(
     tfidf_vectorizer = TfidfVectorizer(ngram_range=(1, 3), stop_words=stop_words)
 
     start_embed = time.time()
-    docs = df[doc_col].to_list()
-    docs = [apply_stemmer(doc) for doc in docs]
+    docs = [apply_stemmer(doc) for doc in df[doc_col].to_list()]
     doc_embeddings = tfidf_vectorizer.fit_transform(docs)
     end_embed = time.time()
     embedding_duration = end_embed - start_embed

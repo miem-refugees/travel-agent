@@ -1,36 +1,23 @@
-from fastembed import TextEmbedding, LateInteractionTextEmbedding, SparseTextEmbedding
-import gc
-import sys
-import time
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import torch
+from fastembed import SparseEmbedding, SparseTextEmbedding
 from loguru import logger
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+from qdrant_client import QdrantClient, models
+from qdrant_client.models import PointStruct
 
-from travel_agent.retrieval.embedding.bench.tf_idf import benchmark_tfidf_similarity
 from travel_agent.retrieval.embedding.bench.utils import (
     average_precision_at_k,
 )
 from travel_agent.retrieval.embedding.generation.st import (
-    MODELS_PROMPTS,
-    generate_embeddings,
     preprocess_text,
 )
 from travel_agent.utils import seed_everything
 
-from fastembed import SparseTextEmbedding, SparseEmbedding
-from qdrant_client import QdrantClient, models
-from qdrant_client.models import PointStruct
-
 
 def embed_using_bm25(docs: list[str]) -> list[SparseEmbedding]:
-    bm25_embedding_model = SparseTextEmbedding(
-        model_name="Qdrant/bm25", language="russian"
-    )
+    bm25_embedding_model = SparseTextEmbedding(model_name="Qdrant/bm25", language="russian")
     bm25_embeddings = list(bm25_embedding_model.embed(doc for doc in docs))
     return bm25_embeddings
 
@@ -49,19 +36,14 @@ def upload_bm25_to_qdrant(
     client.create_collection(
         collection_name=collection_name,
         vectors_config={},
-        sparse_vectors_config={
-            "bm25": models.SparseVectorParams(modifier=models.Modifier.IDF)
-        },
+        sparse_vectors_config={"bm25": models.SparseVectorParams(modifier=models.Modifier.IDF)},
     )
 
     docs = df[doc_col].to_list()
     queries = df[query_col].to_list()
 
     points = []
-    for idx, (bm25_embedding, doc, query) in enumerate(
-        zip(bm25_embeddings, docs, queries)
-    ):
-
+    for idx, (bm25_embedding, doc, query) in enumerate(zip(bm25_embeddings, docs, queries)):
         point = PointStruct(
             id=idx,
             vector={
@@ -85,9 +67,7 @@ def benchmark_bm25(
 ) -> dict[int, float]:
     if doc_col not in df.columns or query_col not in df.columns:
         logger.error(f"DataFrame must contain '{doc_col}' and '{query_col}' columns")
-        raise ValueError(
-            f"DataFrame must contain '{doc_col}' and '{query_col}' columns"
-        )
+        raise ValueError(f"DataFrame must contain '{doc_col}' and '{query_col}' columns")
 
     bm25_model = SparseTextEmbedding(model_name="Qdrant/bm25", language="russian")
 
@@ -128,9 +108,7 @@ if __name__ == "__main__":
     k = [1, 3, 5, 10, 20]
 
     embedding_bench_path = Path("data") / "embedding_bench"
-    embedding_bench_dataset_path = (
-        embedding_bench_path / "normal_rubrics_15886_exploded.parquet"
-    )
+    embedding_bench_dataset_path = embedding_bench_path / "normal_rubrics_15886_exploded.parquet"
     dataset_name = embedding_bench_dataset_path.stem
 
     logger.info("Loading dataset")
@@ -142,8 +120,6 @@ if __name__ == "__main__":
     collection_name = "bm25_bench"
 
     bm25_embeddings = embed_using_bm25(df[doc_col].to_list())
-    upload_bm25_to_qdrant(
-        client, bm25_embeddings, df, collection_name, doc_col, query_col
-    )
+    upload_bm25_to_qdrant(client, bm25_embeddings, df, collection_name, doc_col, query_col)
 
     results = benchmark_bm25(client, collection_name, df, doc_col, query_col, k)
