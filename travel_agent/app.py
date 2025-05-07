@@ -1,19 +1,15 @@
-import argparse
-
 from loguru import logger
-from openinference.instrumentation.smolagents import SmolagentsInstrumentor
-from phoenix.otel import register
-from smolagents import GradioUI, LiteLLMModel, ToolCallingAgent
+from smolagents import LiteLLMModel, ToolCallingAgent
 
-from travel_agent.qdrant import client as qdrant_client
 from travel_agent.retrieval.smolagents.tool import GetExistingAvailableRubricsTool, TravelReviewQueryTool
+from travel_agent.ui.gradio import TravelGradioUI
 
 
 @logger.catch
 def init_agent(model_name: str):
     logger.info("Init app dependencies...")
 
-    qdrant_client.info()
+    from travel_agent.qdrant import client as qdrant_client
 
     # To support llm via api uncomment:
     # llm = InferenceClientModel("mistralai/Mistral-Small-3.1-24B-Instruct-2503")
@@ -36,12 +32,15 @@ def init_agent(model_name: str):
                 "moskva_intfloat_multilingual_e5_base",
             ),
         ],
-        max_steps=3,
-        verbosity_level=2,
+        max_steps=7,
+        verbosity_level=1,
+        planning_interval=3,
     )
 
 
 if __name__ == "__main__":
+    import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_name", type=str, default="hf.co/IlyaGusev/saiga_nemo_12b_gguf:Q4_0")
     parser.add_argument("--tracing", type=bool, default=False)
@@ -49,6 +48,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.tracing:
+        from openinference.instrumentation.smolagents import SmolagentsInstrumentor
+        from phoenix.otel import register
+
         # creates a tracer provider to capture OTEL traces
         tracer_provider = register(project_name="travel-agent-local", verbose=False)
         # automatically captures any smolagents calls as traces
@@ -61,4 +63,4 @@ if __name__ == "__main__":
         logger.error("Agent initialization failed")
         exit(1)
 
-    GradioUI(agent).launch(share=args.share)
+    TravelGradioUI(agent).launch(share=args.share)

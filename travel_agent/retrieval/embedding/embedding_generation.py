@@ -11,7 +11,7 @@ from nltk.tokenize import sent_tokenize
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from travel_agent.utils import seed_everything
+from travel_agent.retrieval.embedding.utils import seed_everything
 
 MODELS_PROMPTS = {
     "cointegrated/rubert-tiny2": {"query": None, "passage": None},
