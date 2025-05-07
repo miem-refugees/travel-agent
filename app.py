@@ -1,64 +1,40 @@
-import gradio as gr
-from huggingface_hub import InferenceClient
+from loguru import logger
+from smolagents import LiteLLMModel, ToolCallingAgent
 
-"""
-For more information on `huggingface_hub` Inference API support, please check the docs: https://huggingface.co/docs/huggingface_hub/v0.22.2/en/guides/inference
-"""
-client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
+from travel_agent.retrieval.smolagents.tool import GetExistingAvailableRubricsTool, TravelReviewQueryTool
+from travel_agent.ui.gradio import TravelGradioUI
 
 
-def respond(
-    message,
-    history: list[tuple[str, str]],
-    system_message,
-    max_tokens,
-    temperature,
-    top_p,
-):
-    messages = [{"role": "system", "content": system_message}]
+@logger.catch
+def init_agent():
+    logger.info("Init app dependencies...")
 
-    for val in history:
-        if val[0]:
-            messages.append({"role": "user", "content": val[0]})
-        if val[1]:
-            messages.append({"role": "assistant", "content": val[1]})
+    from travel_agent.qdrant import client as qdrant_client
 
-    messages.append({"role": "user", "content": message})
+    llm = LiteLLMModel(
+        model_id="deepseek/deepseek-chat",
+    )
 
-    response = ""
-
-    for message in client.chat_completion(
-        messages,
-        max_tokens=max_tokens,
-        stream=True,
-        temperature=temperature,
-        top_p=top_p,
-    ):
-        token = message.choices[0].delta.content
-
-        response += token
-        yield response
-
-
-"""
-For information on how to customize the ChatInterface, peruse the gradio docs: https://www.gradio.app/docs/chatinterface
-"""
-demo = gr.ChatInterface(
-    respond,
-    additional_inputs=[
-        gr.Textbox(value="You are a friendly Chatbot.", label="System message"),
-        gr.Slider(minimum=1, maximum=2048, value=512, step=1, label="Max new tokens"),
-        gr.Slider(minimum=0.1, maximum=4.0, value=0.7, step=0.1, label="Temperature"),
-        gr.Slider(
-            minimum=0.1,
-            maximum=1.0,
-            value=0.95,
-            step=0.05,
-            label="Top-p (nucleus sampling)",
-        ),
-    ],
-)
+    return ToolCallingAgent(
+        model=llm,
+        tools=[
+            GetExistingAvailableRubricsTool(),
+            TravelReviewQueryTool(
+                "intfloat/multilingual-e5-base",
+                qdrant_client,
+                "moskva_intfloat_multilingual_e5_base",
+            ),
+        ],
+        max_steps=7,
+        verbosity_level=1,
+        planning_interval=3,
+    )
 
 
 if __name__ == "__main__":
-    demo.launch()
+    agent = init_agent()
+    if agent is None:
+        logger.error("Agent initialization failed")
+        exit(1)
+
+    TravelGradioUI(agent).launch()
