@@ -269,6 +269,8 @@ lightning_logs/
 
 # Qdrant
 .qdrant_data
+qdrant_storage/
 
+# other
 .gradio
 gcp-creds.json
