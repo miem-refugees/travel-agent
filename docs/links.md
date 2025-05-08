@@ -15,6 +15,16 @@
 - https://www.reddit.com/r/AI_travel_tips/comments/1edaay2/list_of_ai_travel_planners/
 - https://www.reddit.com/r/SwiftUI/comments/18zmk43/travel_agent_with_ai_llm_using_mixtral_7x8b/
 
+## Escalidraw
+
+https://excalidraw.com/#room=b7046b81e2eecb5354a2,aCkG4wr2nofGPfRqdHRvrA
+
+## Pre-thesis defense presentation
+
+https://docs.google.com/presentation/d/1cbrVxJIIKTh38mp1etvbBPb7Keg2Lahpx7-37UEfr4Y/edit#slide=id.g3555e3fe151_0_40
+https://docs.google.com/spreadsheets/d/10958H5GfqaMmOUCkSUZNHDEb1jerYGgfISlm4z9hGsY/edit?gid=1128803509#gid=1128803509
+https://docs.google.com/presentation/d/1gCLtSCC5JiqceMxcvRixxp0AmyPrerR-1WfEp5pbqCE/edit#slide=id.g353fd7a5444_1_6
+
 ## Other
 
 - [Project brainstorm miro](https://miro.com/app/board/uXjVLIzx3wg=/)
