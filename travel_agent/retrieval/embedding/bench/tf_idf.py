@@ -6,11 +6,7 @@ from loguru import logger
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-from travel_agent.retrieval.embedding.bench.utils import (
-    apply_stemmer,
-    average_precision_at_k,
-    stop_words,
-)
+from travel_agent.retrieval.embedding.bench.utils import apply_stemmer, average_precision_at_k, stop_words
 
 
 def benchmark_tfidf_similarity(

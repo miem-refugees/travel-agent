@@ -11,13 +11,37 @@ from collections import defaultdict
 from typing import Callable
 
 import numpy as np
+from pathlib import Path
 
-from travel_agent.retrieval.embedding.bench.utils import (
-    average_precision_at_k,
+
+from typing import Optional
+
+import numpy as np
+import pandas as pd
+import torch
+from fastembed import SparseEmbedding
+from loguru import logger
+from qdrant_client import QdrantClient, models
+from qdrant_client.models import PointStruct
+from tqdm import trange
+
+from travel_agent.retrieval.embedding.generation.sparse import (
+    generate_bm25_embeddings,
+    BM25_MODEL_NAME,
 )
+from travel_agent.retrieval.embedding.generation.dense import (
+    MODELS_PROMPTS,
+    generate_dense_models_embeddings,
+    get_models_params_embedding_dim,
+)
+from travel_agent.utils import seed_everything
+
+from travel_agent.retrieval.embedding.bench.utils import average_precision_at_k
 
 
 def qdrant_benchmark(
+    client: QdrantClient,
+    collection_name: str,
     queries: list[str],
     query_payload_key: str,
     embed_query: Callable,
@@ -27,8 +51,8 @@ def qdrant_benchmark(
     ap_scores_by_k = defaultdict(list)
 
     for query in queries:
-        embedding = embed_query(query)
-        search_result = qdrant_search(embedding)
+        embeddings = embed_query(query)
+        search_result = qdrant_search(client, collection_name, embeddings, max(ks))
         top_types = [point.payload[query_payload_key] for point in search_result.points]
 
         for k in ks:

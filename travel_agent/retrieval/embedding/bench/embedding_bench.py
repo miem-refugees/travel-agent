@@ -11,14 +11,8 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from travel_agent.retrieval.embedding.bench.tf_idf import benchmark_tfidf_similarity
-from travel_agent.retrieval.embedding.bench.utils import (
-    average_precision_at_k,
-)
-from travel_agent.retrieval.embedding.generation.st import (
-    MODELS_PROMPTS,
-    generate_embeddings,
-    preprocess_text,
-)
+from travel_agent.retrieval.embedding.bench.utils import average_precision_at_k
+from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS, generate_embeddings, preprocess_text
 from travel_agent.utils import seed_everything
 
 

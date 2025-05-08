@@ -1,6 +1,8 @@
 from fastembed import SparseEmbedding, SparseTextEmbedding
 
-bm25_model = SparseTextEmbedding(model_name="Qdrant/bm25", language="russian")
+
+BM25_MODEL_NAME = "Qdrant/bm25"
+bm25_model = SparseTextEmbedding(model_name=BM25_MODEL_NAME, language="russian")
 
 
 def query_embed_bm25(query: str) -> SparseEmbedding:
