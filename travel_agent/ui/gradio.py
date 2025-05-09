@@ -198,6 +198,9 @@ class TravelGradioUI:
         self.agent = agent
 
     def interact_with_agent(self, prompt, messages, session_state):
+        if not prompt.strip():
+            return
+
         # Get the agent type from the template agent
         if "agent" not in session_state:
             session_state["agent"] = self.agent
@@ -206,12 +209,27 @@ class TravelGradioUI:
             messages.append(gr.ChatMessage(role="user", content=prompt, metadata={"status": "done"}))
             yield messages
 
+            loading_message = gr.ChatMessage(
+                role="assistant", content="⏳ Думаю над ответом...", metadata={"status": "pending", "is_loading": True}
+            )
+            messages.append(loading_message)
+            yield messages
+
+            response_started = False
+
             for msg in stream_to_gradio(session_state["agent"], task=prompt, reset_agent_memory=False):
                 if isinstance(msg, gr.ChatMessage):
-                    messages.append(msg)
+                    if not response_started:
+                        messages[-1] = msg
+                        response_started = True
+                    else:
+                        messages.append(msg)
                 elif isinstance(msg, str):  # Then it's only a completion delta
                     try:
-                        if messages[-1].metadata["status"] == "pending":
+                        if not response_started:
+                            messages[-1] = gr.ChatMessage(role="assistant", content=msg, metadata={"status": "pending"})
+                            response_started = True
+                        elif messages[-1].metadata["status"] == "pending":
                             messages[-1].content = msg
                         else:
                             messages.append(
@@ -221,23 +239,30 @@ class TravelGradioUI:
                         raise e
                 yield messages
 
+            if not response_started:
+                messages.pop()
+                messages.append(
+                    gr.ChatMessage(
+                        role="assistant",
+                        content="Не удалось получить ответ. Пожалуйста, попробуйте еще раз.",
+                        metadata={"status": "done"},
+                    )
+                )
+                yield messages
+
             yield messages
         except Exception as e:
             print(f"Error in interaction: {str(e)}")
-            messages.append(gr.ChatMessage(role="assistant", content=f"Error: {str(e)}"))
+
+            if messages and messages[-1].metadata.get("is_loading"):
+                messages.pop()
+            messages.append(
+                gr.ChatMessage(role="assistant", content=f"💥 Ошибка: {str(e)}", metadata={"status": "done"})
+            )
             yield messages
 
-    def log_user_message(self, text_input, file_uploads_log):
-        return (
-            text_input
-            + (
-                f"\nYou have been provided with these files, which might be helpful or not: {file_uploads_log}"
-                if len(file_uploads_log) > 0
-                else ""
-            ),
-            "",
-            gr.Button(interactive=False),
-        )
+    def log_user_message(self, text_input):
+        return text_input, "", gr.Button(interactive=False)
 
     def launch(self, share: bool = True, **kwargs):
         self.create_app().launch(debug=True, share=share, **kwargs)
@@ -247,7 +272,6 @@ class TravelGradioUI:
             # Add session state to store session-specific data
             session_state = gr.State({})
             stored_messages = gr.State([])
-            file_uploads_log = gr.State([])
 
             with gr.Sidebar():
                 gr.Markdown(
@@ -263,13 +287,13 @@ class TravelGradioUI:
                         container=False,
                         placeholder="Введите запрос и нажмите Shift+Enter или кнопку 'Отправить'",
                     )
-                    submit_btn = gr.Button("Submit", variant="primary")
+                    submit_btn = gr.Button("Отправить", variant="primary")
 
                 gr.HTML(
                     "<br><br><h4><center><a target='_blank' href='https://github.com/miem-refugees/travel-agent'><b>Github travel-agent</b></a></center></h4>"
                 )
 
-            # Main chat interface
+            # Main chat interface with custom styling for loading indicators
             chatbot = gr.Chatbot(
                 label="Помощник 🕵🏻‍♂️",
                 type="messages",
@@ -284,7 +308,7 @@ class TravelGradioUI:
             # Set up event handlers
             text_input.submit(
                 self.log_user_message,
-                [text_input, file_uploads_log],
+                [text_input],
                 [stored_messages, text_input, submit_btn],
             ).then(self.interact_with_agent, [stored_messages, chatbot, session_state], [chatbot]).then(
                 lambda: (
@@ -300,7 +324,7 @@ class TravelGradioUI:
 
             submit_btn.click(
                 self.log_user_message,
-                [text_input, file_uploads_log],
+                [text_input],
                 [stored_messages, text_input, submit_btn],
             ).then(self.interact_with_agent, [stored_messages, chatbot, session_state], [chatbot]).then(
                 lambda: (
