@@ -45,7 +45,7 @@ def init_agent(deepseek: bool) -> MultiStepAgent:
         ],
         max_steps=7,
         verbosity_level=1,
-        planning_interval=3,
+        planning_interval=5,
     )
 
 
