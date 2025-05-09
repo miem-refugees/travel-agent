@@ -1,0 +1,7 @@
+[core]
+    remote = storage
+    autostage = true
+['remote "storage"']
+    url = s3://travel-rag/dvcstore
+    endpointurl = https://storage.yandexcloud.net
+    region = ru-central1

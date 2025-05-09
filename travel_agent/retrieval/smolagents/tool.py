@@ -6,7 +6,8 @@ from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
-from rubrics import ALL_RUBRICS
+from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
+from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
 
 DEFAULT_LIMIT = 20
 
@@ -78,8 +79,11 @@ class TravelReviewQueryTool(Tool):
         )
         logger.info("Using device: {}", device)
 
+        if embed_model_name not in MODELS_PROMPTS.keys():
+            raise Exception(f"Model f{embed_model_name} is not supported in MODELS_PROMPTS")
+
         self.embedder = SentenceTransformer(embed_model_name, device=device)
-        self.embed_prompt = "query: "
+        self.embed_prompt = MODELS_PROMPTS[embed_model_name]["query"]
         self.retrieve_limit = retrieve_limit
 
         # sanity checks
