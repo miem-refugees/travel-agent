@@ -1,8 +1,9 @@
+import os
+
 from loguru import logger
 from smolagents import (
     DuckDuckGoSearchTool,
     LiteLLMModel,
-    MultiStepAgent,
     ToolCallingAgent,
     VisitWebpageTool,
 )
@@ -12,15 +13,12 @@ from travel_agent.ui.gradio import TravelGradioUI
 
 
 @logger.catch
-def init_agent(deepseek: bool) -> MultiStepAgent:
+def init_agent(ollama: bool):
     logger.info("Init app dependencies...")
 
     from travel_agent.qdrant import client as qdrant_client
 
-    if deepseek:
-        logger.info("Using Deepseek as LLM")
-        llm = LiteLLMModel(model_id="deepseek/deepseek-chat")
-    else:
+    if ollama:
         model_name = "hf.co/IlyaGusev/saiga_nemo_12b_gguf:Q4_0"
 
         logger.info("Using ollama {} as LLM", model_name)
@@ -30,6 +28,12 @@ def init_agent(deepseek: bool) -> MultiStepAgent:
             api_base="http://127.0.0.1:11434",
             num_ctx=8192,
         )
+    elif os.getenv("DEEPSEEK_API_KEY"):
+        logger.info("Using Deepseek as LLM")
+        llm = LiteLLMModel(model_id="deepseek/deepseek-chat")
+    else:
+        logger.error("No LLM model info provided")
+        return
 
     return ToolCallingAgent(
         model=llm,
@@ -49,27 +53,33 @@ def init_agent(deepseek: bool) -> MultiStepAgent:
     )
 
 
+def try_setup_langfuse_tracing():
+    if not os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
+        logger.info("Tracing disabled (no OTEL env vars)")
+        return
+
+    from openinference.instrumentation.smolagents import SmolagentsInstrumentor
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+
+    trace_provider = TracerProvider()
+    trace_provider.add_span_processor(SimpleSpanProcessor(OTLPSpanExporter()))
+
+    SmolagentsInstrumentor().instrument(tracer_provider=trace_provider)
+
+
 def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--deepseek", type=bool, default=False)
-    parser.add_argument("--tracing", type=bool, default=False)
+    parser.add_argument("--ollama", type=bool, default=False)
     parser.add_argument("--share", type=bool, default=False)
     args = parser.parse_args()
 
-    if args.tracing:
-        from openinference.instrumentation.smolagents import SmolagentsInstrumentor
-        from phoenix.otel import register
+    try_setup_langfuse_tracing()
 
-        # creates a tracer provider to capture OTEL traces
-        tracer_provider = register(project_name="travel-agent-local", verbose=False)
-        # automatically captures any smolagents calls as traces
-        SmolagentsInstrumentor().instrument(tracer_provider=tracer_provider)
-    else:
-        logger.debug("Tracing disabled (launthing with --tracing flag)")
-
-    agent = init_agent(args.deepseek)
+    agent = init_agent(args.ollama)
     if agent is None:
         logger.error("Agent initialization failed")
         exit(1)
