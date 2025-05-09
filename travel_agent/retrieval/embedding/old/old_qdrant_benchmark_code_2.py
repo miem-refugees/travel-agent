@@ -36,12 +36,8 @@ for model_name in MODELS_PROMPTS:
         result_row[f"map@{k_val}"] = float(score)
 
     results.append(result_row)
-    
-    
-    
-    
-    
-### BM25
+
+    ### BM25
     start_time = time.time()
     bm25_result = qdrant_bm25_benchmark(client, dataset_name, queries, query_col, ks=k)
     duration = time.time() - start_time
@@ -57,17 +53,12 @@ for model_name in MODELS_PROMPTS:
         bm25_row[f"map@{k_val}"] = float(score)
 
     results.append(bm25_row)
-    
-    
-    
-    
-## COLBERT
+
+    ## COLBERT
     colbert_params_embedding_dim = get_colbert_embedding_dim()
 
     start_time = time.time()
-    colbert_result = qdrant_colbert_benchmark(
-        client, dataset_name, queries, query_col, ks=k
-    )
+    colbert_result = qdrant_colbert_benchmark(client, dataset_name, queries, query_col, ks=k)
     duration = time.time() - start_time
 
     embedding_dim = colbert_params_embedding_dim["embedding_dim"]
@@ -91,9 +82,8 @@ for model_name in MODELS_PROMPTS:
         colbert_row[f"map@{k_val}"] = float(score)
 
     results.append(colbert_row)
-    
-    
-## ALL DENSE MODELS RERANKING
+
+    ## ALL DENSE MODELS RERANKING
 
     for model_name in MODELS_PROMPTS:
         start_time = time.time()
@@ -122,8 +112,7 @@ for model_name in MODELS_PROMPTS:
             result_row[f"map@{k_val}"] = float(score)
 
         results.append(result_row)
-        
-        
+
     ## 1000 BM25 and then dense
 
     for model_name in MODELS_PROMPTS:
@@ -153,7 +142,6 @@ for model_name in MODELS_PROMPTS:
             result_row[f"map@{k_val}"] = float(score)
 
         results.append(result_row)
-        
 
 
 if __name__ == "__main__":
@@ -162,9 +150,7 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     embedding_bench_path = Path("data") / "embedding_bench"
-    embedding_bench_dataset_path = (
-        embedding_bench_path / "normal_rubrics_15886_exploded.parquet"
-    )
+    embedding_bench_dataset_path = embedding_bench_path / "normal_rubrics_15886_exploded.parquet"
     dataset_name = embedding_bench_dataset_path.stem
 
     doc_col = "text"

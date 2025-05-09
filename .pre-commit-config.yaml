@@ -28,11 +28,6 @@ repos:
       - id: name-tests-test
       - id: trailing-whitespace
 
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.9.1
     hooks:

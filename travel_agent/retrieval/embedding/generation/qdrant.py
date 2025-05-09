@@ -21,6 +21,7 @@ from travel_agent.retrieval.embedding.generation.late_interaction import (
     get_colbert_embedding_dim,
 )
 from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, generate_bm25_embeddings
+from travel_agent.retrieval.embedding.utils import preprocess_text
 from travel_agent.utils import seed_everything
 
 
@@ -121,12 +122,18 @@ def embed_and_upload_df_with_payload(
 
     if dense_models_prompts:
         dense_embeddings = generate_dense_models_embeddings(docs, dense_models_prompts, device)
+    else:
+        dense_embeddings = {}
 
     if late_interaction_model:
         late_interaction_embeddings = {COLBERT_MODEL_NAME: generate_colbert_embeddings(docs)}
+    else:
+        late_interaction_embeddings = {}
 
     if bm25:
         sparse_embeddings = {BM25_MODEL_NAME: generate_bm25_embeddings(docs)}
+    else:
+        sparse_embeddings = {}
 
     upload_embeddings(
         client,
@@ -150,6 +157,19 @@ if __name__ == "__main__":
 
     client = QdrantClient(url="http://localhost:6333")
 
-    df = pd.read_parquet(dataset_path).sample(100)
+    df = pd.read_parquet(dataset_path)
 
-    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device)
+    df[doc_col] = df[doc_col].apply(preprocess_text)
+
+    if "address" in df.columns:
+        df["address"] = df["address"].fillna("")
+    if "name" in df.columns:
+        df["name"] = df["name"].fillna("")
+    if "rating" in df.columns:
+        df["rating"] = df["rating"].fillna("0").astype(float)
+    if "rubrics" in df.columns:
+        df["rubrics"] = df["rubrics"].apply(lambda x: [rubric for rubric in str(x).split(";") if pd.notna(x)])
+    if "text" in df.columns:
+        df["text"] = df["text"].fillna("")
+
+    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, False, False, device)

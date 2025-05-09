@@ -14,9 +14,7 @@ def qdrant_single_dense_benchmark(
 
     for query in queries:
         embedding = embed_dense(model, sentences=query, prompt=prompt)
-        search_result = client.query_points(
-            collection_name, query=embedding, using=model_name, limit=max(ks)
-        )
+        search_result = client.query_points(collection_name, query=embedding, using=model_name, limit=max(ks))
         top_types = [point.payload[query_payload_key] for point in search_result.points]
 
         for k in ks:
@@ -32,6 +30,7 @@ def qdrant_single_dense_benchmark(
         torch.cuda.ipc_collect()
 
     return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+
 
 def qdrant_bm25_benchmark(
     client: QdrantClient,
@@ -74,9 +73,7 @@ def qdrant_colbert_benchmark(
 
     for query in queries:
         embedding = query_embed_colbert(colbert_model, query)
-        search_result = client.query_points(
-            collection_name, query=embedding, using=COLBERT_MODEL_NAME, limit=max(ks)
-        )
+        search_result = client.query_points(collection_name, query=embedding, using=COLBERT_MODEL_NAME, limit=max(ks))
         top_types = [point.payload[query_payload_key] for point in search_result.points]
 
         for k in ks:
@@ -90,8 +87,6 @@ def qdrant_colbert_benchmark(
     return {k: np.mean(ap_scores_by_k[k]) for k in ks}
 
 
-
-
 def qdrant_triple_model_reranking_benchmark(
     client: QdrantClient,
     collection_name: str,
@@ -102,7 +97,6 @@ def qdrant_triple_model_reranking_benchmark(
     query_payload_key: str,
     ks: list[int] = [10],
 ) -> dict[int, float]:
-
     colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
     model = SentenceTransformer(model_name, device=device)
 
@@ -150,7 +144,6 @@ def qdrant_triple_model_reranking_benchmark(
     return {k: np.mean(ap_scores_by_k[k]) for k in ks}
 
 
-
 def qdrant_bm25_1000_then_dense_benchmark(
     client: QdrantClient,
     collection_name: str,
@@ -161,7 +154,6 @@ def qdrant_bm25_1000_then_dense_benchmark(
     query_payload_key: str,
     ks: list[int] = [10],
 ) -> dict[int, float]:
-
     model = SentenceTransformer(model_name, device=device)
 
     ap_scores_by_k = defaultdict(list)

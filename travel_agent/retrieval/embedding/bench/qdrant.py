@@ -1,58 +1,15 @@
-import gc
-
-# client.query_points(
-#             collection_name=collection_name,
-#             query=models.SparseVector(**sparse_vectors.as_object()),
-#             limit=max(ks),
-#             using="bm25",
-#         )
-# {
-# "bm25": models.SparseVectorParams(modifier=models.Modifier.IDF)
-# },
 from collections import defaultdict
-
-import numpy as np
-import torch
-from qdrant_client import QdrantClient
-from sentence_transformers import SentenceTransformer
-
-from travel_agent.retrieval.embedding.utils import average_precision_at_k
-from travel_agent.retrieval.embedding.generation.dense import embed_dense
-from pathlib import Path
-
-import numpy as np
-import pandas as pd
-from fastembed import SparseEmbedding, SparseTextEmbedding
-from loguru import logger
-from qdrant_client import QdrantClient, models
-from qdrant_client.models import PointStruct
-
-from travel_agent.retrieval.embedding.utils import average_precision_at_k
-
-# from travel_agent.retrieval.embedding.generation.dense import preprocess_text
-from travel_agent.utils import seed_everything
-
 from typing import Callable
 
-from collections import defaultdict
-from travel_agent.retrieval.embedding.utils import clean_up_model
-
-
-from travel_agent.retrieval.embedding.generation.sparse import (
-    query_embed_bm25,
-    BM25_MODEL_NAME,
-)
-
-
 import numpy as np
-import torch
 from fastembed import LateInteractionTextEmbedding
-from loguru import logger
-from tqdm import tqdm
-from travel_agent.retrieval.embedding.generation.late_interaction import (
-    COLBERT_MODEL_NAME,
-    query_embed_colbert,
-)
+from qdrant_client import QdrantClient, models
+from sentence_transformers import SentenceTransformer
+
+from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS, embed_dense
+from travel_agent.retrieval.embedding.generation.late_interaction import COLBERT_MODEL_NAME, query_embed_colbert
+from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, query_embed_bm25
+from travel_agent.retrieval.embedding.utils import average_precision_at_k, clean_up_model
 
 
 def qdrant_evaluate_queries(
@@ -84,19 +41,15 @@ def qdrant_single_dense_benchmark(
     queries: list[str],
     query_payload_key: str,
     ks: list[int] = [10],
-) -> dict[str, float]:
+) -> dict[int, float]:
     model = SentenceTransformer(model_name, device=device)
 
     def get_search_results(query):
         embedding = embed_dense(model, sentences=query, prompt=prompt)
-        search_result = client.query_points(
-            collection_name, query=embedding, using=model_name, limit=max(ks)
-        )
+        search_result = client.query_points(collection_name, query=embedding, using=model_name, limit=max(ks))
         return search_result
 
-    results = qdrant_evaluate_queries(
-        queries, get_search_results, query_payload_key, ks
-    )
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
     clean_up_model(model, device)
     return results
 
@@ -132,9 +85,7 @@ def qdrant_colbert_benchmark(
 
     def get_search_results(query):
         embedding = query_embed_colbert(model, query)
-        search_result = client.query_points(
-            collection_name, query=embedding, using=COLBERT_MODEL_NAME, limit=max(ks)
-        )
+        search_result = client.query_points(collection_name, query=embedding, using=COLBERT_MODEL_NAME, limit=max(ks))
         return search_result
 
     return qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
@@ -180,9 +131,7 @@ def qdrant_triple_model_reranking_benchmark(
         )
         return search_result
 
-    results = qdrant_evaluate_queries(
-        queries, get_search_results, query_payload_key, ks
-    )
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
 
     clean_up_model(dense_model, device)
 
@@ -218,8 +167,66 @@ def qdrant_bm25_1000_then_dense_benchmark(
         )
         return search_result
 
-    results = qdrant_evaluate_queries(
-        queries, get_search_results, query_payload_key, ks
-    )
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
     clean_up_model(model, device)
+    return results
+
+
+def qdrant_hybrid_search_top_models_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    device = "cpu"
+    model_1_name = "sergeyzh/BERTA"
+    model_2_name = "intfloat/multilingual-e5-large"
+    model_3_name = "ai-forever/ru-en-RoSBERTa"
+    model_4_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+    model_1 = SentenceTransformer(model_1_name, device=device)
+    model_2 = SentenceTransformer(model_2_name, device=device)
+    model_3 = SentenceTransformer(model_3_name, device=device)
+    model_4 = SentenceTransformer(model_4_name, device=device)
+
+    def get_search_results(query):
+        embedding_1 = embed_dense(model_1, sentences=query, prompt=MODELS_PROMPTS[model_1_name].get("query"))
+        embedding_2 = embed_dense(model_2, sentences=query, prompt=MODELS_PROMPTS[model_2_name].get("query"))
+        embedding_3 = embed_dense(model_3, sentences=query, prompt=MODELS_PROMPTS[model_3_name].get("query"))
+        embedding_4 = embed_dense(model_4, sentences=query, prompt=MODELS_PROMPTS[model_4_name].get("query"))
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=[
+                models.Prefetch(
+                    query=embedding_1,
+                    using=model_1_name,
+                    limit=20,
+                ),
+                models.Prefetch(
+                    query=embedding_2,
+                    using=model_2_name,
+                    limit=20,
+                ),
+                models.Prefetch(
+                    query=embedding_3,
+                    using=model_3_name,
+                    limit=20,
+                ),
+                models.Prefetch(
+                    query=embedding_4,
+                    using=model_4_name,
+                    limit=20,
+                ),
+            ],
+            query=models.FusionQuery(fusion=models.Fusion.RRF),
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    clean_up_model(model_1, device)
+    clean_up_model(model_2, device)
+    clean_up_model(model_3, device)
+    clean_up_model(model_4, device)
     return results

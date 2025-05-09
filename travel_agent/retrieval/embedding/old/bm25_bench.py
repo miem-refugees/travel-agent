@@ -7,8 +7,8 @@ from loguru import logger
 from qdrant_client import QdrantClient, models
 from qdrant_client.models import PointStruct
 
-from travel_agent.retrieval.embedding.utils import average_precision_at_k
 from travel_agent.retrieval.embedding.generation.dense import preprocess_text
+from travel_agent.retrieval.embedding.utils import average_precision_at_k
 from travel_agent.utils import seed_everything
 
 

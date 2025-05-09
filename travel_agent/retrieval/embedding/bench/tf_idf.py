@@ -1,17 +1,16 @@
-import time
-
-import numpy as np
-import pandas as pd
-from loguru import logger
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 import sys
+import time
 from unicodedata import category
 
 import nltk
+import numpy as np
+import pandas as pd
+from loguru import logger
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from travel_agent.retrieval.embedding.utils import average_precision_at_k
 
@@ -33,6 +32,7 @@ def apply_stemmer(sentence: str) -> str:
     filtered_tokens = [word for word in tokens if word not in stop_words]
     stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
     return " ".join(stemmed_words)
+
 
 def benchmark_tfidf_similarity(
     df: pd.DataFrame,

@@ -5,7 +5,7 @@ from loguru import logger
 from tqdm import tqdm
 
 COLBERT_MODEL_NAME = "jinaai/jina-colbert-v2"
-BATCH_SIZE = 2
+BATCH_SIZE = 1
 
 
 def get_colbert_embedding_dim() -> dict[str, int]:
@@ -17,9 +17,7 @@ def get_colbert_embedding_dim() -> dict[str, int]:
     }
 
 
-def query_embed_colbert(
-    colbert_model: LateInteractionTextEmbedding, query: str
-) -> np.ndarray:
+def query_embed_colbert(colbert_model: LateInteractionTextEmbedding, query: str) -> np.ndarray:
     return next(colbert_model.query_embed(query))
 
 

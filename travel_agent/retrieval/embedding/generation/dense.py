@@ -1,10 +1,10 @@
-import gc
 from typing import Optional
 
 import numpy as np
-import torch
 from loguru import logger
 from sentence_transformers import SentenceTransformer
+
+from travel_agent.retrieval.embedding.utils import clean_up_model
 
 MODELS_PROMPTS = {
     "cointegrated/rubert-tiny2": {"query": None, "passage": None},
@@ -66,7 +66,7 @@ def get_dynamic_batch_size(model: SentenceTransformer) -> int:
 def embed_dense(
     model: SentenceTransformer,
     sentences: str | list[str],
-    prompt: str,
+    prompt: str | None,
     progress_bar: bool = False,
 ) -> np.ndarray:
     return model.encode(
@@ -75,9 +75,6 @@ def embed_dense(
         prompt=prompt,
         show_progress_bar=progress_bar,
     )
-
-
-from travel_agent.retrieval.embedding.utils import clean_up_model
 
 
 def generate_dense_models_embeddings(
@@ -89,9 +86,7 @@ def generate_dense_models_embeddings(
         logger.info(f"Generating embeddings using {model_name}")
         model = SentenceTransformer(model_name, device=device)
 
-        doc_embeddings = embed_dense(
-            model, docs, models_prompts[model_name].get("passage"), True
-        )
+        doc_embeddings = embed_dense(model, docs, models_prompts[model_name].get("passage"), True)
 
         dense_embeddings[model_name] = doc_embeddings
         clean_up_model(model, device)

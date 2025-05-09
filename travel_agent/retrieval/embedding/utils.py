@@ -1,11 +1,6 @@
-import sys
-from unicodedata import category
+import gc
 
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem.snowball import SnowballStemmer
-from nltk.tokenize import word_tokenize
-
+import torch
 
 
 def average_precision_at_k(relevant_list: list[int], k: int) -> float:
@@ -17,6 +12,7 @@ def average_precision_at_k(relevant_list: list[int], k: int) -> float:
             score += num_hits / (i + 1)
     return score / min(k, sum(relevant_list)) if sum(relevant_list) > 0 else 0.0
 
+
 def preprocess_text(text: str) -> str:
     text = text.replace("\n", " ")
     text = text.replace("\\n", " ")
@@ -24,8 +20,8 @@ def preprocess_text(text: str) -> str:
     # text = text.replace("-", "")
     # text = text.replace(";", " ")
     return text
-import gc
-import torch
+
+
 def clean_up_model(model, device):
     del model
     gc.collect()
