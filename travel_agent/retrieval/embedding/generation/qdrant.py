@@ -1,6 +1,4 @@
 from pathlib import Path
-
-
 from typing import Optional
 
 import numpy as np
@@ -12,15 +10,17 @@ from qdrant_client import QdrantClient, models
 from qdrant_client.models import PointStruct
 from tqdm import trange
 
-from travel_agent.retrieval.embedding.generation.sparse import (
-    generate_bm25_embeddings,
-    BM25_MODEL_NAME,
-)
 from travel_agent.retrieval.embedding.generation.dense import (
     MODELS_PROMPTS,
     generate_dense_models_embeddings,
     get_models_params_embedding_dim,
 )
+from travel_agent.retrieval.embedding.generation.late_interaction import (
+    COLBERT_MODEL_NAME,
+    generate_colbert_embeddings,
+    get_colbert_embedding_dim,
+)
+from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, generate_bm25_embeddings
 from travel_agent.utils import seed_everything
 
 
@@ -47,16 +47,12 @@ def get_vectors_config(
 ) -> dict[str, models.VectorParams]:
     vectors_confg = {}
     for model_name, embedding_dim in dense_models.items():
-        vectors_confg[model_name] = models.VectorParams(
-            size=embedding_dim, distance=models.Distance.COSINE
-        )
+        vectors_confg[model_name] = models.VectorParams(size=embedding_dim, distance=models.Distance.COSINE)
     for model_name, embedding_dim in late_interaction_models.items():
         vectors_confg[model_name] = models.VectorParams(
             size=embedding_dim,
             distance=models.Distance.COSINE,
-            multivector_config=models.MultiVectorConfig(
-                comparator=models.MultiVectorComparator.MAX_SIM
-            ),
+            multivector_config=models.MultiVectorConfig(comparator=models.MultiVectorComparator.MAX_SIM),
         )
     logger.info(f"Vectors config: {vectors_confg}")
     return vectors_confg
@@ -66,9 +62,7 @@ def get_sparse_vectors_config(
     bm25: bool = True,
 ) -> dict[str, models.SparseVectorParams] | None:
     if bm25:
-        return {
-            BM25_MODEL_NAME: models.SparseVectorParams(modifier=models.Modifier.IDF)
-        }
+        return {BM25_MODEL_NAME: models.SparseVectorParams(modifier=models.Modifier.IDF)}
 
 
 def upload_embeddings(
@@ -98,13 +92,6 @@ def upload_embeddings(
     logger.info("Inserted embeddings into Qdrant")
 
 
-from travel_agent.retrieval.embedding.generation.late_interaction import (
-    COLBERT_MODEL_NAME,
-    get_colbert_embedding_dim,
-    generate_colbert_embeddings,
-)
-
-
 def embed_and_upload_df_with_payload(
     client: QdrantClient,
     collection_name: str,
@@ -119,9 +106,7 @@ def embed_and_upload_df_with_payload(
 
     dense_models = {}
     for model_name in dense_models_prompts:
-        dense_models[model_name] = model_params_embedding_dim[model_name][
-            "embedding_dim"
-        ]
+        dense_models[model_name] = model_params_embedding_dim[model_name]["embedding_dim"]
 
     if late_interaction_model:
         late_interaction_models = {COLBERT_MODEL_NAME: get_colbert_embedding_dim()}
@@ -135,14 +120,10 @@ def embed_and_upload_df_with_payload(
     docs = payload_df[doc_col].to_list()
 
     if dense_models_prompts:
-        dense_embeddings = generate_dense_models_embeddings(
-            docs, dense_models_prompts, device
-        )
+        dense_embeddings = generate_dense_models_embeddings(docs, dense_models_prompts, device)
 
     if late_interaction_model:
-        late_interaction_embeddings = {
-            COLBERT_MODEL_NAME: generate_colbert_embeddings(docs)
-        }
+        late_interaction_embeddings = {COLBERT_MODEL_NAME: generate_colbert_embeddings(docs)}
 
     if bm25:
         sparse_embeddings = {BM25_MODEL_NAME: generate_bm25_embeddings(docs)}
@@ -164,13 +145,11 @@ if __name__ == "__main__":
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
     doc_col = "text"
-    dataset_path = Path("data") / "prepared" / "sankt-peterburg.csv"
+    dataset_path = Path("data") / "embedding_bench" / "normal_rubrics_15886_exploded.parquet"
     dataset_name = dataset_path.stem
 
     client = QdrantClient(url="http://localhost:6333")
 
-    df = pd.read_csv(dataset_path).sample(1000)
+    df = pd.read_parquet(dataset_path).sample(100)
 
-    embed_and_upload_df_with_payload(
-        client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device
-    )
+    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device)

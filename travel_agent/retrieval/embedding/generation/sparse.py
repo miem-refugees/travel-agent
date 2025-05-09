@@ -1,6 +1,5 @@
 from fastembed import SparseEmbedding, SparseTextEmbedding
 
-
 BM25_MODEL_NAME = "Qdrant/bm25"
 bm25_model = SparseTextEmbedding(model_name=BM25_MODEL_NAME, language="russian")
 

@@ -34,3 +34,11 @@ def average_precision_at_k(relevant_list: list[int], k: int) -> float:
             num_hits += 1
             score += num_hits / (i + 1)
     return score / min(k, sum(relevant_list)) if sum(relevant_list) > 0 else 0.0
+
+def preprocess_text(text: str) -> str:
+    text = text.replace("\n", " ")
+    text = text.replace("\\n", " ")
+    text = text.replace("\t", " ")
+    # text = text.replace("-", "")
+    # text = text.replace(";", " ")
+    return text

@@ -1,4 +1,3 @@
-
 # def mean_pool_sentence_embeddings(texts: list[str], model: SentenceTransformer, prompt: Optional[str]) -> np.ndarray:
 #     all_embeddings = []
 #     for text in tqdm(texts):
