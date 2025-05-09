@@ -8,34 +8,34 @@ from sentence_transformers import SentenceTransformer
 
 MODELS_PROMPTS = {
     "cointegrated/rubert-tiny2": {"query": None, "passage": None},
-    # "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
-    # "ai-forever/sbert_large_nlu_ru": {"query": None, "passage": None},
-    # "ai-forever/sbert_large_mt_nlu_ru": {"query": None, "passage": None},
-    # "sentence-transformers/distiluse-base-multilingual-cased-v1": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/distiluse-base-multilingual-cased-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/paraphrase-multilingual-mpnet-base-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "intfloat/multilingual-e5-large": {"query": "query: ", "passage": "passage: "},
-    # "intfloat/multilingual-e5-base": {"query": "query: ", "passage": "passage: "},
-    # "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
-    # "ai-forever/ru-en-RoSBERTa": {
-    #     "query": "search_query: ",
-    #     "passage": "search_document: ",
-    # },
-    # # "ai-forever/FRIDA": {"query": "search_query: ", "passage": "search_document: "},
-    # "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
+    "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
+    "ai-forever/sbert_large_nlu_ru": {"query": None, "passage": None},
+    "ai-forever/sbert_large_mt_nlu_ru": {"query": None, "passage": None},
+    "sentence-transformers/distiluse-base-multilingual-cased-v1": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/distiluse-base-multilingual-cased-v2": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/paraphrase-multilingual-mpnet-base-v2": {
+        "query": None,
+        "passage": None,
+    },
+    "intfloat/multilingual-e5-large": {"query": "query: ", "passage": "passage: "},
+    "intfloat/multilingual-e5-base": {"query": "query: ", "passage": "passage: "},
+    "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
+    "ai-forever/ru-en-RoSBERTa": {
+        "query": "search_query: ",
+        "passage": "search_document: ",
+    },
+    # "ai-forever/FRIDA": {"query": "search_query: ", "passage": "search_document: "},
+    "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
 }
 
 
@@ -63,13 +63,21 @@ def get_dynamic_batch_size(model: SentenceTransformer) -> int:
         return 64
 
 
-def embed_dense(model: SentenceTransformer, sentences: str | list[str], prompt: str, progress_bar: bool = False) -> np.ndarray:
+def embed_dense(
+    model: SentenceTransformer,
+    sentences: str | list[str],
+    prompt: str,
+    progress_bar: bool = False,
+) -> np.ndarray:
     return model.encode(
         sentences,
         batch_size=get_dynamic_batch_size(model),
         prompt=prompt,
         show_progress_bar=progress_bar,
     )
+
+
+from travel_agent.retrieval.embedding.utils import clean_up_model
 
 
 def generate_dense_models_embeddings(
@@ -81,14 +89,11 @@ def generate_dense_models_embeddings(
         logger.info(f"Generating embeddings using {model_name}")
         model = SentenceTransformer(model_name, device=device)
 
-        doc_embeddings = embed_dense(model, docs, models_prompts[model_name].get("passage"), True)
+        doc_embeddings = embed_dense(
+            model, docs, models_prompts[model_name].get("passage"), True
+        )
 
         dense_embeddings[model_name] = doc_embeddings
-
-        del model
-        gc.collect()
-        if device.lower().startswith("cuda"):
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
+        clean_up_model(model, device)
 
     return dense_embeddings

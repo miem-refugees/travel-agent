@@ -32,75 +32,16 @@ from travel_agent.retrieval.embedding.utils import average_precision_at_k
 # from travel_agent.retrieval.embedding.generation.dense import preprocess_text
 from travel_agent.utils import seed_everything
 
+from typing import Callable
 
-def qdrant_single_dense_benchmark(
-    client: QdrantClient,
-    collection_name: str,
-    model_name: str,
-    device: str,
-    prompt: str,
-    queries: list[str],
-    query_payload_key: str,
-    ks: list[int] = [10],
-) -> dict[int, float]:
-    ap_scores_by_k = defaultdict(list)
-
-    model = SentenceTransformer(model_name, device=device)
-
-    for query in queries:
-        embedding = embed_dense(model, sentences=query, prompt=prompt)
-        search_result = client.query_points(
-            collection_name, query=embedding, using=model_name, limit=max(ks)
-        )
-        top_types = [point.payload[query_payload_key] for point in search_result.points]
-
-        for k in ks:
-            top_k_types = top_types[:k]
-            relevant_list = [1 if t == query else 0 for t in top_k_types]
-            ap_at_k = average_precision_at_k(relevant_list, k)
-            ap_scores_by_k[k].append(ap_at_k)
-
-    del model
-    gc.collect()
-    if device.lower().startswith("cuda"):
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
-
-    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+from collections import defaultdict
+from travel_agent.retrieval.embedding.utils import clean_up_model
 
 
 from travel_agent.retrieval.embedding.generation.sparse import (
     query_embed_bm25,
     BM25_MODEL_NAME,
 )
-
-
-def qdrant_bm25_benchmark(
-    client: QdrantClient,
-    collection_name: str,
-    queries: list[str],
-    query_payload_key: str,
-    ks: list[int] = [10],
-) -> dict[int, float]:
-    ap_scores_by_k = defaultdict(list)
-
-    for query in queries:
-        embedding = query_embed_bm25(query)
-        search_result = client.query_points(
-            collection_name=collection_name,
-            query=models.SparseVector(**embedding.as_object()),
-            limit=max(ks),
-            using=BM25_MODEL_NAME,
-        )
-        top_types = [point.payload[query_payload_key] for point in search_result.points]
-
-        for k in ks:
-            top_k_types = top_types[:k]
-            relevant_list = [1 if t == query else 0 for t in top_k_types]
-            ap_at_k = average_precision_at_k(relevant_list, k)
-            ap_scores_by_k[k].append(ap_at_k)
-
-    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
 
 
 import numpy as np
@@ -114,6 +55,72 @@ from travel_agent.retrieval.embedding.generation.late_interaction import (
 )
 
 
+def qdrant_evaluate_queries(
+    queries: list[str],
+    search_results_fn: Callable,
+    query_payload_key: str,
+    ks: list[int],
+) -> dict[int, float]:
+    ap_scores_by_k = defaultdict(list)
+
+    for query in queries:
+        search_result = search_results_fn(query)
+        top_types = [point.payload[query_payload_key] for point in search_result.points]
+        for k in ks:
+            top_k_types = top_types[:k]
+            relevant_list = [1 if t == query else 0 for t in top_k_types]
+            ap_at_k = average_precision_at_k(relevant_list, k)
+            ap_scores_by_k[k].append(ap_at_k)
+
+    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+
+
+def qdrant_single_dense_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    model_name: str,
+    device: str,
+    prompt: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[str, float]:
+    model = SentenceTransformer(model_name, device=device)
+
+    def get_search_results(query):
+        embedding = embed_dense(model, sentences=query, prompt=prompt)
+        search_result = client.query_points(
+            collection_name, query=embedding, using=model_name, limit=max(ks)
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(
+        queries, get_search_results, query_payload_key, ks
+    )
+    clean_up_model(model, device)
+    return results
+
+
+def qdrant_bm25_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    def get_search_results(query):
+        embedding = query_embed_bm25(query)
+        search_result = client.query_points(
+            collection_name,
+            query=models.SparseVector(**embedding.as_object()),
+            limit=max(ks),
+            using=BM25_MODEL_NAME,
+        )
+        return search_result
+
+    return qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+
+
 def qdrant_colbert_benchmark(
     client: QdrantClient,
     collection_name: str,
@@ -121,26 +128,16 @@ def qdrant_colbert_benchmark(
     query_payload_key: str,
     ks: list[int] = [10],
 ) -> dict[int, float]:
-    ap_scores_by_k = defaultdict(list)
+    model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
 
-    colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
-
-    for query in queries:
-        embedding = query_embed_colbert(colbert_model, query)
+    def get_search_results(query):
+        embedding = query_embed_colbert(model, query)
         search_result = client.query_points(
             collection_name, query=embedding, using=COLBERT_MODEL_NAME, limit=max(ks)
         )
-        top_types = [point.payload[query_payload_key] for point in search_result.points]
+        return search_result
 
-        for k in ks:
-            top_k_types = top_types[:k]
-            if len(top_k_types) != k:
-                logger.info(len(top_k_types))
-            relevant_list = [1 if t == query else 0 for t in top_k_types]
-            ap_at_k = average_precision_at_k(relevant_list, k)
-            ap_scores_by_k[k].append(ap_at_k)
-
-    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+    return qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
 
 
 def qdrant_triple_model_reranking_benchmark(
@@ -153,15 +150,12 @@ def qdrant_triple_model_reranking_benchmark(
     query_payload_key: str,
     ks: list[int] = [10],
 ) -> dict[int, float]:
-
+    dense_model = SentenceTransformer(model_name, device=device)
     colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
-    model = SentenceTransformer(model_name, device=device)
 
-    ap_scores_by_k = defaultdict(list)
-
-    for query in queries:
+    def get_search_results(query):
         late_embedding = query_embed_colbert(colbert_model, query)
-        dense_embedding = embed_dense(model, sentences=query, prompt=prompt)
+        dense_embedding = embed_dense(dense_model, sentences=query, prompt=prompt)
         sparse_embedding = query_embed_bm25(query)
 
         prefetch = [
@@ -178,27 +172,21 @@ def qdrant_triple_model_reranking_benchmark(
         ]
 
         search_result = client.query_points(
-            collection_name,
+            collection_name=collection_name,
             prefetch=prefetch,
             query=late_embedding,
             using=COLBERT_MODEL_NAME,
             limit=max(ks),
         )
-        top_types = [point.payload[query_payload_key] for point in search_result.points]
+        return search_result
 
-        for k in ks:
-            top_k_types = top_types[:k]
-            relevant_list = [1 if t == query else 0 for t in top_k_types]
-            ap_at_k = average_precision_at_k(relevant_list, k)
-            ap_scores_by_k[k].append(ap_at_k)
+    results = qdrant_evaluate_queries(
+        queries, get_search_results, query_payload_key, ks
+    )
 
-    del model
-    gc.collect()
-    if device.lower().startswith("cuda"):
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
+    clean_up_model(dense_model, device)
 
-    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+    return results
 
 
 def qdrant_bm25_1000_then_dense_benchmark(
@@ -211,12 +199,9 @@ def qdrant_bm25_1000_then_dense_benchmark(
     query_payload_key: str,
     ks: list[int] = [10],
 ) -> dict[int, float]:
-
     model = SentenceTransformer(model_name, device=device)
 
-    ap_scores_by_k = defaultdict(list)
-
-    for query in queries:
+    def get_search_results(query):
         dense_embedding = embed_dense(model, sentences=query, prompt=prompt)
         sparse_embedding = query_embed_bm25(query)
 
@@ -231,18 +216,10 @@ def qdrant_bm25_1000_then_dense_benchmark(
             using=model_name,
             limit=max(ks),
         )
-        top_types = [point.payload[query_payload_key] for point in search_result.points]
+        return search_result
 
-        for k in ks:
-            top_k_types = top_types[:k]
-            relevant_list = [1 if t == query else 0 for t in top_k_types]
-            ap_at_k = average_precision_at_k(relevant_list, k)
-            ap_scores_by_k[k].append(ap_at_k)
-
-    del model
-    gc.collect()
-    if device.lower().startswith("cuda"):
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
-
-    return {k: np.mean(ap_scores_by_k[k]) for k in ks}
+    results = qdrant_evaluate_queries(
+        queries, get_search_results, query_payload_key, ks
+    )
+    clean_up_model(model, device)
+    return results

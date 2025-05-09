@@ -109,7 +109,7 @@ def embed_and_upload_df_with_payload(
         dense_models[model_name] = model_params_embedding_dim[model_name]["embedding_dim"]
 
     if late_interaction_model:
-        late_interaction_models = {COLBERT_MODEL_NAME: get_colbert_embedding_dim()}
+        late_interaction_models = {COLBERT_MODEL_NAME: get_colbert_embedding_dim()["embedding_dim"]}
     else:
         late_interaction_models = {}
 

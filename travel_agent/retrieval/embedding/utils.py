@@ -6,24 +6,6 @@ from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
 
-nltk.download("stopwords")
-nltk.download("punkt")
-
-
-punctuation_chars_numbers = set(
-    [chr(i) for i in range(sys.maxunicode) if category(chr(i)).startswith("P") or category(chr(i)).startswith("Nd")]
-)
-stemmer = SnowballStemmer("russian")
-stop_words = stopwords.words("russian")
-
-
-def apply_stemmer(sentence: str) -> str:
-    sentence = sentence.lower()
-    sentence = "".join([char for char in sentence if char not in punctuation_chars_numbers])
-    tokens = word_tokenize(sentence, language="russian")
-    filtered_tokens = [word for word in tokens if word not in stop_words]
-    stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
-    return " ".join(stemmed_words)
 
 
 def average_precision_at_k(relevant_list: list[int], k: int) -> float:
@@ -42,3 +24,11 @@ def preprocess_text(text: str) -> str:
     # text = text.replace("-", "")
     # text = text.replace(";", " ")
     return text
+import gc
+import torch
+def clean_up_model(model, device):
+    del model
+    gc.collect()
+    if device.lower().startswith("cuda"):
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()

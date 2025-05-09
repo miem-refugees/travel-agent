@@ -5,9 +5,34 @@ import pandas as pd
 from loguru import logger
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import sys
+from unicodedata import category
 
-from travel_agent.retrieval.embedding.utils import apply_stemmer, average_precision_at_k, stop_words
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem.snowball import SnowballStemmer
+from nltk.tokenize import word_tokenize
 
+from travel_agent.retrieval.embedding.utils import average_precision_at_k
+
+nltk.download("stopwords")
+nltk.download("punkt")
+
+
+punctuation_chars_numbers = set(
+    [chr(i) for i in range(sys.maxunicode) if category(chr(i)).startswith("P") or category(chr(i)).startswith("Nd")]
+)
+stemmer = SnowballStemmer("russian")
+stop_words = stopwords.words("russian")
+
+
+def apply_stemmer(sentence: str) -> str:
+    sentence = sentence.lower()
+    sentence = "".join([char for char in sentence if char not in punctuation_chars_numbers])
+    tokens = word_tokenize(sentence, language="russian")
+    filtered_tokens = [word for word in tokens if word not in stop_words]
+    stemmed_words = [stemmer.stem(word) for word in filtered_tokens]
+    return " ".join(stemmed_words)
 
 def benchmark_tfidf_similarity(
     df: pd.DataFrame,

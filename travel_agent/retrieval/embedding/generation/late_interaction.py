@@ -10,6 +10,7 @@ BATCH_SIZE = 2
 
 def get_colbert_embedding_dim() -> dict[str, int]:
     colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
+    assert COLBERT_MODEL_NAME == "jinaai/jina-colbert-v2"
     return {
         "embedding_dim": query_embed_colbert(colbert_model, "Test query").shape[1],
         "num_params": 559_000_000,
