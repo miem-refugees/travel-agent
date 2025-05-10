@@ -299,7 +299,7 @@ class TravelGradioUI:
                 type="messages",
                 avatar_images=(
                     None,
-                    "https://cdn-images.dzcdn.net/images/artist/a538ec3bf7d84faf8ff85457ef8cbe12/1900x1900-000000-80-0-0.jpg",
+                    "https://storage.yandexcloud.net/travel-rag/static/kizaru-s.jpeg",
                 ),
                 resizeable=True,
                 scale=1,

@@ -1,6 +1,11 @@
 .dvc
 .github
+.venv
 data
 docs
 notebooks
 scripts
+dvc.lock
+dvc.yaml
+mkdocs.yml
+params.yaml
