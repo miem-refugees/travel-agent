@@ -172,4 +172,4 @@ if __name__ == "__main__":
     if "text" in df.columns:
         df["text"] = df["text"].fillna("")
 
-    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, False, False, device)
+    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device)
