@@ -74,17 +74,20 @@ class TravelReviewQueryTool(Tool):
         self.client = qdrant_client
 
         device = torch.device(
-            "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
+            "cuda"
+            if torch.cuda.is_available()
+            else ("mps" if torch.backends.mps.is_available() else "cpu")
         )
         logger.info("Using device: {}", device)
 
         self.embedder = SentenceTransformer(embed_model_name, device=device)
-        self.embed_prompt = "query: "
         self.retrieve_limit = retrieve_limit
 
         # sanity checks
         if not self.client.collection_exists(self.collection_name):
-            raise Exception(f"Collection f{self.collection_name} does not exist in qdrant")
+            raise Exception(
+                f"Collection f{self.collection_name} does not exist in qdrant"
+            )
 
         collection_info = self.client.get_collection(self.collection_name)
         if collection_info.vectors_count == 0:
@@ -99,17 +102,25 @@ class TravelReviewQueryTool(Tool):
     ):
         query_embedding = self.embedder.encode(
             query,
-            prompt=self.embed_prompt,
+            prompt="query: ",
         )
 
         filters = []
 
         if min_rating:
-            filters.append(models.FieldCondition(key="rating", range=models.Range(gte=min_rating)))
+            filters.append(
+                models.FieldCondition(key="rating", range=models.Range(gte=min_rating))
+            )
         if address:
-            filters.append(models.FieldCondition(key="address", match=models.MatchText(text=address)))
+            filters.append(
+                models.FieldCondition(
+                    key="address", match=models.MatchText(text=address)
+                )
+            )
         if rubrics:
-            filters.append(models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics)))
+            filters.append(
+                models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics))
+            )
 
         points = self.client.search(
             collection_name=self.collection_name,
