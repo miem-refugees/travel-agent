@@ -9,7 +9,7 @@ from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
-from travel_agent.retrieval.embedding.embedding_generation import MODELS_PROMPTS
+from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS
 
 
 class GetExistingAvailableRubricsSchema(BaseModel):

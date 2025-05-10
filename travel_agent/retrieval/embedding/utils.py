@@ -1,17 +1,30 @@
-import os
-import random
+import gc
 
-import numpy as np
 import torch
 
 
-def seed_everything(seed: int, pytorch_init: bool = True) -> None:
-    random.seed(seed)
-    os.environ["PYTHONHASHSEED"] = str(seed)
-    np.random.seed(seed)
-    if pytorch_init is True:
-        torch.manual_seed(seed)
-        torch.cuda.manual_seed(seed)
-        torch.cuda.manual_seed_all(seed)
-        torch.backends.cudnn.deterministic = True
-        torch.backends.cudnn.benchmark = False
+def average_precision_at_k(relevant_list: list[int], k: int) -> float:
+    score = 0.0
+    num_hits = 0
+    for i, rel in enumerate(relevant_list[:k]):
+        if rel:
+            num_hits += 1
+            score += num_hits / (i + 1)
+    return score / min(k, sum(relevant_list)) if sum(relevant_list) > 0 else 0.0
+
+
+def preprocess_text(text: str) -> str:
+    text = text.replace("\n", " ")
+    text = text.replace("\\n", " ")
+    text = text.replace("\t", " ")
+    # text = text.replace("-", "")
+    # text = text.replace(";", " ")
+    return text
+
+
+def clean_up_model(model, device):
+    del model
+    gc.collect()
+    if device.lower().startswith("cuda"):
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
