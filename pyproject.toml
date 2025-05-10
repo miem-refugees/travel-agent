@@ -32,7 +32,8 @@ dev = [
     "ruff>=0.11.5",
 ]
 notebooks = [
-    "fastembed-gpu>=0.6.1",
+    "fastembed-gpu>=0.6.1; sys_platform == 'linux'",
+    "fastembed>=0.6.1; sys_platform == 'darwin'",
     "matplotlib>=3.10.1",
     "nltk>=3.9.1",
     "pandas>=2.2.3",

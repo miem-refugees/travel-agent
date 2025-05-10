@@ -9,8 +9,8 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/prepare.py
       hash: md5
-      md5: 5c5f460ae55706e0c1451f861813bcb8
-      size: 2336
+      md5: e62dee4a7d240cb5c9e14f5867da4423
+      size: 2552
     params:
       params.yaml:
         prepare:
@@ -23,9 +23,9 @@ stages:
     outs:
     - path: data/prepared
       hash: md5
-      md5: e4d0623137ca2ac5970cbc8b79616968.dir
-      size: 129437103
-      nfiles: 3
+      md5: 9464aadc26e2605740dc86ebec1cdfbb.dir
+      size: 509554325
+      nfiles: 4
   generate_questions:
     cmd: uv run -m travel_agent.pipeline.generate_questions
     deps:
@@ -109,21 +109,20 @@ stages:
     deps:
     - path: data/prepared/moskva.csv
       hash: md5
-      md5: 5b2d8f87fff971ff2ac381eea6d362c8
-      size: 78122812
+      md5: 3f1c0e603999f8293b8705c1ba5d8d3f
+      size: 79482125
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: f50b1f79fe159e91f43a16c05e5633c6
-      size: 4610
+      md5: 8b49dfd22f4b52192866f8476801ebce
+      size: 4104
     params:
       params.yaml:
         generate_rag_questions:
           out_dir: data/questions/rag
           n_questions:
-            rubric: 20
-            address: 20
-            rating_and_rubric: 10
-            rating: 3
+            rubric: 30
+            address: 5
+            rating_and_rubric: 20
           keywords:
           - вкусный кофе
           - японская кухня
@@ -131,31 +130,37 @@ stages:
           - качественный сервис
           - приятная атмосфера
           - ноготочки
+          - увлекательная экскурсия
+          - интересное представление
+          - удобный доступ
+          - красивый вид
+          - лучшие завтраки
+          - ужас!
+          - огромная благодарность
     outs:
     - path: data/questions/rag/moskva.csv
       hash: md5
-      md5: 4ceb2897041def9ab622e85d8f54e843
-      size: 2970446
+      md5: 9209ca71b50c3d7af83e34a04d6091c2
+      size: 1194625
   generate_saint_petersburg_rag_questions:
     cmd: uv run -m travel_agent.pipeline.generate_rag_questions --dataset data/prepared/sankt-peterburg.csv
     deps:
     - path: data/prepared/sankt-peterburg.csv
       hash: md5
-      md5: 0475bb59086c4c10b131400d1ef5254e
-      size: 38769618
+      md5: 311d599a9a837811cbbef06e07d08a39
+      size: 40343545
     - path: travel_agent/pipeline/generate_rag_questions.py
       hash: md5
-      md5: f50b1f79fe159e91f43a16c05e5633c6
-      size: 4610
+      md5: 8b49dfd22f4b52192866f8476801ebce
+      size: 4104
     params:
       params.yaml:
         generate_rag_questions:
           out_dir: data/questions/rag
           n_questions:
-            rubric: 20
-            address: 20
-            rating_and_rubric: 10
-            rating: 3
+            rubric: 30
+            address: 5
+            rating_and_rubric: 20
           keywords:
           - вкусный кофе
           - японская кухня
@@ -163,22 +168,29 @@ stages:
           - качественный сервис
           - приятная атмосфера
           - ноготочки
+          - увлекательная экскурсия
+          - интересное представление
+          - удобный доступ
+          - красивый вид
+          - лучшие завтраки
+          - ужас!
+          - огромная благодарность
     outs:
     - path: data/questions/rag/sankt-peterburg.csv
       hash: md5
-      md5: 81298009071e9588320b15816a958256
-      size: 1446462
+      md5: c88b34b026eac86a14af8d11cdbe67ab
+      size: 601718
   generate_norm_rubrics_questions:
     cmd: uv run -m travel_agent.pipeline.generate_embed_questions --dataset data/prepared/normal_rubrics_15886.csv
     deps:
     - path: data/prepared/normal_rubrics_15886.csv
       hash: md5
-      md5: 90656d87bb070ca65222f922e3a501ea
-      size: 12544673
+      md5: 37d668de73837dd98a8420361e8afe81
+      size: 12951280
     - path: travel_agent/pipeline/generate_embed_questions.py
       hash: md5
-      md5: bffbf884b23f1cae2eefc4e750ade412
-      size: 9245
+      md5: 80f8e2fe0f5fbef353c238d01da9c366
+      size: 9846
     params:
       params.yaml:
         generate_embed_questions:
@@ -187,7 +199,7 @@ stages:
     outs:
     - path: data/questions/embed_eval/normal_rubrics_15886.csv
       hash: md5
-      md5: 70bfda80e366b34fd3058878350e9a0f
+      md5: e2e7a4d8a201ac4e0be1e7c404fc743f
       size: 18939
   analyze:
     cmd: uv run -m travel_agent.pipeline.analyze
@@ -198,8 +210,8 @@ stages:
       size: 363459109
     - path: travel_agent/pipeline/analyze.py
       hash: md5
-      md5: a3b0916a1697020578f1d1945e75cb5d
-      size: 3822
+      md5: d5244f0714ea985c57477fc5a03750c8
+      size: 3770
     params:
       params.yaml:
         analyze:
