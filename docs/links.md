@@ -1,5 +1,12 @@
 # 🔗 Useful Links
 
+## Project main points:
+- EDA notebook: notebooks/eda.ipynb
+- Embedding benchs notebooks: notebooks/embedding_bench_draft.ipynb
+- RAG demo with smolagents notebook: notebooks/smolagents.ipynb
+- Parquet-data upload to qdrant script: scripts/python-qdrant-upload
+- Main app entrypoint: travel_agent/app.py
+
 ## Embedding
 
 - [Step-by-Step Guide to Choosing the Best Embedding Model for Your Application](https://weaviate.io/blog/how-to-choose-an-embedding-model)

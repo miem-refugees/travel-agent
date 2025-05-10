@@ -32,9 +32,6 @@ uv sync
 
 # Install dev dependencies
 uv sync --dev
-
-# Install docs dependencies
-uv sync --group docs
 ```
 
 ### Data Preparation
@@ -42,16 +39,8 @@ uv sync --group docs
 The project uses DVC to manage the data pipeline:
 
 ```bash
-# Download and prepare the dataset
-dvc repro prepare
-
-# Analyze the dataset
-dvc repro analyze
-
-# Generate evaluation questions and datasets
-dvc repro generate_moscow_rag_questions
-dvc repro generate_saint_petersburg_rag_questions
-dvc repro generate_norm_rubrics_questions
+# single command for all pipeline:
+dvc repro
 ```
 
 ### Embedding Benchmark Results
