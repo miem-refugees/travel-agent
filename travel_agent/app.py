@@ -13,19 +13,17 @@ from travel_agent.ui.gradio import TravelGradioUI
 
 
 @logger.catch
-def init_agent(ollama: bool):
+def init_agent(ollama_model: str):
     logger.info("Init app dependencies...")
 
     from travel_agent.qdrant import client as qdrant_client
 
-    if ollama:
-        model_name = "hf.co/IlyaGusev/saiga_nemo_12b_gguf:Q4_0"
-
-        logger.info("Using ollama {} as LLM", model_name)
+    if ollama_model:
+        logger.info("Using ollama {} as LLM", ollama_model)
 
         llm = LiteLLMModel(
-            model_id=f"ollama_chat/{model_name}",
-            api_base="http://127.0.0.1:11434",
+            model_id=f"ollama_chat/{ollama_model}",
+            api_base=os.getenv("OLLAMA_URL", "http://127.0.0.1:11434"),
             num_ctx=8192,
         )
     elif os.getenv("DEEPSEEK_API_KEY"):
@@ -73,18 +71,19 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--ollama", type=bool, default=False)
+    parser.add_argument("--ollama-model", type=str, default=None)
+    parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--share", type=bool, default=False)
     args = parser.parse_args()
 
     try_setup_langfuse_tracing()
 
-    agent = init_agent(args.ollama)
+    agent = init_agent(args.ollama_model)
     if agent is None:
         logger.error("Agent initialization failed")
         exit(1)
 
-    TravelGradioUI(agent).launch(share=args.share)
+    TravelGradioUI(agent).launch(share=args.share, server_port=args.port)
 
 
 if __name__ == "__main__":
