@@ -16,12 +16,12 @@ class Params(BaseModel):
 
 def preprocess_df(df):
     processed_df = df.dropna(subset=["name_ru"])
-
     logger.info("Removed {} NaN rows", df.shape[0] - processed_df.shape[0])
 
     deduplicated = processed_df.drop_duplicates(subset=["address", "name_ru", "text"])
-
     logger.info("Deduplicated {} rows", processed_df.shape[0] - deduplicated.shape[0])
+
+    deduplicated["region"] = deduplicated["address"].astype(str).str.split(",").str[0].str.strip()
 
     return deduplicated
 
@@ -72,6 +72,10 @@ def main():
 
     out_dir = Path(params.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    filename = "prepared.csv"
+    df.to_csv(out_dir / filename, index=False)
+    logger.info("Created {}", filename)
 
     for city in params.cities:
         save_city_prefix_dataset(df, city, out_dir)
