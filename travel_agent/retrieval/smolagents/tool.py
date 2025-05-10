@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 import torch
 from loguru import logger
@@ -7,20 +7,14 @@ from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
 from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
-from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS
 
-DEFAULT_LIMIT = 20
+DEFAULT_LIMIT = 30
 
 
 class GetExistingAvailableRubricsTool(Tool):
     name = "get_available_rubrics"
-    description = 'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics".'
+    description = f'Получение возможных значений рубрик. Использовать если нужно вызвать утилиту "travel_review_query" с аргументом "rubrics". Default limit = {DEFAULT_LIMIT}'
     inputs = {
-        "limit": {
-            "type": "integer",
-            "description": f"Лимит рубрик в ответе. По-умолчанию {DEFAULT_LIMIT}",
-            "nullable": True,
-        },
         "offset": {
             "type": "integer",
             "description": "Отступ. Передать, если недостаточно полученных данных.",
@@ -32,13 +26,16 @@ class GetExistingAvailableRubricsTool(Tool):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def forward(self, limit: Optional[int] = DEFAULT_LIMIT, offset: Optional[int] = 0):
-        return ", ".join(ALL_RUBRICS[offset:limit])
+    def forward(self, offset: Optional[int] = 0):
+        return ", ".join(ALL_RUBRICS[offset:DEFAULT_LIMIT])
 
 
 class TravelReviewQueryTool(Tool):
     name = "travel_review_query"
-    description = "Использует семантический поиск для извлечения отзывов на различные заведения."
+    description = (
+        "Использует семантический поиск для извлечения отзывов на различные заведения. "
+        "Запрещено использовать результат напрямую - пример ответа: пользователи говорят, что в заведении X хорошая атмосфера, низкие цены, много хороших отзывов."
+    )
     inputs = {
         "query": {
             "type": "string",
@@ -49,17 +46,17 @@ class TravelReviewQueryTool(Tool):
             "description": "Опциональное поле, фильтр минимального рейтинга (от 1 до 5)",
             "nullable": True,
         },
-        # "address": {
-        #     "type": "string",
-        #     "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва", "улица Энгельса"',
-        #     "nullable": True,
-        # },
-        # "rubrics": {
-        #     "type": "string",
-        #     "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
-        #     + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
-        #     "nullable": True,
-        # },
+        "address": {
+            "type": "string",
+            "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва" или "улица Энгельса"',
+            "nullable": True,
+        },
+        "rubrics": {
+            "type": "array",
+            "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
+            + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
+            "nullable": True,
+        },
     }
     output_type = "string"
 
@@ -81,11 +78,7 @@ class TravelReviewQueryTool(Tool):
         )
         logger.info("Using device: {}", device)
 
-        if embed_model_name not in MODELS_PROMPTS.keys():
-            raise Exception(f"Model f{embed_model_name} is not supported in MODELS_PROMPTS")
-
         self.embedder = SentenceTransformer(embed_model_name, device=device)
-        self.embed_prompt = MODELS_PROMPTS[embed_model_name]["query"]
         self.retrieve_limit = retrieve_limit
 
         # sanity checks
@@ -100,21 +93,22 @@ class TravelReviewQueryTool(Tool):
         self,
         query: str,
         min_rating: Optional[int] = None,
-        # address: Optional[str] = None,
-        # rubrics: Optional[str] = None,
+        address: Optional[str] = None,
+        rubrics: Optional[List[str]] = None,
     ):
         query_embedding = self.embedder.encode(
             query,
-            prompt=self.embed_prompt,
+            prompt="query: ",
         )
 
         filters = []
+
         if min_rating:
             filters.append(models.FieldCondition(key="rating", range=models.Range(gte=min_rating)))
-        # if address:
-        #     filters.append(models.FieldCondition(key="address", match=models.MatchText(value=address)))
-        # if rubrics:
-        #     filters.append(models.FieldCondition(key="rubrics", match=models.MatchValue(value=rubrics)))
+        if address:
+            filters.append(models.FieldCondition(key="address", match=models.MatchText(text=address)))
+        if rubrics:
+            filters.append(models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics)))
 
         points = self.client.search(
             collection_name=self.collection_name,
