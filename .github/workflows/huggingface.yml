@@ -1,0 +1,19 @@
+name: Sync to Hugging Face space
+on:
+  push:
+    branches:
+        - huggingface-space
+  workflow_dispatch:
+
+jobs:
+  sync-to-hub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: false
+      - name: Push to hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: git push https://ksusonic:$HF_TOKEN@huggingface.co/spaces/miem-refugees/travel-agent huggingface-space:main

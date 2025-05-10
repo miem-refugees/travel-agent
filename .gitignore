@@ -280,3 +280,5 @@ pyrightconfig.json
 
 # space ignores
 .dvc
+data
+travel_agent
