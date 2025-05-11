@@ -20,12 +20,11 @@ from travel_agent.retrieval.embedding.generation.late_interaction import (
     generate_colbert_embeddings,
     get_colbert_embedding_dim,
 )
-from travel_agent.retrieval.embedding.generation.sparse import (
-    BM25_MODEL_NAME,
-    generate_bm25_embeddings,
-)
+from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, generate_bm25_embeddings
 from travel_agent.retrieval.embedding.utils import preprocess_text
 from travel_agent.utils import seed_everything
+
+BATCH_SIZE = 100
 
 
 def create_collection(
@@ -87,6 +86,7 @@ def upload_embeddings(
     sparse_embeddings: dict[str, list[SparseEmbedding]] = {},
 ):
     num_points = len(payload_df)
+    points_buffer = []
 
     for idx in trange(num_points):
         vector = {}
@@ -101,7 +101,15 @@ def upload_embeddings(
 
         point = PointStruct(id=idx, vector=vector, payload=payload)
 
-        client.upsert(collection_name=collection_name, points=[point])
+        points_buffer.append(point)
+
+        if len(points_buffer) >= BATCH_SIZE:
+            client.upsert(collection_name=collection_name, points=points_buffer)
+            points_buffer.clear()
+
+    if points_buffer:
+        client.upsert(collection_name=collection_name, points=points_buffer)
+
     logger.info("Inserted embeddings into Qdrant")
 
 
@@ -199,7 +207,7 @@ if __name__ == "__main__":
 
     embed_and_upload_df_with_payload(
         client,
-        dataset_name,
+        dataset_name + "123",
         df,
         field_name_schema,
         doc_col,

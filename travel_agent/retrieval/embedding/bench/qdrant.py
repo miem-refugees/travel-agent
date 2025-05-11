@@ -6,22 +6,10 @@ from fastembed import LateInteractionTextEmbedding
 from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
-from travel_agent.retrieval.embedding.generation.dense import (
-    MODELS_PROMPTS,
-    embed_dense,
-)
-from travel_agent.retrieval.embedding.generation.late_interaction import (
-    COLBERT_MODEL_NAME,
-    query_embed_colbert,
-)
-from travel_agent.retrieval.embedding.generation.sparse import (
-    BM25_MODEL_NAME,
-    query_embed_bm25,
-)
-from travel_agent.retrieval.embedding.utils import (
-    average_precision_at_k,
-    clean_up_model,
-)
+from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS, embed_dense
+from travel_agent.retrieval.embedding.generation.late_interaction import COLBERT_MODEL_NAME, query_embed_colbert
+from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, query_embed_bm25
+from travel_agent.retrieval.embedding.utils import average_precision_at_k, clean_up_model
 
 
 def qdrant_evaluate_queries(
@@ -253,7 +241,7 @@ def qdrant_hybrid_search_top_models_2_benchmark(
 ) -> dict[int, float]:
     device = "cpu"
     model_1_name = "sergeyzh/BERTA"
-    model_2_name = "intfloat/multilingual-e5-large"
+    model_2_name = "intfloat/multilingual-e5-small"
 
     model_1 = SentenceTransformer(model_1_name, device=device)
     model_2 = SentenceTransformer(model_2_name, device=device)
@@ -302,7 +290,7 @@ def qdrant_hybrid_search_top_models_2_rerank_benchmark(
 ) -> dict[int, float]:
     device = "cpu"
     model_1_name = "sergeyzh/BERTA"
-    model_2_name = "intfloat/multilingual-e5-large"
+    model_2_name = "intfloat/multilingual-e5-small"
 
     model_1 = SentenceTransformer(model_1_name, device=device)
     model_2 = SentenceTransformer(model_2_name, device=device)

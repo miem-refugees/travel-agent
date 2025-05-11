@@ -7,34 +7,39 @@ from sentence_transformers import SentenceTransformer
 from travel_agent.retrieval.embedding.utils import clean_up_model
 
 MODELS_PROMPTS = {
-    # "cointegrated/rubert-tiny2": {"query": None, "passage": None},
-    # "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
-    # "ai-forever/sbert_large_nlu_ru": {"query": None, "passage": None},
-    # "ai-forever/sbert_large_mt_nlu_ru": {"query": None, "passage": None},
-    # "sentence-transformers/distiluse-base-multilingual-cased-v1": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/distiluse-base-multilingual-cased-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
-    # "sentence-transformers/paraphrase-multilingual-mpnet-base-v2": {
-    #     "query": None,
-    #     "passage": None,
-    # },
+    "cointegrated/rubert-tiny2": {"query": None, "passage": None},
+    "DeepPavlov/rubert-base-cased-sentence": {"query": None, "passage": None},
+    "ai-forever/sbert_large_nlu_ru": {"query": None, "passage": None},
+    "ai-forever/sbert_large_mt_nlu_ru": {"query": None, "passage": None},
+    "sentence-transformers/distiluse-base-multilingual-cased-v1": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/distiluse-base-multilingual-cased-v2": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2": {
+        "query": None,
+        "passage": None,
+    },
+    "sentence-transformers/paraphrase-multilingual-mpnet-base-v2": {
+        "query": None,
+        "passage": None,
+    },
     "intfloat/multilingual-e5-large": {"query": "query: ", "passage": "passage: "},
-    # "intfloat/multilingual-e5-base": {"query": "query: ", "passage": "passage: "},
-    # "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
-    # "ai-forever/ru-en-RoSBERTa": {
-    #     "query": "search_query: ",
-    #     "passage": "search_document: ",
-    # },
-    # # "ai-forever/FRIDA": {"query": "search_query: ", "passage": "search_document: "},
+    "intfloat/multilingual-e5-base": {"query": "query: ", "passage": "passage: "},
+    "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
+    "ai-forever/ru-en-RoSBERTa": {
+        "query": "search_query: ",
+        "passage": "search_document: ",
+    },
+    # "ai-forever/FRIDA": {"query": "search_query: ", "passage": "search_document: "},
+    "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
+}
+
+MODELS_PROMPTS_FINAL = {
+    "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
     "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
 }
 
@@ -81,6 +86,7 @@ def generate_dense_models_embeddings(
     docs: list[str], models_prompts: dict[str, dict[str, Optional[str]]], device: str
 ) -> dict[str, np.ndarray]:
     dense_embeddings = {}
+    logger.info(f"docs size: {len(docs)}")
 
     for model_name in models_prompts:
         logger.info(f"Generating embeddings using {model_name}")
