@@ -1,6 +1,6 @@
 outs:
-- md5: 057021f9b8193f93214c58e8f4edbba4.dir
-  size: 3729897182
-  nfiles: 9
+- md5: 13ba95c04e8b44d66455c43ef955df24.dir
+  size: 3729913224
+  nfiles: 11
   hash: md5
   path: embedding_bench
