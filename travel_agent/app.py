@@ -36,7 +36,7 @@ def init_agent(ollama_model: str):
         model=llm,
         tools=[
             GetExistingAvailableRubricsTool(),
-            TravelReviewQueryTool(retrieve_limit=5),
+            TravelReviewQueryTool(retrieve_limit=10),
             DuckDuckGoSearchTool(),
             VisitWebpageTool(),
         ],
