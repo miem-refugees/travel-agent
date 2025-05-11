@@ -1,3 +1,4 @@
+import os
 from loguru import logger
 from smolagents import (
     DuckDuckGoSearchTool,
@@ -8,30 +9,23 @@ from smolagents import (
 
 from tool import GetExistingAvailableRubricsTool, TravelReviewQueryTool
 from ui import TravelGradioUI
-from qdrant import create_client
 
 
 @logger.catch
 def init_agent():
     logger.info("Init app dependencies...")
 
-    qdrant_client = create_client()
-
     return ToolCallingAgent(
         model=LiteLLMModel(model_id="deepseek/deepseek-chat"),
         tools=[
             GetExistingAvailableRubricsTool(),
-            TravelReviewQueryTool(
-                "intfloat/multilingual-e5-base",
-                qdrant_client,
-                "moskva_intfloat_multilingual_e5_base",
-            ),
+            TravelReviewQueryTool(retrieve_limit=os.getenv("RETRIEVE_LIMIT", 10)),
             DuckDuckGoSearchTool(),
             VisitWebpageTool(),
         ],
-        max_steps=7,
-        verbosity_level=1,
-        planning_interval=5,
+        max_steps=os.getenv("MAX_STEPS", 7),
+        verbosity_level=os.getenv("VERBOSITY_LEVEL", 1),
+        planning_interval=os.getenv("PLANNING_INTERVAL", 5),
     )
 
 
