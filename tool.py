@@ -1,14 +1,13 @@
+import time
 from typing import List, Optional
 
-import torch
 from loguru import logger
-from qdrant_client import QdrantClient, models
-from sentence_transformers import SentenceTransformer
 
 from smolagents import Tool
+from qdrant import QdrantReviewsSearcher
 from rubrics import ALL_RUBRICS
 
-DEFAULT_LIMIT = 20
+DEFAULT_LIMIT = 30
 
 
 class GetExistingAvailableRubricsTool(Tool):
@@ -43,18 +42,22 @@ class TravelReviewQueryTool(Tool):
         },
         "min_rating": {
             "type": "integer",
-            "description": "Опциональное поле, фильтр минимального рейтинга (от 1 до 5)",
+            "description": "Опционально. Фильтр минимального рейтинга (от 1 до 5)",
             "nullable": True,
         },
         "address": {
             "type": "string",
-            "description": 'Опциональное поле, ключевое слово из адреса (город или улица), например: "Москва" или "улица Энгельса"',
+            "description": 'Опционально. Название улицы или локации, например: "Улица Энгельса", "Болотная набережная, 15".',
+            "nullable": True,
+        },
+        "region": {
+            "type": "string",
+            "description": 'Опционально. Название города, если известен город или региона России, например: "Рязань", "Тверская область", "Краснодарский край".',
             "nullable": True,
         },
         "rubrics": {
             "type": "array",
-            "description": 'Опциональное поле, использовать его только если не получилось получить подходящих результатов по параметру "query". '
-            + f"Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}",
+            "description": f'Опционально. Аргумент можно получить из утилиты {GetExistingAvailableRubricsTool.name}. Использовать его только если не получилось получить подходящих результатов по параметру "query"',
             "nullable": True,
         },
     }
@@ -62,71 +65,35 @@ class TravelReviewQueryTool(Tool):
 
     def __init__(
         self,
-        embed_model_name: str,
-        qdrant_client: QdrantClient,
-        collection_name: str,
         retrieve_limit: int = 5,
+        timeout: int = 500,
         **kwargs,
     ):
         super().__init__(**kwargs)
 
-        self.collection_name = collection_name
-        self.client = qdrant_client
-
-        device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else ("mps" if torch.backends.mps.is_available() else "cpu")
+        self.searcher = QdrantReviewsSearcher(
+            retrieve_limit=retrieve_limit, timeout=timeout
         )
-        logger.info("Using device: {}", device)
-
-        self.embedder = SentenceTransformer(embed_model_name, device=device)
-        self.retrieve_limit = retrieve_limit
-
-        # sanity checks
-        if not self.client.collection_exists(self.collection_name):
-            raise Exception(
-                f"Collection f{self.collection_name} does not exist in qdrant"
-            )
-
-        collection_info = self.client.get_collection(self.collection_name)
-        if collection_info.vectors_count == 0:
-            raise Exception(f"Collection f{self.collection_name} is empty")
 
     def forward(
         self,
         query: str,
         min_rating: Optional[int] = None,
         address: Optional[str] = None,
+        region: Optional[str] = None,
         rubrics: Optional[List[str]] = None,
     ):
-        query_embedding = self.embedder.encode(
-            query,
-            prompt="query: ",
+        start = time.time()
+        points = self.searcher.query(
+            query=query,
+            min_rating=min_rating,
+            address=address,
+            region=region,
+            rubrics=rubrics,
         )
 
-        filters = []
-
-        if min_rating:
-            filters.append(
-                models.FieldCondition(key="rating", range=models.Range(gte=min_rating))
-            )
-        if address:
-            filters.append(
-                models.FieldCondition(
-                    key="address", match=models.MatchText(text=address)
-                )
-            )
-        if rubrics:
-            filters.append(
-                models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics))
-            )
-
-        points = self.client.search(
-            collection_name=self.collection_name,
-            query_vector=query_embedding,
-            limit=self.retrieve_limit,
-            query_filter=models.Filter(must=filters),
+        logger.debug(
+            "retrieved {} points in {} sec", len(points), (time.time() - start)
         )
 
         if not points:
@@ -134,10 +101,11 @@ class TravelReviewQueryTool(Tool):
 
         results = "Найденные отзывы о местах:\n\n"
         for i, point in enumerate(points, 1):
-            results += f"=== Отзыв на {point.payload['name']} ===\n"
-            results += f"Адрес: {point.payload['address']}\n"
-            results += f"Рейтинг: {point.payload['rating']}\n"
-            results += f"Категории: {point.payload['rubrics']}\n"
-            results += f"Текст: {point.payload['text']}\n\n"
+            results += f"=== Отзыв на {point.payload.get('name_ru')} ===\n"
+            results += f"Адрес: {point.payload.get('address')}\n"
+            results += f"Регион: {point.payload.get('region')}\n"
+            results += f"Рейтинг: {point.payload.get('rating')}\n"
+            results += f"Категории: {point.payload.get('rubrics')}\n"
+            results += f"Текст: {point.payload.get('text')}\n\n"
 
         return results

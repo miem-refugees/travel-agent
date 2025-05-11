@@ -1,4 +1,5 @@
 duckduckgo-search>=8.0.1
+fastembed>=0.6.1
 huggingface-hub[hf-xet]>=0.30.2
 loguru>=0.7.3
 openinference-instrumentation-smolagents>=0.1.11
