@@ -270,6 +270,7 @@ lightning_logs/
 # Qdrant
 .qdrant_data
 qdrant-storage/
+qdrant_storage/
 
 # rag_eval
 .gradio

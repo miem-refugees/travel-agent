@@ -20,7 +20,10 @@ from travel_agent.retrieval.embedding.generation.late_interaction import (
     generate_colbert_embeddings,
     get_colbert_embedding_dim,
 )
-from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, generate_bm25_embeddings
+from travel_agent.retrieval.embedding.generation.sparse import (
+    BM25_MODEL_NAME,
+    generate_bm25_embeddings,
+)
 from travel_agent.retrieval.embedding.utils import preprocess_text
 from travel_agent.utils import seed_everything
 
@@ -66,6 +69,15 @@ def get_sparse_vectors_config(
         return {BM25_MODEL_NAME: models.SparseVectorParams(modifier=models.Modifier.IDF)}
 
 
+def create_payload_index(client: QdrantClient, collection_name: str, field_name_schema: dict[str, str]) -> None:
+    for field_name, field_schema in field_name_schema.items():
+        client.create_payload_index(
+            collection_name=collection_name,
+            field_name=field_name,
+            field_schema=field_schema,
+        )
+
+
 def upload_embeddings(
     client: QdrantClient,
     collection_name: str,
@@ -97,6 +109,7 @@ def embed_and_upload_df_with_payload(
     client: QdrantClient,
     collection_name: str,
     payload_df: pd.DataFrame,
+    field_name_schema: dict[str, str],
     doc_col: str,
     dense_models_prompts: dict[str, dict[str, Optional[str]]],
     late_interaction_model: bool,
@@ -117,6 +130,7 @@ def embed_and_upload_df_with_payload(
     vectors_config = get_vectors_config(dense_models, late_interaction_models)
     sparse_vectors_config = get_sparse_vectors_config(bm25=bm25)
     create_collection(client, collection_name, vectors_config, sparse_vectors_config)
+    create_payload_index(client, collection_name, field_name_schema)
 
     docs = payload_df[doc_col].to_list()
 
@@ -163,6 +177,8 @@ if __name__ == "__main__":
 
     if "address" in df.columns:
         df["address"] = df["address"].fillna("")
+    if "question" in df.columns:
+        df["question"] = df["question"].fillna("")
     if "name" in df.columns:
         df["name"] = df["name"].fillna("")
     if "rating" in df.columns:
@@ -172,4 +188,23 @@ if __name__ == "__main__":
     if "text" in df.columns:
         df["text"] = df["text"].fillna("")
 
-    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device)
+    field_name_schema = {
+        "name": "text",
+        "address": "text",
+        "rubrics": "keyword",
+        "rating": "float",
+        "question": "text",
+        "text": "text",
+    }
+
+    embed_and_upload_df_with_payload(
+        client,
+        dataset_name,
+        df,
+        field_name_schema,
+        doc_col,
+        MODELS_PROMPTS,
+        True,
+        True,
+        device,
+    )
