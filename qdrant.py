@@ -132,7 +132,7 @@ class QdrantReviewsSearcher:
                 models.Prefetch(
                     query=models.SparseVector(**sparse_embedding.as_object()),
                     using=BM25_MODEL_NAME,
-                    limit=1000,
+                    limit=self.retrieve_limit * 2,
                 ),
             ],
             query=models.FusionQuery(fusion=models.Fusion.RRF),
