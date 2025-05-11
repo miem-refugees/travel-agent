@@ -24,6 +24,8 @@ from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, 
 from travel_agent.retrieval.embedding.utils import preprocess_text
 from travel_agent.utils import seed_everything
 
+BATCH_SIZE = 100
+
 
 def create_collection(
     client: QdrantClient,
@@ -66,6 +68,15 @@ def get_sparse_vectors_config(
         return {BM25_MODEL_NAME: models.SparseVectorParams(modifier=models.Modifier.IDF)}
 
 
+def create_payload_index(client: QdrantClient, collection_name: str, field_name_schema: dict[str, str]) -> None:
+    for field_name, field_schema in field_name_schema.items():
+        client.create_payload_index(
+            collection_name=collection_name,
+            field_name=field_name,
+            field_schema=field_schema,
+        )
+
+
 def upload_embeddings(
     client: QdrantClient,
     collection_name: str,
@@ -75,6 +86,7 @@ def upload_embeddings(
     sparse_embeddings: dict[str, list[SparseEmbedding]] = {},
 ):
     num_points = len(payload_df)
+    points_buffer = []
 
     for idx in trange(num_points):
         vector = {}
@@ -89,7 +101,15 @@ def upload_embeddings(
 
         point = PointStruct(id=idx, vector=vector, payload=payload)
 
-        client.upsert(collection_name=collection_name, points=[point])
+        points_buffer.append(point)
+
+        if len(points_buffer) >= BATCH_SIZE:
+            client.upsert(collection_name=collection_name, points=points_buffer)
+            points_buffer.clear()
+
+    if points_buffer:
+        client.upsert(collection_name=collection_name, points=points_buffer)
+
     logger.info("Inserted embeddings into Qdrant")
 
 
@@ -97,6 +117,7 @@ def embed_and_upload_df_with_payload(
     client: QdrantClient,
     collection_name: str,
     payload_df: pd.DataFrame,
+    field_name_schema: dict[str, str],
     doc_col: str,
     dense_models_prompts: dict[str, dict[str, Optional[str]]],
     late_interaction_model: bool,
@@ -117,6 +138,7 @@ def embed_and_upload_df_with_payload(
     vectors_config = get_vectors_config(dense_models, late_interaction_models)
     sparse_vectors_config = get_sparse_vectors_config(bm25=bm25)
     create_collection(client, collection_name, vectors_config, sparse_vectors_config)
+    create_payload_index(client, collection_name, field_name_schema)
 
     docs = payload_df[doc_col].to_list()
 
@@ -163,6 +185,8 @@ if __name__ == "__main__":
 
     if "address" in df.columns:
         df["address"] = df["address"].fillna("")
+    if "question" in df.columns:
+        df["question"] = df["question"].fillna("")
     if "name" in df.columns:
         df["name"] = df["name"].fillna("")
     if "rating" in df.columns:
@@ -172,4 +196,23 @@ if __name__ == "__main__":
     if "text" in df.columns:
         df["text"] = df["text"].fillna("")
 
-    embed_and_upload_df_with_payload(client, dataset_name, df, doc_col, MODELS_PROMPTS, True, True, device)
+    field_name_schema = {
+        "name": "text",
+        "address": "text",
+        "rubrics": "keyword",
+        "rating": "float",
+        "question": "text",
+        "text": "text",
+    }
+
+    embed_and_upload_df_with_payload(
+        client,
+        dataset_name + "123",
+        df,
+        field_name_schema,
+        doc_col,
+        MODELS_PROMPTS,
+        True,
+        True,
+        device,
+    )

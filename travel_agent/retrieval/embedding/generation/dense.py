@@ -38,6 +38,11 @@ MODELS_PROMPTS = {
     "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
 }
 
+MODELS_PROMPTS_FINAL = {
+    "intfloat/multilingual-e5-small": {"query": "query: ", "passage": "passage: "},
+    "sergeyzh/BERTA": {"query": "search_query: ", "passage": "search_document: "},
+}
+
 
 def get_models_params_embedding_dim(
     models_prompts: dict[str, dict[str, Optional[str]]],
@@ -81,6 +86,7 @@ def generate_dense_models_embeddings(
     docs: list[str], models_prompts: dict[str, dict[str, Optional[str]]], device: str
 ) -> dict[str, np.ndarray]:
     dense_embeddings = {}
+    logger.info(f"docs size: {len(docs)}")
 
     for model_name in models_prompts:
         logger.info(f"Generating embeddings using {model_name}")

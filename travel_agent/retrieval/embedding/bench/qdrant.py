@@ -202,22 +202,22 @@ def qdrant_hybrid_search_top_models_benchmark(
                 models.Prefetch(
                     query=embedding_1,
                     using=model_1_name,
-                    limit=20,
+                    limit=max(ks),
                 ),
                 models.Prefetch(
                     query=embedding_2,
                     using=model_2_name,
-                    limit=20,
+                    limit=max(ks),
                 ),
                 models.Prefetch(
                     query=embedding_3,
                     using=model_3_name,
-                    limit=20,
+                    limit=max(ks),
                 ),
                 models.Prefetch(
                     query=embedding_4,
                     using=model_4_name,
-                    limit=20,
+                    limit=max(ks),
                 ),
             ],
             query=models.FusionQuery(fusion=models.Fusion.RRF),
@@ -229,4 +229,105 @@ def qdrant_hybrid_search_top_models_benchmark(
     clean_up_model(model_2, device)
     clean_up_model(model_3, device)
     clean_up_model(model_4, device)
+    return results
+
+
+def qdrant_hybrid_search_top_models_2_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    device = "cpu"
+    model_1_name = "sergeyzh/BERTA"
+    model_2_name = "intfloat/multilingual-e5-small"
+
+    model_1 = SentenceTransformer(model_1_name, device=device)
+    model_2 = SentenceTransformer(model_2_name, device=device)
+
+    def get_search_results(query):
+        sparse_embedding = query_embed_bm25(query)
+        embedding_1 = embed_dense(model_1, sentences=query, prompt=MODELS_PROMPTS[model_1_name].get("query"))
+        embedding_2 = embed_dense(model_2, sentences=query, prompt=MODELS_PROMPTS[model_2_name].get("query"))
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=[
+                models.Prefetch(
+                    query=embedding_1,
+                    using=model_1_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=embedding_2,
+                    using=model_2_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=models.SparseVector(**sparse_embedding.as_object()),
+                    using=BM25_MODEL_NAME,
+                    limit=1000,
+                ),
+            ],
+            query=models.FusionQuery(fusion=models.Fusion.RRF),
+            limit=max(ks),
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    clean_up_model(model_1, device)
+    clean_up_model(model_2, device)
+    return results
+
+
+def qdrant_hybrid_search_top_models_2_rerank_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    device = "cpu"
+    model_1_name = "sergeyzh/BERTA"
+    model_2_name = "intfloat/multilingual-e5-small"
+
+    model_1 = SentenceTransformer(model_1_name, device=device)
+    model_2 = SentenceTransformer(model_2_name, device=device)
+    colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
+
+    def get_search_results(query):
+        sparse_embedding = query_embed_bm25(query)
+        embedding_1 = embed_dense(model_1, sentences=query, prompt=MODELS_PROMPTS[model_1_name].get("query"))
+        embedding_2 = embed_dense(model_2, sentences=query, prompt=MODELS_PROMPTS[model_2_name].get("query"))
+        late_embedding = query_embed_colbert(colbert_model, query)
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=[
+                models.Prefetch(
+                    query=embedding_1,
+                    using=model_1_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=embedding_2,
+                    using=model_2_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=models.SparseVector(**sparse_embedding.as_object()),
+                    using=BM25_MODEL_NAME,
+                    limit=1000,
+                ),
+            ],
+            query=late_embedding,
+            limit=max(ks),
+            using=COLBERT_MODEL_NAME,
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    clean_up_model(model_1, device)
+    clean_up_model(model_2, device)
     return results

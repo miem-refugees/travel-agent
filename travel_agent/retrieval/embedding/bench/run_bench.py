@@ -11,6 +11,8 @@ from travel_agent.retrieval.embedding.bench.qdrant import (
     qdrant_bm25_1000_then_dense_benchmark,
     qdrant_bm25_benchmark,
     qdrant_colbert_benchmark,
+    qdrant_hybrid_search_top_models_2_benchmark,
+    qdrant_hybrid_search_top_models_2_rerank_benchmark,
     qdrant_hybrid_search_top_models_benchmark,
     qdrant_single_dense_benchmark,
     qdrant_triple_model_reranking_benchmark,
@@ -198,6 +200,48 @@ def benchmark_hybrid(
     results.append(row)
 
 
+def benchmark_hybrid_2(
+    results: list[dict[str, str | float | int]],
+    client: QdrantClient,
+    dataset_name: str,
+    queries: list[str],
+    query_col: str,
+    ks: list[int],
+) -> None:
+    logger.info("Benchmarking hybrid_2...")
+    row = run_and_record_benchmark(
+        experiment_name="hybrid_search_top_models_2",
+        func=qdrant_hybrid_search_top_models_2_benchmark,
+        client=client,
+        collection_name=dataset_name,
+        queries=queries,
+        query_payload_key=query_col,
+        ks=ks,
+    )
+    results.append(row)
+
+
+def benchmark_hybrid_3(
+    results: list[dict[str, str | float | int]],
+    client: QdrantClient,
+    dataset_name: str,
+    queries: list[str],
+    query_col: str,
+    ks: list[int],
+) -> None:
+    logger.info("Benchmarking hybrid_3...")
+    row = run_and_record_benchmark(
+        experiment_name="hybrid_search_top_models_3",
+        func=qdrant_hybrid_search_top_models_2_rerank_benchmark,
+        client=client,
+        collection_name=dataset_name,
+        queries=queries,
+        query_payload_key=query_col,
+        ks=ks,
+    )
+    results.append(row)
+
+
 def main():
     seed_everything(42)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -210,9 +254,10 @@ def main():
     k = [1, 3, 5, 10, 20]
 
     logger.info(f"Loading dataset {dataset_name}")
-    df = pd.read_parquet(embedding_bench_dataset_path).sample(300)
+    df = pd.read_parquet(embedding_bench_dataset_path)
     queries = list(set(df[query_col].to_list()))
     logger.info(f"Number of unique queries: {len(queries)}")
+    logger.info(f"Dataset size {len(df)}")
 
     client = QdrantClient(url="http://localhost:6333")
 
@@ -224,9 +269,11 @@ def main():
     benchmark_reranking(results, client, dataset_name, queries, query_col, device, k)
     benchmark_multi_stage(results, client, dataset_name, queries, query_col, device, k)
     benchmark_hybrid(results, client, dataset_name, queries, query_col, k)
+    benchmark_hybrid_2(results, client, dataset_name, queries, query_col, k)
+    benchmark_hybrid_3(results, client, dataset_name, queries, query_col, k)
 
     df_results = pd.DataFrame(results)
-    save_path = Path("data") / "embedding_bench" / f"{dataset_name}_new_results.csv"
+    save_path = Path("data") / "embedding_bench" / f"{dataset_name}_new_results+one_more.csv"
     df_results.to_csv(save_path, index=False)
 
 

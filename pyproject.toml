@@ -21,7 +21,7 @@ dependencies = [
     "qdrant-client>=1.13.3",
     "sentence-transformers>=4.0.2",
     "smolagents[gradio,litellm,telemetry]>=1.15.0",
-    "torch>=2.6.0",
+    "torch>=2.7.0",
     "transformers>=4.51.2",
 ]
 
@@ -45,6 +45,7 @@ notebooks = [
     "umap-learn>=0.5.7",
     "vertexai>=1.71.1",
     "wordcloud>=1.9.4",
+    "tabulate>=0.9.0",
 ]
 docs = [
     "mkdocs-material>=9.6.11",
