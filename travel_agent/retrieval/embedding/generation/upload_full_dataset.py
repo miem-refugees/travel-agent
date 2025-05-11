@@ -37,11 +37,11 @@ if __name__ == "__main__":
 
     field_name_schema = {
         "address": "text",
+        "region": "text",
         "name_ru": "text",
         "rating": "float",
         "rubrics": "keyword",
         "text": "text",
-        "region": "keyword",
     }
 
     embed_and_upload_df_with_payload(

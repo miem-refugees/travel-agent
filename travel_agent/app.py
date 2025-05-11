@@ -1,3 +1,4 @@
+import argparse
 import os
 
 from loguru import logger
@@ -15,8 +16,6 @@ from travel_agent.ui.gradio import TravelGradioUI
 @logger.catch
 def init_agent(ollama_model: str):
     logger.info("Init app dependencies...")
-
-    from travel_agent.qdrant import client as qdrant_client
 
     if ollama_model:
         logger.info("Using ollama {} as LLM", ollama_model)
@@ -37,23 +36,19 @@ def init_agent(ollama_model: str):
         model=llm,
         tools=[
             GetExistingAvailableRubricsTool(),
-            TravelReviewQueryTool(
-                "intfloat/multilingual-e5-base",
-                qdrant_client,
-                "moskva_intfloat_multilingual_e5_base",
-            ),
+            TravelReviewQueryTool(retrieve_limit=5),
             DuckDuckGoSearchTool(),
             VisitWebpageTool(),
         ],
-        max_steps=7,
-        verbosity_level=1,
-        planning_interval=5,
+        max_steps=os.getenv("MAX_STEPS", 7),
+        verbosity_level=os.getenv("VERBOSITY_LEVEL", 1),
+        planning_interval=os.getenv("PLANNING_INTERVAL", 5),
     )
 
 
-def try_setup_langfuse_tracing():
-    if not os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
-        logger.info("Tracing disabled (no OTEL env vars)")
+def setup_langfuse_tracing(trace: bool):
+    if not trace or not os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
+        logger.info("Tracing disabled")
         return
 
     from openinference.instrumentation.smolagents import SmolagentsInstrumentor
@@ -68,15 +63,14 @@ def try_setup_langfuse_tracing():
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("--ollama-model", type=str, default=None)
     parser.add_argument("--port", type=int, default=8080)
+    parser.add_argument("--trace", type=bool, default=False)
     parser.add_argument("--share", type=bool, default=False)
     args = parser.parse_args()
 
-    try_setup_langfuse_tracing()
+    setup_langfuse_tracing(args.trace)
 
     agent = init_agent(args.ollama_model)
     if agent is None:

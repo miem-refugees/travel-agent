@@ -54,6 +54,7 @@ def create_collection(
 
     client.create_payload_index(collection_name=collection_name, field_name="name", field_schema="text")
     client.create_payload_index(collection_name=collection_name, field_name="address", field_schema="text")
+    client.create_payload_index(collection_name=collection_name, field_name="region", field_schema="text")
     client.create_payload_index(collection_name=collection_name, field_name="rubrics", field_schema="keyword")
     client.create_payload_index(collection_name=collection_name, field_name="rating", field_schema="float")
 
