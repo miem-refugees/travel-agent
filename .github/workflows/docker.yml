@@ -5,14 +5,14 @@ on:
     branches:
       - main
     paths:
-      - .github
+      - .github/**
       - Dockerfile
       - travel_agent/**
   pull_request:
     branches:
       - main
     paths:
-      - .github
+      - .github/**
       - Dockerfile
       - travel_agent/**
 
