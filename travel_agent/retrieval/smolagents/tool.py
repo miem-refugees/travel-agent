@@ -1,5 +1,6 @@
 import time
 from typing import List, Optional
+from urllib.parse import quote
 
 from loguru import logger
 
@@ -97,7 +98,14 @@ class TravelReviewQueryTool(Tool):
 
         results = "Найденные отзывы о местах:\n\n"
         for i, point in enumerate(points, 1):
-            results += f"=== Отзыв на {point.payload.get('name_ru')} ===\n"
+            name = point.payload.get("name_ru")
+            link = (
+                f"https://yandex.ru/maps/213/moscow/search/{quote(name)}"
+                if point.payload.get("region") == "Москва"
+                else f"https://yandex.ru/maps/?text={quote(name)}"
+            )
+
+            results += f"== Отзыв на [{name}]({link}) ==\n"
             results += f"Адрес: {point.payload.get('address')}\n"
             results += f"Регион: {point.payload.get('region')}\n"
             results += f"Рейтинг: {point.payload.get('rating')}\n"
