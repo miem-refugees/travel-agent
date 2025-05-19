@@ -66,7 +66,7 @@ class TravelReviewQueryTool(Tool):
 
     def __init__(
         self,
-        retrieve_limit: int = 5,
+        retrieve_limit: int = 10,
         timeout: int = 500,
         **kwargs,
     ):
