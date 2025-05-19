@@ -10,8 +10,11 @@ requires-python = ">=3.13"
 
 
 dependencies = [
+    "arize-phoenix>=9.5.0",
     "duckduckgo-search>=8.0.1",
     "huggingface-hub[hf-xet]>=0.30.2",
+    "fastembed-gpu>=0.6.1; sys_platform == 'linux'",
+    "fastembed>=0.6.1; sys_platform == 'darwin'",
     "loguru>=0.7.3",
     "markdownify>=1.1.0",
     "openinference-instrumentation-smolagents>=0.1.11",
@@ -34,8 +37,6 @@ dev = [
     "ruff>=0.11.5",
 ]
 notebooks = [
-    "fastembed-gpu>=0.6.1; sys_platform == 'linux'",
-    "fastembed>=0.6.1; sys_platform == 'darwin'",
     "matplotlib>=3.10.1",
     "nltk>=3.9.1",
     "pandas>=2.2.3",
