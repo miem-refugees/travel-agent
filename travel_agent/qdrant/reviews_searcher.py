@@ -92,7 +92,7 @@ class QdrantReviewsSearcher:
                     limit=self.retrieve_limit * 2,
                 ),
             ],
-            query=models.FusionQuery(fusion=models.Fusion.RRF),
+            query=models.FusionQuery(fusion=models.Fusion.DBSF),
             query_filter=models.Filter(must=filters),
             limit=self.retrieve_limit,
             timeout=self.timeout,
