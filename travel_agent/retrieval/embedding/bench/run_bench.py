@@ -8,12 +8,15 @@ from loguru import logger
 from qdrant_client import QdrantClient
 
 from travel_agent.retrieval.embedding.bench.qdrant import (
+    qdrant_bm25_1000_then_colbert_benchmark,
     qdrant_bm25_1000_then_dense_benchmark,
     qdrant_bm25_benchmark,
     qdrant_colbert_benchmark,
     qdrant_hybrid_search_top_models_2_benchmark,
+    qdrant_hybrid_search_top_models_2_benchmark_dbsf,
     qdrant_hybrid_search_top_models_2_rerank_benchmark,
     qdrant_hybrid_search_top_models_benchmark,
+    qdrant_hybrid_search_top_models_benchmark_dbsf,
     qdrant_single_dense_benchmark,
     qdrant_triple_model_reranking_benchmark,
 )
@@ -242,6 +245,72 @@ def benchmark_hybrid_3(
     results.append(row)
 
 
+def benchmark_multi_stage_colbert(
+    results: list[dict[str, str | float | int]],
+    client: QdrantClient,
+    dataset_name: str,
+    queries: list[str],
+    query_col: str,
+    ks: list[int],
+) -> None:
+    logger.info("Benchmarking multistage with ColBERT...")
+    colbert_params_embedding_dim = get_colbert_embedding_dim()
+    row = run_and_record_benchmark(
+        experiment_name=f"multi_stage_1000_{BM25_MODEL_NAME}_top_k_{COLBERT_MODEL_NAME}",
+        func=qdrant_bm25_1000_then_colbert_benchmark,
+        client=client,
+        collection_name=dataset_name,
+        queries=queries,
+        query_payload_key=query_col,
+        ks=ks,
+        embedding_dim=colbert_params_embedding_dim["embedding_dim"],
+        num_params=colbert_params_embedding_dim["num_params"],
+    )
+    results.append(row)
+
+
+def benchmark_hybrid_dbsf(
+    results: list[dict[str, str | float | int]],
+    client: QdrantClient,
+    dataset_name: str,
+    queries: list[str],
+    query_col: str,
+    ks: list[int],
+) -> None:
+    logger.info("Benchmarking hybrid...")
+    row = run_and_record_benchmark(
+        experiment_name="hybrid_search_top_models_dbsf",
+        func=qdrant_hybrid_search_top_models_benchmark_dbsf,
+        client=client,
+        collection_name=dataset_name,
+        queries=queries,
+        query_payload_key=query_col,
+        ks=ks,
+    )
+    results.append(row)
+
+
+def benchmark_hybrid_2_dbsf(
+    results: list[dict[str, str | float | int]],
+    client: QdrantClient,
+    dataset_name: str,
+    queries: list[str],
+    query_col: str,
+    ks: list[int],
+) -> None:
+    logger.info("Benchmarking hybrid_2...")
+    row = run_and_record_benchmark(
+        experiment_name="hybrid_search_top_models_2_dbsf",
+        func=qdrant_hybrid_search_top_models_2_benchmark_dbsf,
+        client=client,
+        collection_name=dataset_name,
+        queries=queries,
+        query_payload_key=query_col,
+        ks=ks,
+    )
+    results.append(row)
+
+
 def main():
     seed_everything(42)
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -268,9 +337,13 @@ def main():
     benchmark_colbert(results, client, dataset_name, queries, query_col, k)
     benchmark_reranking(results, client, dataset_name, queries, query_col, device, k)
     benchmark_multi_stage(results, client, dataset_name, queries, query_col, device, k)
+    benchmark_multi_stage_colbert(results, client, dataset_name, queries, query_col, k)
     benchmark_hybrid(results, client, dataset_name, queries, query_col, k)
     benchmark_hybrid_2(results, client, dataset_name, queries, query_col, k)
     benchmark_hybrid_3(results, client, dataset_name, queries, query_col, k)
+
+    benchmark_hybrid_dbsf(results, client, dataset_name, queries, query_col, k)
+    benchmark_hybrid_2_dbsf(results, client, dataset_name, queries, query_col, k)
 
     df_results = pd.DataFrame(results)
     save_path = Path("data") / "embedding_bench" / f"{dataset_name}_new_results+one_more.csv"

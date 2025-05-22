@@ -6,10 +6,22 @@ from fastembed import LateInteractionTextEmbedding
 from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
-from travel_agent.retrieval.embedding.generation.dense import MODELS_PROMPTS, embed_dense
-from travel_agent.retrieval.embedding.generation.late_interaction import COLBERT_MODEL_NAME, query_embed_colbert
-from travel_agent.retrieval.embedding.generation.sparse import BM25_MODEL_NAME, query_embed_bm25
-from travel_agent.retrieval.embedding.utils import average_precision_at_k, clean_up_model
+from travel_agent.retrieval.embedding.generation.dense import (
+    MODELS_PROMPTS,
+    embed_dense,
+)
+from travel_agent.retrieval.embedding.generation.late_interaction import (
+    COLBERT_MODEL_NAME,
+    query_embed_colbert,
+)
+from travel_agent.retrieval.embedding.generation.sparse import (
+    BM25_MODEL_NAME,
+    query_embed_bm25,
+)
+from travel_agent.retrieval.embedding.utils import (
+    average_precision_at_k,
+    clean_up_model,
+)
 
 
 def qdrant_evaluate_queries(
@@ -324,6 +336,145 @@ def qdrant_hybrid_search_top_models_2_rerank_benchmark(
             query=late_embedding,
             limit=max(ks),
             using=COLBERT_MODEL_NAME,
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    clean_up_model(model_1, device)
+    clean_up_model(model_2, device)
+    return results
+
+
+def qdrant_bm25_1000_then_colbert_benchmark(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    colbert_model = LateInteractionTextEmbedding(COLBERT_MODEL_NAME)
+
+    def get_search_results(query):
+        colbert_embedding = query_embed_colbert(colbert_model, query)
+        sparse_embedding = query_embed_bm25(query)
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=models.Prefetch(
+                query=models.SparseVector(**sparse_embedding.as_object()),
+                using=BM25_MODEL_NAME,
+                limit=1000,
+            ),
+            query=colbert_embedding,
+            using=COLBERT_MODEL_NAME,
+            limit=max(ks),
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    return results
+
+
+def qdrant_hybrid_search_top_models_benchmark_dbsf(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    device = "cpu"
+    model_1_name = "sergeyzh/BERTA"
+    model_2_name = "intfloat/multilingual-e5-large"
+    model_3_name = "ai-forever/ru-en-RoSBERTa"
+    model_4_name = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+
+    model_1 = SentenceTransformer(model_1_name, device=device)
+    model_2 = SentenceTransformer(model_2_name, device=device)
+    model_3 = SentenceTransformer(model_3_name, device=device)
+    model_4 = SentenceTransformer(model_4_name, device=device)
+
+    def get_search_results(query):
+        embedding_1 = embed_dense(model_1, sentences=query, prompt=MODELS_PROMPTS[model_1_name].get("query"))
+        embedding_2 = embed_dense(model_2, sentences=query, prompt=MODELS_PROMPTS[model_2_name].get("query"))
+        embedding_3 = embed_dense(model_3, sentences=query, prompt=MODELS_PROMPTS[model_3_name].get("query"))
+        embedding_4 = embed_dense(model_4, sentences=query, prompt=MODELS_PROMPTS[model_4_name].get("query"))
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=[
+                models.Prefetch(
+                    query=embedding_1,
+                    using=model_1_name,
+                    limit=max(ks),
+                ),
+                models.Prefetch(
+                    query=embedding_2,
+                    using=model_2_name,
+                    limit=max(ks),
+                ),
+                models.Prefetch(
+                    query=embedding_3,
+                    using=model_3_name,
+                    limit=max(ks),
+                ),
+                models.Prefetch(
+                    query=embedding_4,
+                    using=model_4_name,
+                    limit=max(ks),
+                ),
+            ],
+            query=models.FusionQuery(fusion=models.Fusion.DBSF),
+        )
+        return search_result
+
+    results = qdrant_evaluate_queries(queries, get_search_results, query_payload_key, ks)
+    clean_up_model(model_1, device)
+    clean_up_model(model_2, device)
+    clean_up_model(model_3, device)
+    clean_up_model(model_4, device)
+    return results
+
+
+def qdrant_hybrid_search_top_models_2_benchmark_dbsf(
+    client: QdrantClient,
+    collection_name: str,
+    queries: list[str],
+    query_payload_key: str,
+    ks: list[int] = [10],
+) -> dict[int, float]:
+    device = "cpu"
+    model_1_name = "sergeyzh/BERTA"
+    model_2_name = "intfloat/multilingual-e5-small"
+
+    model_1 = SentenceTransformer(model_1_name, device=device)
+    model_2 = SentenceTransformer(model_2_name, device=device)
+
+    def get_search_results(query):
+        sparse_embedding = query_embed_bm25(query)
+        embedding_1 = embed_dense(model_1, sentences=query, prompt=MODELS_PROMPTS[model_1_name].get("query"))
+        embedding_2 = embed_dense(model_2, sentences=query, prompt=MODELS_PROMPTS[model_2_name].get("query"))
+
+        search_result = client.query_points(
+            collection_name=collection_name,
+            prefetch=[
+                models.Prefetch(
+                    query=embedding_1,
+                    using=model_1_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=embedding_2,
+                    using=model_2_name,
+                    limit=max(ks) * 2,
+                ),
+                models.Prefetch(
+                    query=models.SparseVector(**sparse_embedding.as_object()),
+                    using=BM25_MODEL_NAME,
+                    limit=1000,
+                ),
+            ],
+            query=models.FusionQuery(fusion=models.Fusion.DBSF),
+            limit=max(ks),
         )
         return search_result
 
