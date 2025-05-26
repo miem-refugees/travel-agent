@@ -19,8 +19,8 @@ services:
       - app
 
   app:
-    # image: ghcr.io/miem-refugees/travel-agent:main
-    build: .
+    image: ghcr.io/miem-refugees/travel-agent:main
+    # build: .
     container_name: travel-agent
     env_file: .env
     entrypoint: /app/.venv/bin/app --port 8000 --trace=true
