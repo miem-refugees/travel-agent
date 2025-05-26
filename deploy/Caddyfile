@@ -1,0 +1,14 @@
+# app
+travel-agent.local {
+    handle_errors {
+        rewrite * html/error.html
+        file_server
+    }
+
+    reverse_proxy app:8000
+}
+
+# tracing panel
+tracing.local {
+    reverse_proxy tracing:6006
+}

@@ -1,28 +1,67 @@
 services:
-  app:
-    container_name: travel-agent-app
-    build: .
+  reverse-proxy:
+    image: caddy:2.10.0-alpine
+    container_name: caddy
+    cap_add:
+      - NET_ADMIN
     ports:
-      - 8080:8080
+      - "80:80"
+      - "443:443"
+      - "8000:8000"
+      - "8080:8080"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile
+      - ./deploy/html:/srv/html
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    depends_on:
+      - app
+
+  app:
+    image: ghcr.io/miem-refugees/travel-agent:main
+    container_name: travel-agent
     env_file: .env
+    entrypoint: /app/.venv/bin/app --port 8000 --trace=true
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - TRANSFORMERS_CACHE=/hf_cache
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tracing:4317
+      - COLLECTOR_ENDPOINT=http://tracing:6006/v1/traces
+    restart: unless-stopped
+    volumes:
+      - ./.hf_cache:/hf_cache
+    healthcheck:
+      test: curl -f http://localhost:8000/ || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      - qdrant
+      - tracing
 
-#   qdrant:
-#     image: qdrant/qdrant:latest
-#     restart: always
-#     container_name: qdrant
-#     ports:
-#       - 6333:6333
-#       - 6334:6334
-#     expose:
-#       - 6333
-#       - 6334
-#     configs:
-#       - source: qdrant_config
-#         target: /qdrant/config/production.yaml
-#     volumes:
-#       - ${PWD}/.qdrant_data:/qdrant/storage
+  tracing:
+    image: arizephoenix/phoenix:latest
+    container_name: phoenix
+    restart: unless-stopped
+    volumes:
+      - phoenix_data:/mnt/data
 
-# configs:
-#   qdrant_config:
-#     content: |
-#       log_level: INFO
+  qdrant:
+    image: qdrant/qdrant:latest
+    restart: always
+    container_name: qdrant
+    volumes:
+      - ${PWD}/.qdrant_data:/qdrant/storage
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  caddy_data:
+  caddy_config:
+  phoenix_data:
