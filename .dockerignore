@@ -1,11 +1,12 @@
 .dvc
+.git
 .github
+.gradio
+.hf_cache
+.qdrant_data
+.ruff_cache
 .venv
 data
 docs
 notebooks
 scripts
-dvc.lock
-dvc.yaml
-mkdocs.yml
-params.yaml

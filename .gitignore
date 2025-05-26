@@ -275,3 +275,5 @@ qdrant_storage/
 # rag_eval
 .gradio
 gcp-creds.json
+
+.hf_cache

@@ -1,0 +1,16 @@
+travel-agent.localhost {
+	handle_errors {
+		rewrite * html/error.html
+		file_server
+	}
+
+	reverse_proxy app:8000
+}
+
+tracing.localhost {
+	reverse_proxy tracing:6006
+}
+
+qdrant.localhost {
+	reverse_proxy qdrant:6333
+}

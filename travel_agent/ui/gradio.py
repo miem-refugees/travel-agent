@@ -264,8 +264,8 @@ class TravelGradioUI:
     def log_user_message(self, text_input):
         return text_input, "", gr.Button(interactive=False)
 
-    def launch(self, share: bool = True, **kwargs):
-        self.create_app().launch(debug=True, share=share, **kwargs)
+    def launch(self, server_name: str, share: bool = True, **kwargs):
+        self.create_app().launch(debug=True, server_name=server_name, share=share, **kwargs)
 
     def create_app(self):
         with gr.Blocks(theme="ocean", fill_height=True) as demo:
