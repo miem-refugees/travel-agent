@@ -728,7 +728,7 @@ wheels = [
 
 [[package]]
 name = "fastembed"
-version = "0.6.1"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub", marker = "sys_platform == 'darwin'" },
@@ -742,9 +742,9 @@ dependencies = [
     { name = "tokenizers", marker = "sys_platform == 'darwin'" },
     { name = "tqdm", marker = "sys_platform == 'darwin'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ac/85/0613ef57fd381ee392c54c88e88d66629a9727f57fe3540abdaa54bf7f15/fastembed-0.6.1.tar.gz", hash = "sha256:9c69ce389700eaa267eb9f488ecced94273d973be3fa933e6a9f807df3da5d96", size = 51645, upload-time = "2025-04-10T13:48:06.215Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/7d/6135fcc4bff8c23bc75abe8f9ba29c75c2855dd3e05c2a28d3795c2ea55e/fastembed-0.7.0.tar.gz", hash = "sha256:5a7bf5cba71a00b4c5af85bc678c9969edcf0916c807c56cc30f1d6c67cd2ada", size = 60906, upload-time = "2025-05-13T14:09:25.536Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/e4/b34b33fde8d3739d3b69909bc920aa1a47f9ec219e45f10b68d64b87dee7/fastembed-0.6.1-py3-none-any.whl", hash = "sha256:89bfe07d3e12ae84474f0c85a6416ffbded25c72af43ac7ebf39acf309046044", size = 86789, upload-time = "2025-04-10T13:48:05.062Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/39/f3d16c9475269b8d580b469f733efe3856bd48484e251e163fedf63d1753/fastembed-0.7.0-py3-none-any.whl", hash = "sha256:7809c2e64dbbe626d9f4899b3932b2c9ed18288c1db1c1f8c94e2e3046926fa8", size = 99033, upload-time = "2025-05-13T14:09:23.942Z" },
 ]
 
 [[package]]
