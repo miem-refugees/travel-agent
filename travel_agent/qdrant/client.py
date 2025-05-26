@@ -11,7 +11,11 @@ def create_client() -> QdrantClient:
     try:
         logger.debug("Connecting to Qdrant at {}", url)
 
-        client = QdrantClient(url=url, api_key=api_key)
+        client = QdrantClient(
+            url=url,
+            api_key=api_key,
+            timeout=os.getenv("QDRANT_TIMEOUT", 3600),
+        )
 
         # ping server
         info = client.info()

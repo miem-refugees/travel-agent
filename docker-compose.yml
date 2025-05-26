@@ -19,15 +19,18 @@ services:
       - app
 
   app:
-    image: ghcr.io/miem-refugees/travel-agent:main
+    # image: ghcr.io/miem-refugees/travel-agent:main
+    build: .
     container_name: travel-agent
     env_file: .env
     entrypoint: /app/.venv/bin/app --port 8000 --trace=true
     environment:
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
-      - TRANSFORMERS_CACHE=/hf_cache
+      - HF_HOME=/hf_cache
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tracing:4317
       - COLLECTOR_ENDPOINT=http://tracing:6006/v1/traces
+      - QDRANT_URL=http://qdrant:6333
+      - QDRANT_SHAPSHOT=${QDRANT_SHAPSHOT}
     restart: unless-stopped
     volumes:
       - ./.hf_cache:/hf_cache

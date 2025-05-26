@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import torch
 from loguru import logger
-from qdrant_client import models
+from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from travel_agent.qdrant import client
@@ -18,12 +18,13 @@ class QdrantReviewsSearcher:
         model_2_name: str = "intfloat/multilingual-e5-small",
         retrieve_limit: int = 5,
         timeout: int = 500,
+        snapshot_url: Optional[str] = None,
     ):
         self.collection_name = collection_name
         self.model_1_name = model_1_name
         self.model_2_name = model_2_name
         self.retrieve_limit = retrieve_limit
-        self.client = client
+        self.client: QdrantClient = client
         self.timeout = timeout
 
         device = torch.device(
@@ -42,7 +43,19 @@ class QdrantReviewsSearcher:
 
         # sanity check
         if not self.client.collection_exists(self.collection_name):
-            raise Exception(f"Collection f{self.collection_name} does not exist in qdrant")
+            logger.info(
+                "Collection {} does not exist in qdrant, trying to recover from snapshot {}...",
+                self.collection_name,
+                snapshot_url,
+            )
+            if snapshot_url:
+                ok = self.client.recover_snapshot(
+                    self.collection_name, snapshot_url, priority=models.SnapshotPriority.SNAPSHOT, wait=True
+                )
+                if not ok:
+                    logger.error("Failed to recover qdrant snapshot")
+            else:
+                raise Exception(f"Collection f{self.collection_name} does not exist in qdrant")
 
         collection_info = self.client.get_collection(self.collection_name)
         if collection_info.vectors_count == 0:

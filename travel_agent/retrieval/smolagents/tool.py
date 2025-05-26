@@ -1,3 +1,4 @@
+import os
 import time
 from typing import List, Optional
 from urllib.parse import quote
@@ -72,7 +73,11 @@ class TravelReviewQueryTool(Tool):
     ):
         super().__init__(**kwargs)
 
-        self.searcher = QdrantReviewsSearcher(retrieve_limit=retrieve_limit, timeout=timeout)
+        self.searcher = QdrantReviewsSearcher(
+            retrieve_limit=retrieve_limit,
+            timeout=timeout,
+            snapshot_url=os.getenv("QDRANT_SHAPSHOT"),
+        )
 
     def forward(
         self,
