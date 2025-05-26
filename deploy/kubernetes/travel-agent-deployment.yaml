@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: travel-agent
+spec:
+  selector:
+    app: travel-agent
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: travel-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: travel-agent
+  template:
+    metadata:
+      labels:
+        app: travel-agent
+    spec:
+      containers:
+        - name: travel-agent
+          image: ghcr.io/miem-refugees/travel-agent:main
+          command: ["/app/.venv/bin/app"]
+          args: ["--port", "8000", "--trace=true"]
+          envFrom:
+            - configMapRef:
+                name: travel-agent-config
+            - secretRef:
+                name: travel-agent-secrets
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /hf_cache
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: hf-cache
+          emptyDir: {}

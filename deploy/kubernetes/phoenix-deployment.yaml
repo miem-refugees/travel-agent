@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tracing
+spec:
+  selector:
+    app: phoenix
+  ports:
+    - port: 6006
+      targetPort: 6006
+    - port: 4317
+      targetPort: 4317
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phoenix
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: phoenix
+  template:
+    metadata:
+      labels:
+        app: phoenix
+    spec:
+      containers:
+        - name: phoenix
+          image: arizephoenix/phoenix:latest
+          volumeMounts:
+            - name: phoenix-data
+              mountPath: /mnt/data
+      volumes:
+        - name: phoenix-data
+          emptyDir: {}
