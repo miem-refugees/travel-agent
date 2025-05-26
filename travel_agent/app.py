@@ -65,6 +65,7 @@ def setup_langfuse_tracing(trace: bool):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ollama-model", type=str, default=None)
+    parser.add_argument("--host", type=str, default="localhost")
     parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--trace", type=bool, default=False)
     parser.add_argument("--share", type=bool, default=False)
@@ -79,7 +80,7 @@ def main():
 
     logger.success("agent ready")
 
-    TravelGradioUI(agent).launch(share=args.share, server_port=args.port)
+    TravelGradioUI(agent).launch(args.host, server_port=args.port, share=args.share)
 
 
 if __name__ == "__main__":
