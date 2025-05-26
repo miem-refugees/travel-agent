@@ -749,7 +749,7 @@ wheels = [
 
 [[package]]
 name = "fastembed-gpu"
-version = "0.6.1"
+version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "huggingface-hub", marker = "sys_platform != 'darwin'" },
@@ -763,9 +763,9 @@ dependencies = [
     { name = "tokenizers", marker = "sys_platform != 'darwin'" },
     { name = "tqdm", marker = "sys_platform != 'darwin'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/f1/0cde735baa81827ef54c875ab1689f307bf6562f5ec12e3aeed53f002e56/fastembed_gpu-0.6.1.tar.gz", hash = "sha256:5a9ed9cc5f81c26eed9e99cd5f8d4af8ceefcf2c0c1a879432aa1fa9a72cc2dd", size = 51705, upload-time = "2025-04-10T13:48:17.65Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/16/22/4d515f09193bef85b40e24178bcdcbb9a9ba2e0a6cafdb2dedfe3069bc34/fastembed_gpu-0.7.0.tar.gz", hash = "sha256:ecf29514b2ab7e319eb8f784140767fdbc259c03213a0e7230846e1f73e2898d", size = 60977, upload-time = "2025-05-13T14:26:08.126Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7f/f1/4746523eaf1273be4274244cadd72b25fd30c31c4113b61d5866388318e8/fastembed_gpu-0.6.1-py3-none-any.whl", hash = "sha256:66273814c4c69be850236663547549770c6085d6289c4e8ecfae9a4f626c72f0", size = 86839, upload-time = "2025-04-10T13:48:16.549Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/d4/b257abe6bdc70ef5cfd8f027cef797a736c9291465d1f265a5269e880c2b/fastembed_gpu-0.7.0-py3-none-any.whl", hash = "sha256:e3e2714a9ab3cf9190afafe614ade932cb5074e0e6cde7ce4e2517c04b157f10", size = 99080, upload-time = "2025-05-13T14:26:06.625Z" },
 ]
 
 [[package]]
