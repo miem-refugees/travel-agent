@@ -13,8 +13,7 @@ dependencies = [
     "arize-phoenix>=9.5.0",
     "duckduckgo-search>=8.0.1",
     "huggingface-hub[hf-xet]>=0.30.2",
-    "fastembed-gpu>=0.6.1; sys_platform == 'linux'",
-    "fastembed>=0.6.1; sys_platform == 'darwin'",
+    "fastembed>=0.6.1",
     "loguru>=0.7.3",
     "markdownify>=1.1.0",
     "openinference-instrumentation-smolagents>=0.1.11",
@@ -28,6 +27,11 @@ dependencies = [
     "smolagents[gradio,litellm,telemetry]>=1.15.0",
     "torch>=2.7.0",
     "transformers>=4.51.2",
+]
+
+[project.optional-dependencies]
+gpu = [
+    "fastembed-gpu>=0.6.1",
 ]
 
 [dependency-groups]
