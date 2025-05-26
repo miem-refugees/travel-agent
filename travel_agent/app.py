@@ -77,6 +77,8 @@ def main():
         logger.error("Agent initialization failed")
         exit(1)
 
+    logger.success("agent ready")
+
     TravelGradioUI(agent).launch(share=args.share, server_port=args.port)
 
 
