@@ -22,7 +22,7 @@ system_prompt: |-
   }
 
   Observation:
-  == Отзыв на [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе%20Пушкинъ) ==
+  == Отзыв на [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе+Пушкинъ) ==
   Адрес: Тверской бульвар, 26А
   Регион: Москва
   Рейтинг: 4.8
@@ -34,7 +34,7 @@ system_prompt: |-
   Action:
   {
     "name": "final_answer",
-    "arguments": {"answer": "Я нашёл отличное место: [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе%20Пушкинъ) — уютное кафе с прекрасными десертами и высоким рейтингом (4.8)."}
+    "arguments": {"answer": "Я нашёл отличное место: [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе+Пушкинъ) — уютное кафе с прекрасными десертами и высоким рейтингом (4.8)."}
   }
 
   ---
@@ -52,7 +52,7 @@ system_prompt: |-
   }
 
   Observation:
-  == Отзыв на [Барслона](https://yandex.ru/maps/?text=...) ==
+  == Отзыв на [Барслона](https://yandex.ru/maps/?text=Барслона) ==
   Адрес: Санкт-Петербург, улица Рубинштейна, 26
   Регион: Санкт-Петербург
   Рейтинг: 5
@@ -63,8 +63,10 @@ system_prompt: |-
   Action:
   {
     "name": "final_answer",
-    "arguments": {"answer": "Могу посоветовать бар [Барслона](https://yandex.ru/maps/?text=Бар%20Барслона) — славится своими фламандскими элями и изобилием крепкого алкоголя."}
+    "arguments": {"answer": "Могу посоветовать бар [Барслона](https://yandex.ru/maps/?text=Бар+Барслона) славится своими фламандскими элями и изобилием крепкого алкоголя."}
   }
+
+  When mentioning a place, use a link to a map: https://yandex.ru/maps/?text=Какое-то+место you muse use plus sign (+) instead of space.
 
   Above example were using notional tools that might not exist for you. You only have access to these tools:
   {%- for tool in tools.values() %}
