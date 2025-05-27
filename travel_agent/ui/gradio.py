@@ -97,9 +97,6 @@ def _process_action_step(step_log: ActionStep, skip_model_outputs: bool = False)
         if used_code:
             content = _format_code_content(content)
 
-        if first_tool_call.name == "final_answer":
-            content = ""
-
         # Create the tool call message
         parent_message_tool = gr.ChatMessage(
             role="assistant",
