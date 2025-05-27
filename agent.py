@@ -18,7 +18,10 @@ def create_agent() -> ToolCallingAgent:
 
     if os.getenv("DEEPSEEK_API_KEY"):
         logger.info("Using Deepseek as LLM")
-        llm = LiteLLMModel(model_id="deepseek/deepseek-chat")
+        llm = LiteLLMModel(
+            model_id="deepseek/deepseek-chat",
+            num_ctx=64000,
+        )
     else:
         logger.error("No DEEPSEEK_API_KEY")
         return

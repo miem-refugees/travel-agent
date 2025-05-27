@@ -1,3 +1,4 @@
+import os
 import time
 from typing import List, Optional
 from urllib.parse import quote
@@ -35,8 +36,8 @@ class TravelReviewQueryTool(Tool):
     description = (
         "Использует семантический поиск для извлечения отзывов на различные заведения.\n"
         "Запрещено использовать результат напрямую - пример ответа: пользователи говорят, что в заведении X хорошая атмосфера, низкие цены, много хороших отзывов.\n"
-        "Прикладывай ссылки на карту из ответа утилиты как есть.\n"
-        "Если не нашлось результатов, попробуй убрать дополнительные фильтры такие, как address, region, rubrics."
+        "Прикладывай ссылки на карту из ответа утилиты к ответу.\n"
+        "Если по запросу ничего не найдено, попробуй убрать дополнительные фильтры такие, как address, region, rubrics."
     )
     inputs = {
         "query": {
@@ -50,12 +51,12 @@ class TravelReviewQueryTool(Tool):
         },
         "address": {
             "type": "string",
-            "description": 'Опционально. Название улицы или локации, например: "Улица Энгельса", "Болотная набережная, 15".',
+            "description": 'Опционально. Название локации или малоизвестного города. Пример: "Ржев", "Улица Энгельса", "Болотная набережная, 15".',
             "nullable": True,
         },
         "region": {
             "type": "string",
-            "description": 'Опционально. Название города, если известен город или региона России, например: "Рязань", "Тверская область", "Краснодарский край".',
+            "description": 'Опционально. Название города, если известен город или региона России, например: "Рязань", "Тверская область", "Краснодарский край". Если город не найден, передать его в поле "address".',
             "nullable": True,
         },
         "rubrics": {
@@ -68,13 +69,17 @@ class TravelReviewQueryTool(Tool):
 
     def __init__(
         self,
-        retrieve_limit: int = 5,
+        retrieve_limit: int = 10,
         timeout: int = 500,
         **kwargs,
     ):
         super().__init__(**kwargs)
 
-        self.searcher = QdrantReviewsSearcher(retrieve_limit=retrieve_limit, timeout=timeout)
+        self.searcher = QdrantReviewsSearcher(
+            retrieve_limit=retrieve_limit,
+            timeout=timeout,
+            snapshot_url=os.getenv("QDRANT_SHAPSHOT"),
+        )
 
     def forward(
         self,
