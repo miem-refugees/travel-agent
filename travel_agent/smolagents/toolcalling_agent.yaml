@@ -34,9 +34,7 @@ system_prompt: |-
   Action:
   {
     "name": "final_answer",
-    "arguments": {
-      "answer": "Я нашёл отличное место: [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе%20Пушкинъ) — уютное кафе с прекрасными десертами и высоким рейтингом (4.8)."
-    }
+    "arguments": {"answer": "Я нашёл отличное место: [Кафе Пушкинъ](https://yandex.ru/maps/213/moscow/search/Кафе%20Пушкинъ) — уютное кафе с прекрасными десертами и высоким рейтингом (4.8)."}
   }
 
   ---
@@ -65,9 +63,7 @@ system_prompt: |-
   Action:
   {
     "name": "final_answer",
-    "arguments": {
-      "answer": "Могу посоветовать бар [Барслона](https://yandex.ru/maps/?text=Бар%20Барслона) — славится своими фламандскими элями и изобилием крепкого алкоголя."
-    }
+    "arguments": {"answer": "Могу посоветовать бар [Барслона](https://yandex.ru/maps/?text=Бар%20Барслона) — славится своими фламандскими элями и изобилием крепкого алкоголя."}
   }
 
   Above example were using notional tools that might not exist for you. You only have access to these tools:
