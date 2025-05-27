@@ -1,4 +1,5 @@
 import re
+from functools import partial
 
 import gradio as gr
 from smolagents.agent_types import AgentAudio, AgentImage, AgentText
@@ -161,11 +162,8 @@ def pull_messages_from_step(step_log: MemoryStep, skip_model_outputs: bool = Fal
     elif isinstance(step_log, PlanningStep):
         yield gr.ChatMessage(
             role="assistant",
-            content="**Шаг планирования**",
-            metadata={"status": "done"},
-        )
-        yield gr.ChatMessage(
-            role="assistant", content=step_log.plan, metadata={"status": "done"}
+            content=f"{step_log.plan}\n",
+            metadata={"title": "🧠 **Планирование действий**"},
         )
         yield gr.ChatMessage(
             role="assistant",
@@ -215,11 +213,7 @@ def stream_to_gradio(
     additional_args: dict | None = None,
 ):
     """Runs an agent with the given task and streams the messages from the agent as gradio ChatMessages."""
-    total_input_tokens = 0
-    total_output_tokens = 0
-
     intermediate_text = ""
-
     for step_log in agent.run(
         task,
         images=task_images,
@@ -229,8 +223,6 @@ def stream_to_gradio(
     ):
         # Track tokens if model provides them
         if getattr(agent.model, "last_input_token_count", None) is not None:
-            total_input_tokens += agent.model.last_input_token_count
-            total_output_tokens += agent.model.last_output_token_count
             if isinstance(step_log, (ActionStep, PlanningStep)):
                 step_log.input_token_count = agent.model.last_input_token_count
                 step_log.output_token_count = agent.model.last_output_token_count
@@ -249,7 +241,7 @@ def stream_to_gradio(
 
 
 class TravelGradioUI:
-    def __init__(self, agent: MultiStepAgent, file_upload_folder: str | None = None):
+    def __init__(self, agent: MultiStepAgent):
         self.agent = agent
 
     def interact_with_agent(self, prompt, messages, session_state):
@@ -323,8 +315,6 @@ class TravelGradioUI:
         except Exception as e:
             print(f"Error in interaction: {str(e)}")
 
-            if messages and messages[-1].metadata.get("is_loading"):
-                messages.pop()
             messages.append(
                 gr.ChatMessage(
                     role="assistant",
@@ -337,36 +327,37 @@ class TravelGradioUI:
     def log_user_message(self, text_input):
         return text_input, "", gr.Button(interactive=False)
 
-    def launch(self, share: bool = True, **kwargs):
-        self.create_app().launch(debug=True, share=share, **kwargs)
+    def launch(self, server_name: str, share: bool = True, **kwargs):
+        self.create_app().launch(
+            debug=True, server_name=server_name, share=share, **kwargs
+        )
 
     def create_app(self):
         with gr.Blocks(theme="ocean", fill_height=True) as demo:
-            # Add session state to store session-specific data
             session_state = gr.State({})
             stored_messages = gr.State([])
 
             with gr.Sidebar():
                 gr.Markdown(
-                    "# Туристический помощник 🕵🏻‍♂️\n"
-                    "> Я помогу тебе подобрать лучший вариант для путешествия в России и расскажу об интересных местах, кафе, и музеях!"
+                    "# 🧭 Туристический помощник по России\n"
+                    "👋 Привет! Я помогу тебе спланировать незабываемое путешествие по России — от уютных кафе Петербурга до музеев Суздаля и пляжей Сочи.\n"
+                    "Хочешь культурный маршрут, гастротур или просто отдохнуть на выходных? Просто задай вопрос!"
                 )
 
                 with gr.Group():
-                    gr.Markdown("**Запрос**", container=True)
+                    gr.Markdown("**Запрос**")
                     text_input = gr.Textbox(
                         lines=3,
-                        label="Chat Message",
+                        label="",
                         container=False,
-                        placeholder="Введите запрос и нажмите Shift+Enter или кнопку 'Отправить'",
+                        placeholder="Введите запрос и нажмите Shift+Enter или выберите пример ниже",
                     )
                     submit_btn = gr.Button("Отправить", variant="primary")
 
                 gr.HTML(
-                    "<br><br><h4><center><a target='_blank' href='https://github.com/miem-refugees/travel-agent'><b>Github travel-agent</b></a></center></h4>"
+                    "<br><br><h4><center><a target='_blank' href='https://github.com/miem-refugees/travel-agent'><b>Github</b></a></center></h4>"
                 )
 
-            # Main chat interface with custom styling for loading indicators
             chatbot = gr.Chatbot(
                 label="Помощник 🕵🏻‍♂️",
                 type="messages",
@@ -376,13 +367,48 @@ class TravelGradioUI:
                 ),
                 resizeable=True,
                 scale=1,
+                show_copy_button=True,
+                watermark="by ksusonic and seara",
+                placeholder="# 💬 Попробуй спросить:",
             )
 
-            # Set up event handlers
+            # ⛳️ Examples section (non-togglable, will be hidden on submit)
+            examples_box = gr.Column(visible=True)
+            with examples_box:
+                gr.Markdown("💡 Примеры запросов:")
+                example_queries = [
+                    "Где в Москве лучший бизнес-ланч?",
+                    "Составь маршрут по необычным кафе и барам в Новосибирске.",
+                    "Составь детский маршрут по Москве: музеи, парки, интересные кафе.",
+                    "Можешь спланировать 7-дневное путешествие по Золотому кольцу России?",
+                    "Сделай гастрономический тур по югу России: Ростов-на-Дону, Краснодар, Сочи.",
+                ]
+
+                def handle_example_click(example_text):
+                    return example_text, example_text, gr.update(visible=False)
+
+                for example in example_queries:
+                    gr.Button(
+                        example,
+                        variant="secondary",
+                        size="md",
+                    ).click(
+                        partial(handle_example_click, example),
+                        outputs=[text_input, stored_messages, examples_box],
+                    ).then(
+                        self.interact_with_agent,
+                        [stored_messages, chatbot, session_state],
+                        [chatbot],
+                    )
+
             text_input.submit(
                 self.log_user_message,
                 [text_input],
                 [stored_messages, text_input, submit_btn],
+            ).then(
+                lambda: gr.update(visible=False),  # Hide examples
+                None,
+                [examples_box],
             ).then(
                 self.interact_with_agent,
                 [stored_messages, chatbot, session_state],
@@ -391,7 +417,7 @@ class TravelGradioUI:
                 lambda: (
                     gr.Textbox(
                         interactive=True,
-                        placeholder="Введите запрос и нажмите Shift+Enter или кнопку 'Отправить'",
+                        placeholder="Введите запрос и нажмите Shift+Enter или выберите пример ниже",
                     ),
                     gr.Button(interactive=True),
                 ),
@@ -404,6 +430,10 @@ class TravelGradioUI:
                 [text_input],
                 [stored_messages, text_input, submit_btn],
             ).then(
+                lambda: gr.update(visible=False),  # Hide examples
+                None,
+                [examples_box],
+            ).then(
                 self.interact_with_agent,
                 [stored_messages, chatbot, session_state],
                 [chatbot],
@@ -411,7 +441,7 @@ class TravelGradioUI:
                 lambda: (
                     gr.Textbox(
                         interactive=True,
-                        placeholder="Введите запрос и нажмите Shift+Enter или кнопку 'Отправить'",
+                        placeholder="Введите запрос и нажмите Shift+Enter или выберите пример ниже",
                     ),
                     gr.Button(interactive=True),
                 ),
