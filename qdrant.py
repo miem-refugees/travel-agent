@@ -1,11 +1,9 @@
 import os
-
-from loguru import logger
-from qdrant_client import QdrantClient
 from typing import List, Optional
 
 import torch
-from qdrant_client import models
+from loguru import logger
+from qdrant_client import QdrantClient, models
 from sentence_transformers import SentenceTransformer
 
 from dense import MODELS_PROMPTS, embed_dense
@@ -41,7 +39,7 @@ class QdrantReviewsSearcher:
         collection_name: str = "yandex_full_dataset",
         model_1_name: str = "sergeyzh/BERTA",
         model_2_name: str = "intfloat/multilingual-e5-small",
-        retrieve_limit: int = 5,
+        retrieve_limit: int = 10,
         timeout: int = 500,
     ):
         self.collection_name = collection_name
@@ -52,9 +50,7 @@ class QdrantReviewsSearcher:
         self.timeout = timeout
 
         device = torch.device(
-            "cuda"
-            if torch.cuda.is_available()
-            else ("mps" if torch.backends.mps.is_available() else "cpu")
+            "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
         )
         logger.debug("torch will use device: {}", device)
 
@@ -69,9 +65,7 @@ class QdrantReviewsSearcher:
 
         # sanity check
         if not self.client.collection_exists(self.collection_name):
-            raise Exception(
-                f"Collection f{self.collection_name} does not exist in qdrant"
-            )
+            raise Exception(f"Collection f{self.collection_name} does not exist in qdrant")
 
         collection_info = self.client.get_collection(self.collection_name)
         if collection_info.vectors_count == 0:
@@ -90,31 +84,17 @@ class QdrantReviewsSearcher:
         filters = []
 
         if min_rating:
-            filters.append(
-                models.FieldCondition(key="rating", range=models.Range(gte=min_rating))
-            )
+            filters.append(models.FieldCondition(key="rating", range=models.Range(gte=min_rating)))
         if address:
-            filters.append(
-                models.FieldCondition(
-                    key="address", match=models.MatchText(text=address)
-                )
-            )
+            filters.append(models.FieldCondition(key="address", match=models.MatchText(text=address)))
         if region:
-            filters.append(
-                models.FieldCondition(key="region", match=models.MatchText(text=region))
-            )
+            filters.append(models.FieldCondition(key="region", match=models.MatchText(text=region)))
         if rubrics:
-            filters.append(
-                models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics))
-            )
+            filters.append(models.FieldCondition(key="rubrics", match=models.MatchAny(any=rubrics)))
 
         sparse_embedding = query_embed_bm25(query)
-        embedding_1 = embed_dense(
-            self.dense_model_1, sentences=query, prompt=self.prompt_1
-        )
-        embedding_2 = embed_dense(
-            self.dense_model_2, sentences=query, prompt=self.prompt_2
-        )
+        embedding_1 = embed_dense(self.dense_model_1, sentences=query, prompt=self.prompt_1)
+        embedding_2 = embed_dense(self.dense_model_2, sentences=query, prompt=self.prompt_2)
 
         result = self.client.query_points(
             collection_name=self.collection_name,
