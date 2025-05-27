@@ -4,8 +4,8 @@ from typing import List, Optional
 from urllib.parse import quote
 
 from loguru import logger
-
 from smolagents import Tool
+
 from travel_agent.qdrant.reviews_searcher import QdrantReviewsSearcher
 from travel_agent.retrieval.common.rubrics import ALL_RUBRICS
 
@@ -100,9 +100,9 @@ class TravelReviewQueryTool(Tool):
         logger.debug("retrieved {} points in {} sec", len(points), (time.time() - start))
 
         if not points:
-            return "По вашему запросу ничего не найдено."
+            return "По запросу ничего не найдено."
 
-        results = "Найденные отзывы о местах:\n\n"
+        results = "Найденные отзывы:\n\n"
         for i, point in enumerate(points, 1):
             name = point.payload.get("name_ru")
             link = (

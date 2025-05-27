@@ -27,7 +27,7 @@ spec:
         - name: travel-agent
           image: ghcr.io/miem-refugees/travel-agent:main
           command: ["/app/.venv/bin/app"]
-          args: ["--port", "8000", "--trace=true"]
+          args: ["--port", "8000"]
           envFrom:
             - configMapRef:
                 name: travel-agent-config
