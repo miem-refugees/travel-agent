@@ -99,9 +99,9 @@ class TravelReviewQueryTool(Tool):
         )
 
         if not points:
-            return "По вашему запросу ничего не найдено."
+            return "По запросу ничего не найдено."
 
-        results = "Найденные отзывы о местах:\n\n"
+        results = "Найденные отзывы:\n\n"
         for i, point in enumerate(points, 1):
             name = point.payload.get("name_ru")
             link = (

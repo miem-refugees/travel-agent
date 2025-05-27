@@ -282,3 +282,7 @@ pyrightconfig.json
 .dvc
 data
 travel_agent
+
+.hf_cache
+.qdrant_data
+gcp-creds.json
