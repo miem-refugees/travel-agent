@@ -1,4 +1,3 @@
-import os
 import time
 from typing import List, Optional
 from urllib.parse import quote
@@ -78,7 +77,6 @@ class TravelReviewQueryTool(Tool):
         self.searcher = QdrantReviewsSearcher(
             retrieve_limit=retrieve_limit,
             timeout=timeout,
-            snapshot_url=os.getenv("QDRANT_SHAPSHOT"),
         )
 
     def forward(
