@@ -3,8 +3,8 @@ from typing import List, Optional
 from urllib.parse import quote
 
 from loguru import logger
-
 from smolagents import Tool
+
 from qdrant import QdrantReviewsSearcher
 from rubrics import ALL_RUBRICS
 
@@ -35,7 +35,7 @@ class TravelReviewQueryTool(Tool):
     description = (
         "Использует семантический поиск для извлечения отзывов на различные заведения. "
         "Запрещено использовать результат напрямую - пример ответа: пользователи говорят, что в заведении X хорошая атмосфера, низкие цены, много хороших отзывов."
-        "Прикладывай ссылки на карты (yandex.ru/maps) из ответа утилиты в формате markdown [название](ссылка)."
+        "Прикладывай ссылки на карту из ответа утилиты как есть."
     )
     inputs = {
         "query": {
@@ -73,9 +73,7 @@ class TravelReviewQueryTool(Tool):
     ):
         super().__init__(**kwargs)
 
-        self.searcher = QdrantReviewsSearcher(
-            retrieve_limit=retrieve_limit, timeout=timeout
-        )
+        self.searcher = QdrantReviewsSearcher(retrieve_limit=retrieve_limit, timeout=timeout)
 
     def forward(
         self,
@@ -94,9 +92,7 @@ class TravelReviewQueryTool(Tool):
             rubrics=rubrics,
         )
 
-        logger.debug(
-            "retrieved {} points in {} sec", len(points), (time.time() - start)
-        )
+        logger.debug("retrieved {} points in {} sec", len(points), (time.time() - start))
 
         if not points:
             return "По запросу ничего не найдено."
