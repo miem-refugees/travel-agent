@@ -27,7 +27,10 @@ def create_agent(ollama_model: Optional[str]) -> ToolCallingAgent:
         )
     elif os.getenv("DEEPSEEK_API_KEY"):
         logger.info("Using Deepseek as LLM")
-        llm = LiteLLMModel(model_id="deepseek/deepseek-chat")
+        llm = LiteLLMModel(
+            model_id="deepseek/deepseek-chat",
+            num_ctx=64000,
+        )
     elif os.getenv("LITELLM_MODEL_ID"):
         model_id = os.getenv("LITELLM_MODEL_ID")
 
