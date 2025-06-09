@@ -167,7 +167,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "10.5.0"
+version = "10.9.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -208,9 +208,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/28/7c/8c61aa9aa6df2d38374e6b620264e4f9a258805cfdfa7c7cdcb6b8961d5e/arize_phoenix-10.5.0.tar.gz", hash = "sha256:8d94c06c5e8b5a200ae529437b9e3b8ab3781ffb14c6b5ca0ae5b3b2f57d1e67", size = 3831020, upload-time = "2025-05-31T00:02:06.24Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/57/b8/35068ea1bbcd00f5026112b3346e7d41cef1cdf008a5daa0dbe2319e4b70/arize_phoenix-10.9.1.tar.gz", hash = "sha256:e00adef245aa2227b55b6e532b4975d92500c9cf03dd311df183f64f7b61cc1c", size = 3836468, upload-time = "2025-06-07T00:28:26.533Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/90/6ef6f104e013e97f435630c03ad6b98de73bf981024a055776b9a507c22e/arize_phoenix-10.5.0-py3-none-any.whl", hash = "sha256:ea1d5c88382c2a458ffaf05be202dc4f6d55efaf6bbd49083c71988cebe3fffc", size = 4016650, upload-time = "2025-05-31T00:02:03.511Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/83/da6bf1131a6fa341e80eef4de278ba1c89dd1f6f8b265c2aad1ed0e6b340/arize_phoenix-10.9.1-py3-none-any.whl", hash = "sha256:add34d223b92985d39021eafe06a00fa026de5e8cffd191632421c4535e7e610", size = 4022158, upload-time = "2025-06-07T00:28:24.078Z" },
 ]
 
 [[package]]
@@ -242,7 +242,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix-otel"
-version = "0.10.1"
+version = "0.10.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
@@ -252,10 +252,11 @@ dependencies = [
     { name = "opentelemetry-sdk" },
     { name = "opentelemetry-semantic-conventions" },
     { name = "typing-extensions" },
+    { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ef/89/08fc6a2dda59e1ce51dd43421905ba9d059144cbf2e8027eccd5a71e19f4/arize_phoenix_otel-0.10.1.tar.gz", hash = "sha256:0d116ced68cff792f88afd13f8dbb13b02b7d4458fab9fe912b5a18dc67675c1", size = 11842, upload-time = "2025-05-28T19:55:15.424Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/58/59/09f683a01137a9d8c64788bbaf1f73635d83a17b6b8467a631b9862b0aca/arize_phoenix_otel-0.10.3.tar.gz", hash = "sha256:c59a3cf3b59f1a5852064763a8f3c72ea2319ec3cc55446d87e91085e18ef1a5", size = 14228, upload-time = "2025-06-04T18:33:58.258Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/b7/1e28ddf95fe2e355bc8156ae58f45b57fc28ef32d874230ba56f0a379e23/arize_phoenix_otel-0.10.1-py3-none-any.whl", hash = "sha256:4cc2333fd7fc5cbff976e4ca0e92679fddda5c472065273cbac86a54c2c19363", size = 12796, upload-time = "2025-05-28T19:55:14.472Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/af/9424d505294b55adeeda1ba9ce6efbb5a0eb7f2fc9d008e577de87353676/arize_phoenix_otel-0.10.3-py3-none-any.whl", hash = "sha256:c371b4dee67cee591771d7bbcbb831fae45495a5fbc6351a508f09c25595db81", size = 13116, upload-time = "2025-06-04T18:33:56.863Z" },
 ]
 
 [[package]]
@@ -2681,16 +2682,16 @@ wheels = [
 
 [[package]]
 name = "openinference-instrumentation"
-version = "0.1.31"
+version = "0.1.32"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-semantic-conventions" },
     { name = "opentelemetry-api" },
     { name = "opentelemetry-sdk" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b8/32/7f4370eb6f56deb0a0826ed414a480a1de927a3b81fd9e9ca2b289fcf35b/openinference_instrumentation-0.1.31.tar.gz", hash = "sha256:fc958e6a6cc73bab892e8f4233c5b61f8b85cdf266f41eed1759408d68e24192", size = 20115, upload-time = "2025-05-23T00:10:37.864Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cb/0d/317dcf8fc1d2ea7db4b55afff6a535136c43fcfcffecd562a54f3b56d184/openinference_instrumentation-0.1.32.tar.gz", hash = "sha256:f59e02d9b45acc8aab4c11c00f6cc6ff6b63a2487e04741cf145702e85408072", size = 21438, upload-time = "2025-05-28T03:51:16.93Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/96/29/5510d1ae50c0b7594bba0d0934d64568bf066798c40090fb9bcad558722b/openinference_instrumentation-0.1.31-py3-none-any.whl", hash = "sha256:6ab5c9ab7cf18a1b3d6f4c7b091dd6692a706dd45f22fac9f58d9265005f5d63", size = 25537, upload-time = "2025-05-23T00:10:35.958Z" },
+    { url = "https://files.pythonhosted.org/packages/81/2a/ad75feeba2024d56dc7b3748b7fc2206ea26b6a2b4c9039572212cf9d7d6/openinference_instrumentation-0.1.32-py3-none-any.whl", hash = "sha256:dbc11a6e1cb719522749b0cd1226feaecdbeeaebe7ff0b73ecb31143a9d92b57", size = 26856, upload-time = "2025-05-28T03:51:16.021Z" },
 ]
 
 [[package]]
