@@ -5,7 +5,7 @@
 
 A smart travel planning assistant that leverages Retrieval-Augmented Generation (RAG) to provide personalized travel recommendations and insights.
 
-![Scheme](docs/img/scheme.png)
+![System architecture diagram for the Travel Agent project](docs/img/scheme.png)
 
 ## 📚 **Documentation**
 
