@@ -5,6 +5,8 @@
 
 A smart travel planning assistant that leverages Retrieval-Augmented Generation (RAG) to provide personalized travel recommendations and insights.
 
+![Scheme](docs/img/scheme.png)
+
 ## 📚 **Documentation**
 
 Visit [GitHub Pages](https://miem-refugees.github.io/travel-agent) for documentation and API references.
@@ -25,3 +27,7 @@ Visit [GitHub Pages](https://miem-refugees.github.io/travel-agent) for documenta
 ## 📊 **Dataset**
 
 This project utilizes the [Yandex Geo Reviews 2023](https://github.com/yandex/geo-reviews-dataset-2023) dataset for providing location-based insights and recommendations.
+
+## 🚀 Demo video
+
+[![Demo Video](docs/img/demo.png)](https://drive.google.com/file/d/1bCAnw5VicRY9uy-0Dr_nc0mhciTGLGUU/view?usp=sharing)
