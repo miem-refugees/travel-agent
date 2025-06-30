@@ -167,7 +167,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "10.15.0"
+version = "11.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -208,9 +208,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/aa/65/ebd32dc5952ba84f842c0bab1fe9177d5afc54457139bf779a0e9354ca83/arize_phoenix-10.15.0.tar.gz", hash = "sha256:4566a2690b6df4b0db2af7d486b4bf0183e3d98803927a78d2c80476ccae28b0", size = 3846347, upload-time = "2025-06-22T04:21:07.878Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/49/25b67bed1066b4c444cd20f43ec8d081555bcab26c91ee8f922320aa509f/arize_phoenix-11.1.1.tar.gz", hash = "sha256:b39ecaadf190278ccf899085469c6704e1487485bd391571a509d8b536ab3472", size = 3887261, upload-time = "2025-06-27T22:55:59.12Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/54/2c/b2bf2b2aefdaa99869a9cb11363a8496a69b7fe49bc269c61d23c4a9b4b4/arize_phoenix-10.15.0-py3-none-any.whl", hash = "sha256:1da5eb51e1799d36dd28fc2385c1b1eed31ebfed08d8029b421371fb9ea95109", size = 4035960, upload-time = "2025-06-22T04:21:04.819Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/39/1820e08b2bc1e3a7aa8c38bd1aa5db9ff91f85cddafcc36306c30a2d4737/arize_phoenix-11.1.1-py3-none-any.whl", hash = "sha256:bb82a0fe81b27160fb02a8425f9566ad672eac0d546750e852b875c6a2d1e8c6", size = 4093011, upload-time = "2025-06-27T22:55:56.7Z" },
 ]
 
 [[package]]
@@ -2702,11 +2702,11 @@ wheels = [
 
 [[package]]
 name = "openinference-semantic-conventions"
-version = "0.1.17"
+version = "0.1.21"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ea/c1/851eed629ee65d38395f586eb4d82d9cc7c61c31de4c523394cc84ee4940/openinference_semantic_conventions-0.1.17.tar.gz", hash = "sha256:8c382f756344887c77f03c8def1702318d8d8cc8b4055f46924aabb7c89ed8bd", size = 9635, upload-time = "2025-04-02T04:43:34.111Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/0f/b794eb009846d4b10af50e205a323ca359f284563ef4d1778f35a80522ac/openinference_semantic_conventions-0.1.21.tar.gz", hash = "sha256:328405b9f79ff72a659c7712b8429c0d7ea68c6a4a1679e3eb44372aa228119b", size = 12534, upload-time = "2025-06-13T05:22:18.982Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fb/99/306c007c3a2accafcf47fc5c20ea81648c039292ca6770c9c1ab7914dd6b/openinference_semantic_conventions-0.1.17-py3-none-any.whl", hash = "sha256:919b7f2c0b0bdd406377288337d77046efb84866ad4805ad7a73a09368147398", size = 9384, upload-time = "2025-04-02T04:43:32.998Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/4d/092766f8e610f2c513e483c4adc892eea1634945022a73371fe01f621165/openinference_semantic_conventions-0.1.21-py3-none-any.whl", hash = "sha256:acde8282c20da1de900cdc0d6258a793ec3eb8031bfc496bd823dae17d32e326", size = 10167, upload-time = "2025-06-13T05:22:18.118Z" },
 ]
 
 [[package]]
