@@ -167,7 +167,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "11.1.1"
+version = "11.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -196,6 +196,7 @@ dependencies = [
     { name = "psutil" },
     { name = "pyarrow" },
     { name = "pydantic" },
+    { name = "python-dateutil" },
     { name = "python-multipart" },
     { name = "scikit-learn" },
     { name = "scipy" },
@@ -208,9 +209,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c2/49/25b67bed1066b4c444cd20f43ec8d081555bcab26c91ee8f922320aa509f/arize_phoenix-11.1.1.tar.gz", hash = "sha256:b39ecaadf190278ccf899085469c6704e1487485bd391571a509d8b536ab3472", size = 3887261, upload-time = "2025-06-27T22:55:59.12Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b9/17/63fcc6f86cf749675d84296fed19d5fa60cf19133ea4c5627a163e95b62c/arize_phoenix-11.4.0.tar.gz", hash = "sha256:172fb3d76447ce72d1ec66f90f1600939659114170c84870c9e68f286d0ef263", size = 3892341, upload-time = "2025-07-03T18:53:44.352Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fb/39/1820e08b2bc1e3a7aa8c38bd1aa5db9ff91f85cddafcc36306c30a2d4737/arize_phoenix-11.1.1-py3-none-any.whl", hash = "sha256:bb82a0fe81b27160fb02a8425f9566ad672eac0d546750e852b875c6a2d1e8c6", size = 4093011, upload-time = "2025-06-27T22:55:56.7Z" },
+    { url = "https://files.pythonhosted.org/packages/25/d7/d28969aff87e9fc2a34ed444560bd1ef550223209f9eb43667272a92a851/arize_phoenix-11.4.0-py3-none-any.whl", hash = "sha256:7165b35243feb3ec78c235bb198dd67136a7fbea966b65a2f5e01f6978d599b2", size = 4097960, upload-time = "2025-07-03T18:53:41.577Z" },
 ]
 
 [[package]]
