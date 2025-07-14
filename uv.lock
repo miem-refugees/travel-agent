@@ -167,7 +167,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "11.4.0"
+version = "11.6.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -192,6 +192,7 @@ dependencies = [
     { name = "opentelemetry-sdk" },
     { name = "opentelemetry-semantic-conventions" },
     { name = "pandas" },
+    { name = "prometheus-client" },
     { name = "protobuf" },
     { name = "psutil" },
     { name = "pyarrow" },
@@ -209,9 +210,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b9/17/63fcc6f86cf749675d84296fed19d5fa60cf19133ea4c5627a163e95b62c/arize_phoenix-11.4.0.tar.gz", hash = "sha256:172fb3d76447ce72d1ec66f90f1600939659114170c84870c9e68f286d0ef263", size = 3892341, upload-time = "2025-07-03T18:53:44.352Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9f/86/b87f14387be9eb20c6208ade41a72a722d29cce8c0accd33e793760fe6b0/arize_phoenix-11.6.2.tar.gz", hash = "sha256:b4a2e6d772920ac78058af230b8ae80ad05f3fe0e8cc7bcf52436c99babed8fa", size = 3894291, upload-time = "2025-07-10T05:35:49.025Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/25/d7/d28969aff87e9fc2a34ed444560bd1ef550223209f9eb43667272a92a851/arize_phoenix-11.4.0-py3-none-any.whl", hash = "sha256:7165b35243feb3ec78c235bb198dd67136a7fbea966b65a2f5e01f6978d599b2", size = 4097960, upload-time = "2025-07-03T18:53:41.577Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/25/86b50304c58feb7ecceab263e5f5d8709de4a3321929b90de86e9f91f78b/arize_phoenix-11.6.2-py3-none-any.whl", hash = "sha256:6466030dd52ae09839b3f9c5e12827da033702cf33c7c4c2f5b3ffc8725749ea", size = 4103005, upload-time = "2025-07-10T05:35:46.359Z" },
 ]
 
 [[package]]
