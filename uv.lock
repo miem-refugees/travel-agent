@@ -167,7 +167,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "11.6.2"
+version = "11.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -210,9 +210,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9f/86/b87f14387be9eb20c6208ade41a72a722d29cce8c0accd33e793760fe6b0/arize_phoenix-11.6.2.tar.gz", hash = "sha256:b4a2e6d772920ac78058af230b8ae80ad05f3fe0e8cc7bcf52436c99babed8fa", size = 3894291, upload-time = "2025-07-10T05:35:49.025Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ee/00/e22bb0892c39c3157e9aeb3417d0ff681a586b059456fbcf981559693a3b/arize_phoenix-11.8.0.tar.gz", hash = "sha256:9d34aeefdb9b22fba74b8167d9e7a3e6f8d025f79b6691fc28f8324959036ba2", size = 3900576, upload-time = "2025-07-17T19:30:22.324Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7e/25/86b50304c58feb7ecceab263e5f5d8709de4a3321929b90de86e9f91f78b/arize_phoenix-11.6.2-py3-none-any.whl", hash = "sha256:6466030dd52ae09839b3f9c5e12827da033702cf33c7c4c2f5b3ffc8725749ea", size = 4103005, upload-time = "2025-07-10T05:35:46.359Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/56/782b38b5835821958dea63209182ed4fd728b1f13ca8dc559e0742350ba8/arize_phoenix-11.8.0-py3-none-any.whl", hash = "sha256:ac8a4af475173577e01ccbc744e56b3aa08b677fb5327101a0ca599393731feb", size = 4110926, upload-time = "2025-07-17T19:30:18.038Z" },
 ]
 
 [[package]]
@@ -3991,7 +3991,7 @@ name = "strawberry-graphql"
 version = "0.270.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "graphql-core", marker = "python_full_version < '4.0'" },
+    { name = "graphql-core", marker = "python_full_version < '4'" },
     { name = "packaging" },
     { name = "python-dateutil" },
     { name = "typing-extensions" },
