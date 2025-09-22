@@ -171,7 +171,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "11.32.1"
+version = "11.35.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -215,9 +215,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/7b/9283eec95b4369a423cc7247a22f46aaef271e501e98cf2cc32a2e50efb2/arize_phoenix-11.32.1.tar.gz", hash = "sha256:bea46dbc19fe042eb667c9f8a801f26aa0a0ae6ec2b4f03e217d346729e693db", size = 2212701, upload-time = "2025-09-04T21:25:38.361Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/37/f4/db70120eb2e332829f8ac6128c0523d925a65597ee8ed3d9ed96d7a854de/arize_phoenix-11.35.0.tar.gz", hash = "sha256:f52eb6ec64807b94497a6c1fda5c28d7225349408e8364a94747c335f7e74546", size = 2219955, upload-time = "2025-09-22T00:30:24.517Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/54/0a/96eb87290a4bb52ae0fb37aff53e4f6fc61c31ad1cd44db2a99b8d760851/arize_phoenix-11.32.1-py3-none-any.whl", hash = "sha256:2d24c3577f119e77e9d0bea48c4a29f303feb877ea8f7e45e32ec705a5a02ab1", size = 2409226, upload-time = "2025-09-04T21:25:35.991Z" },
+    { url = "https://files.pythonhosted.org/packages/34/3c/ec0cd955c69f0523c89059aefc92b0721f3955feadf128785e3543987c59/arize_phoenix-11.35.0-py3-none-any.whl", hash = "sha256:9ded69355dc989bf9c0ed59709a267ca08ae99f45d73361717e1f6d00d461ea1", size = 2421870, upload-time = "2025-09-22T00:30:21.481Z" },
 ]
 
 [[package]]
@@ -235,16 +235,21 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix-evals"
-version = "0.20.6"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "jsonpath-ng" },
+    { name = "openinference-semantic-conventions" },
+    { name = "opentelemetry-api" },
     { name = "pandas" },
+    { name = "pydantic" },
+    { name = "pystache" },
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/82/2b/4357a98172c2161495702896c07b19bc735bec31aff9e35caeec65e30d0d/arize_phoenix_evals-0.20.6.tar.gz", hash = "sha256:a11b5d3cb822a6ad1e6d7d03d77ae72ae7a1fed94c9b6e2c5b660057ae019b9e", size = 48531, upload-time = "2025-04-17T21:44:39.869Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/04/d4/d121fcbf5861958aba2392cf4ed90262df99e33fc18f3a1438ac29c2f45e/arize_phoenix_evals-2.0.1.tar.gz", hash = "sha256:a2d9b576b4f0a17b04f1b58d8eee8eeac6214c5da7af1241546d5be48dda831a", size = 90627, upload-time = "2025-09-17T21:46:01.405Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b4/0c/33127c9e7ec307e8fcbc9e513ac35b5cacca5f28413bfa85590886687b7a/arize_phoenix_evals-0.20.6-py3-none-any.whl", hash = "sha256:eedee66fcd2e6a7a415259a001ee4efb507c2830d86ce55bcce9d0068abc9c28", size = 62880, upload-time = "2025-04-17T21:44:38.633Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/96/764d6257376daa64c7dc93e55c0df12ca0f4199f0fe9ee0d5dc7feb4e3de/arize_phoenix_evals-2.0.1-py3-none-any.whl", hash = "sha256:341dc872b1bef5cff5d799607e338c4d1ad87a22728ffd88a06c26a71756517d", size = 125570, upload-time = "2025-09-17T21:45:59.845Z" },
 ]
 
 [[package]]
@@ -1550,6 +1555,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/78/18813351fe5d63acad16aec57f94ec2b70a09e53ca98145589e185423873/jsonpatch-1.33.tar.gz", hash = "sha256:9fcd4009c41e6d12348b4a0ff2563ba56a2923a7dfee731d004e212e1ee5030c", size = 21699, upload-time = "2023-06-26T12:07:29.144Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/73/07/02e16ed01e04a374e644b575638ec7987ae846d25ad97bcc9945a3ee4b0e/jsonpatch-1.33-py2.py3-none-any.whl", hash = "sha256:0ae28c0cd062bbd8b8ecc26d7d164fbbea9652a1a3693f3b956c1eae5145dade", size = 12898, upload-time = "2023-06-16T21:01:28.466Z" },
+]
+
+[[package]]
+name = "jsonpath-ng"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ply" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/86/08646239a313f895186ff0a4573452038eed8c86f54380b3ebac34d32fb2/jsonpath-ng-1.7.0.tar.gz", hash = "sha256:f6f5f7fd4e5ff79c785f1573b394043b39849fb2bb47bcead935d12b00beab3c", size = 37838, upload-time = "2024-10-11T15:41:42.404Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/5a/73ecb3d82f8615f32ccdadeb9356726d6cae3a4bbc840b437ceb95708063/jsonpath_ng-1.7.0-py3-none-any.whl", hash = "sha256:f3d7f9e848cba1b6da28c55b1c26ff915dc9e0b1ba7e752a53d6da8d5cbd00b6", size = 30105, upload-time = "2024-11-20T17:58:30.418Z" },
 ]
 
 [[package]]
@@ -3023,6 +3040,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ply"
+version = "3.11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3", size = 159130, upload-time = "2018-02-15T19:01:31.097Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce", size = 49567, upload-time = "2018-02-15T19:01:27.172Z" },
+]
+
+[[package]]
 name = "portalocker"
 version = "2.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3379,6 +3405,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/0f/49/4cea918a08f02817aabae639e3d0ac046fef9f9180518a3ad394e22da148/pyreadline3-3.5.4.tar.gz", hash = "sha256:8d57d53039a1c75adba8e50dd3d992b28143480816187ea5efbd5c78e6c885b7", size = 99839, upload-time = "2024-09-19T02:40:10.062Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/dc/491b7661614ab97483abf2056be1deee4dc2490ecbf7bff9ab5cdbac86e1/pyreadline3-3.5.4-py3-none-any.whl", hash = "sha256:eaf8e6cc3c49bcccf145fc6067ba8643d1df34d604a1ec0eccbf7a18e6d3fae6", size = 83178, upload-time = "2024-09-19T02:40:08.598Z" },
+]
+
+[[package]]
+name = "pystache"
+version = "0.6.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/89/0a712ca22930b8c71bced8703e5bb45669c31690ea81afe15f6cb284550c/pystache-0.6.8.tar.gz", hash = "sha256:3707518e6a4d26dd189b07c10c669b1fc17df72684617c327bd3550e7075c72c", size = 101892, upload-time = "2025-03-18T11:54:47.595Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/78/ffd13a516219129cef6a754a11ba2a1c0d69f1e281af4f6bca9ed5327219/pystache-0.6.8-py3-none-any.whl", hash = "sha256:7211e000974a6e06bce2d4d5cad8df03bcfffefd367209117376e4527a1c3cb8", size = 82051, upload-time = "2025-03-18T11:54:45.813Z" },
 ]
 
 [[package]]
