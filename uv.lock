@@ -2732,7 +2732,7 @@ wheels = [
 
 [[package]]
 name = "openinference-instrumentation-smolagents"
-version = "0.1.18"
+version = "0.1.19"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
@@ -2743,9 +2743,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/4b/a284cdc69c05390515c03be9798763f32db66e9f22a7669ca6889e504602/openinference_instrumentation_smolagents-0.1.18.tar.gz", hash = "sha256:788f10dfd8866628638c72a0d53dc47f511e09b9f69769c51d5b5c81954dd9a9", size = 12257, upload-time = "2025-09-18T02:41:55.667Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/05/da/e91c460bc6f6f21e4e622f0ef6f81f073b84cd75ca400889b767daae4100/openinference_instrumentation_smolagents-0.1.19.tar.gz", hash = "sha256:b3aa5bb7f82a31e6d61777ff281815673fa98a957fa1ff1559e5d4e8e7a23cca", size = 12262, upload-time = "2025-10-10T03:49:06.176Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/de/30/54a172e48562ee51bc60858e43f3b05f00b1cfa9b01c97de264d52e497c0/openinference_instrumentation_smolagents-0.1.18-py3-none-any.whl", hash = "sha256:64761eaaf9f53c71354645c5aa74e09ce2ac178a87437fcd7afcf271e81d1b7c", size = 13945, upload-time = "2025-09-18T02:41:53.824Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/a6/87343e2e6ef0354c7ca56fb33264dbc0888f8f7e1931c85e6553accc827a/openinference_instrumentation_smolagents-0.1.19-py3-none-any.whl", hash = "sha256:2e0f4e58fadfd985701b6731d7afe9cfb05e084ad40f4ef352a30cebaa538e7e", size = 13951, upload-time = "2025-10-10T03:48:52.736Z" },
 ]
 
 [[package]]
