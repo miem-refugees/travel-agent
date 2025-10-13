@@ -171,7 +171,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "12.2.0"
+version = "12.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -188,6 +188,7 @@ dependencies = [
     { name = "grpcio" },
     { name = "httpx" },
     { name = "jinja2" },
+    { name = "jmespath" },
     { name = "numpy" },
     { name = "openinference-instrumentation" },
     { name = "openinference-semantic-conventions" },
@@ -215,9 +216,9 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/41/75/d949a7e0a3274964efc911f3d747bff822950c18e6b3e309f4d7498832da/arize_phoenix-12.2.0.tar.gz", hash = "sha256:a74073ef7547567d88a616d4b3f7602d476917e67e580ead44ab133628990566", size = 2252987, upload-time = "2025-10-03T03:57:55.747Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d9/41/05e26e0e1426abf22e9dd7facd997f78abc9fe82aa0f11c4913ba817bb37/arize_phoenix-12.5.0.tar.gz", hash = "sha256:4443da523050bb2542644601702188e22e096158fe0e6c1101c8d1b4fcf3ca38", size = 2307826, upload-time = "2025-10-10T22:39:23.408Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/85/90/2b1a6bab02feb13db256607db076205c3b60c4d50fa4adce6fbcefa45dd7/arize_phoenix-12.2.0-py3-none-any.whl", hash = "sha256:998b4bdd0bcb25777a7c8020f5d08060e22d0879b16ee2c8fdfcad7df485e3bf", size = 2470276, upload-time = "2025-10-03T03:57:52.661Z" },
+    { url = "https://files.pythonhosted.org/packages/d3/43/d55449ff0e567118c71d2ac9ebd375630d3175317b008ccca33dd3b9626b/arize_phoenix-12.5.0-py3-none-any.whl", hash = "sha256:059defce067cf621aa8ac9e46d2bd234fcae228418dc9a6d98223d62fb59301c", size = 2524749, upload-time = "2025-10-10T22:39:20.209Z" },
 ]
 
 [[package]]
@@ -1530,6 +1531,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/d8/b3/2bd02071c5a2430d0b70403a34411fc519c2f227da7b03da9ba6a956f931/jiter-0.10.0-cp314-cp314-win32.whl", hash = "sha256:ac509f7eccca54b2a29daeb516fb95b6f0bd0d0d8084efaf8ed5dfc7b9f0b357", size = 210127, upload-time = "2025-05-18T19:04:38.837Z" },
     { url = "https://files.pythonhosted.org/packages/03/0c/5fe86614ea050c3ecd728ab4035534387cd41e7c1855ef6c031f1ca93e3f/jiter-0.10.0-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:5ed975b83a2b8639356151cef5c0d597c68376fc4922b45d0eb384ac058cfa00", size = 318527, upload-time = "2025-05-18T19:04:40.612Z" },
     { url = "https://files.pythonhosted.org/packages/b3/4a/4175a563579e884192ba6e81725fc0448b042024419be8d83aa8a80a3f44/jiter-0.10.0-cp314-cp314t-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3aa96f2abba33dc77f79b4cf791840230375f9534e5fac927ccceb58c5e604a5", size = 354213, upload-time = "2025-05-18T19:04:41.894Z" },
+]
+
+[[package]]
+name = "jmespath"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/00/2a/e867e8531cf3e36b41201936b7fa7ba7b5702dbef42922193f05c8976cd6/jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe", size = 25843, upload-time = "2022-06-17T18:00:12.224Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/31/b4/b9b800c45527aadd64d5b442f9b932b00648617eb5d63d2c7a6587b7cafc/jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980", size = 20256, upload-time = "2022-06-17T18:00:10.251Z" },
 ]
 
 [[package]]
