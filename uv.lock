@@ -1915,16 +1915,16 @@ wheels = [
 
 [[package]]
 name = "langchain-qdrant"
-version = "1.0.0"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "pydantic" },
     { name = "qdrant-client" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c1/43/0aac18ad51b11c2fc7a1e32809272678e91d47dfed7a961e6285d9b833d1/langchain_qdrant-1.0.0.tar.gz", hash = "sha256:6ac4567b387ed2a94465d3039080e82ec031bf605b215045c148032c2ebce4b7", size = 195601, upload-time = "2025-10-17T15:19:44.808Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/77/66/fb1c4e2801e55d92dea71d9a7f948574a322a1f5adc7913231023827f79f/langchain_qdrant-1.1.0.tar.gz", hash = "sha256:433236845736f973543ac6b7137f9d7fa511b7539373fbc6565c581d3ba59373", size = 195565, upload-time = "2025-10-22T17:27:15.157Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3f/ff/41b7a64ee9fbb75efaa9789f7ef7b64b0b71ee9f5dfae76b1599a1493773/langchain_qdrant-1.0.0-py3-none-any.whl", hash = "sha256:c47e18073474c25ae04ae3106af1823c1dae92d8d3c59265369076d0e9e2bdca", size = 24331, upload-time = "2025-10-17T15:19:43.623Z" },
+    { url = "https://files.pythonhosted.org/packages/62/7e/d951082cb13e923508ba1eee4f48e7d511efc991c6506af567334654a3f3/langchain_qdrant-1.1.0-py3-none-any.whl", hash = "sha256:546c5c9aa57f543dbcee07343f730c331e4ec2af2ec55b541010af08d872bf35", size = 24254, upload-time = "2025-10-22T17:27:14.065Z" },
 ]
 
 [[package]]
