@@ -171,7 +171,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "12.16.0"
+version = "12.18.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -216,14 +216,14 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/ef/858ffaff6e02353948603490d17a3163a065befdbab57d4321735f4878df/arize_phoenix-12.16.0.tar.gz", hash = "sha256:58ee465ab646a2174a6ab0777012ba3404bb83a06ba71aa926fc292b82a82b4e", size = 2334835, upload-time = "2025-11-19T16:55:30.424Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5a/db/e5436a6e506d675abd70c763b4964c5ead0a6b27f3889f0651065585f3f9/arize_phoenix-12.18.0.tar.gz", hash = "sha256:c9aef01c0219039dd98608a1cb1c14c458386899133db123cef87224f226ea04", size = 2338828, upload-time = "2025-11-25T22:51:10.807Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c6/c5/22e17f01d55beb1825616716e9667f72fcc2857978d903492444977b51d7/arize_phoenix-12.16.0-py3-none-any.whl", hash = "sha256:c98688a80c8bc0defbcdb20128fc887692e0a81ff2527754767ea59575975462", size = 2557497, upload-time = "2025-11-19T16:55:28.095Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/8e/c25f1dce6babd98a85735eccc1726c551f189648c76e2146c4d96f9c448d/arize_phoenix-12.18.0-py3-none-any.whl", hash = "sha256:36cd45a0773bd1c58de7acf90275c8206ad207451f5076c00abb1772e7cc5f4e", size = 2564886, upload-time = "2025-11-25T22:51:08.618Z" },
 ]
 
 [[package]]
 name = "arize-phoenix-client"
-version = "1.24.0"
+version = "1.26.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -234,9 +234,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fd/ea/cdf01262013d0f1b8129d385187bcd14a5ba45a6d30ed37d64b58f13d367/arize_phoenix_client-1.24.0.tar.gz", hash = "sha256:45e669dff2243f74c9d2d954c2de22c46bd609889e08ba7f58974c59b823e4fe", size = 137022, upload-time = "2025-11-19T19:50:13.277Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c8/14/f9e2fc93b1fd0e4c7aeec53a704d9190d50f9528654c8739c2a13a47bd11/arize_phoenix_client-1.26.0.tar.gz", hash = "sha256:d2777a1c3501c91ce1fd8fbd52e2c49220a06356f30f413ae50a36b8db700d62", size = 140058, upload-time = "2025-11-25T21:03:36.341Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/93/41/25913f57d7e83fdceb289a5600c6e7f3fdb7016b40bec9b6bba085fe40b2/arize_phoenix_client-1.24.0-py3-none-any.whl", hash = "sha256:76378223573f7d3cedb977a4926368087fe90c65d60b8e9bc630c485a0d52ff9", size = 143956, upload-time = "2025-11-19T19:50:11.489Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/f9/b218741593d2e4f2940380a12fdb7e25bccbe9b813e5bd86e74e0c245b45/arize_phoenix_client-1.26.0-py3-none-any.whl", hash = "sha256:b37ec4560b94c0d489579fd07b8ce0c765e34e1d181772055eed9daf932a8c03", size = 147102, upload-time = "2025-11-25T21:03:35.054Z" },
 ]
 
 [[package]]
@@ -261,7 +261,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix-otel"
-version = "0.10.3"
+version = "0.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
@@ -273,9 +273,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/58/59/09f683a01137a9d8c64788bbaf1f73635d83a17b6b8467a631b9862b0aca/arize_phoenix_otel-0.10.3.tar.gz", hash = "sha256:c59a3cf3b59f1a5852064763a8f3c72ea2319ec3cc55446d87e91085e18ef1a5", size = 14228, upload-time = "2025-06-04T18:33:58.258Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7c/17/ebd502f1bd8a0a6087ea28be8de8b765bcf34fb1b9bc4d6fd6d91bd822f1/arize_phoenix_otel-0.14.0.tar.gz", hash = "sha256:ad1368f0f52c242591ec554cedeccf718abda81383cf8c8d3ade218a7b20b955", size = 20155, upload-time = "2025-11-19T19:48:29.447Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cb/af/9424d505294b55adeeda1ba9ce6efbb5a0eb7f2fc9d008e577de87353676/arize_phoenix_otel-0.10.3-py3-none-any.whl", hash = "sha256:c371b4dee67cee591771d7bbcbb831fae45495a5fbc6351a508f09c25595db81", size = 13116, upload-time = "2025-06-04T18:33:56.863Z" },
+    { url = "https://files.pythonhosted.org/packages/c0/be/e7ddb54c4ad6115d2d468b71e90d7a2718735fd217f05c50759799191bfe/arize_phoenix_otel-0.14.0-py3-none-any.whl", hash = "sha256:47bf5563b9342a931385a16609ca83ada44d56a00bf6ed3be199226792b9937f", size = 17708, upload-time = "2025-11-19T19:48:28.252Z" },
 ]
 
 [[package]]
@@ -2767,16 +2767,17 @@ wheels = [
 
 [[package]]
 name = "openinference-instrumentation"
-version = "0.1.32"
+version = "0.1.42"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-semantic-conventions" },
     { name = "opentelemetry-api" },
     { name = "opentelemetry-sdk" },
+    { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/cb/0d/317dcf8fc1d2ea7db4b55afff6a535136c43fcfcffecd562a54f3b56d184/openinference_instrumentation-0.1.32.tar.gz", hash = "sha256:f59e02d9b45acc8aab4c11c00f6cc6ff6b63a2487e04741cf145702e85408072", size = 21438, upload-time = "2025-05-28T03:51:16.93Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/00/d0/b19061a21fd6127d2857c77744a36073bba9c1502d1d5e8517b708eb8b7c/openinference_instrumentation-0.1.42.tar.gz", hash = "sha256:2275babc34022e151b5492cfba41d3b12e28377f8e08cb45e5d64fe2d9d7fe37", size = 23954, upload-time = "2025-11-05T01:37:46.869Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/81/2a/ad75feeba2024d56dc7b3748b7fc2206ea26b6a2b4c9039572212cf9d7d6/openinference_instrumentation-0.1.32-py3-none-any.whl", hash = "sha256:dbc11a6e1cb719522749b0cd1226feaecdbeeaebe7ff0b73ecb31143a9d92b57", size = 26856, upload-time = "2025-05-28T03:51:16.021Z" },
+    { url = "https://files.pythonhosted.org/packages/c3/71/43ee4616fc95dbd2f560550f199c6652a5eb93f84e8aa0039bc95c19cfe0/openinference_instrumentation-0.1.42-py3-none-any.whl", hash = "sha256:e7521ff90833ef7cc65db526a2f59b76a496180abeaaee30ec6abbbc0b43f8ec", size = 30086, upload-time = "2025-11-05T01:37:43.866Z" },
 ]
 
 [[package]]
