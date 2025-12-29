@@ -173,7 +173,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "12.25.1"
+version = "12.27.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -220,14 +220,14 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9a/d5/7a7cf140eb9d426118b464dd71538abb3082abbf8ee9215c77c7bd41c06c/arize_phoenix-12.25.1.tar.gz", hash = "sha256:de2598f245deb8f0ecab4b52bfbc0bff1d1ce4030fdd6549e4300efbf4b3cf30", size = 2379672, upload-time = "2025-12-16T04:12:10.442Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6f/5e/c00e53e53ceac1e37e6cce72b9f0de9029561232da11658ec93b36cb6ff8/arize_phoenix-12.27.0.tar.gz", hash = "sha256:611825433b1e40eb2f39d4d4cd8b9b3c0f63a3d0679fd7904d3556c52ecf706f", size = 2380373, upload-time = "2025-12-26T18:03:29.652Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b1/98/7b9c1759a79a1274cbd8f9799e764c381df303a02bfe17687987cc382537/arize_phoenix-12.25.1-py3-none-any.whl", hash = "sha256:1f4704d3c23576a9fb2d1ff3ba6ac89d90ac2fa01f502ddddab1ee20c55b9b07", size = 2605248, upload-time = "2025-12-16T04:12:08.099Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/53/d3221b5d1fe6ec3b1b825de21c781917ac7e730d1d9876da1f5994ab0712/arize_phoenix-12.27.0-py3-none-any.whl", hash = "sha256:0d06ed11b476685f735dc93ed1a16fd31e3136e85614dd233284f9ad405eec3c", size = 2605992, upload-time = "2025-12-26T18:03:27.243Z" },
 ]
 
 [[package]]
 name = "arize-phoenix-client"
-version = "1.27.0"
+version = "1.27.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -238,9 +238,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e0/1b/8ccb00a3ee23a7ccf0f2de6495cd4f0aa0a9e31089498fff4c18a6f80d68/arize_phoenix_client-1.27.0.tar.gz", hash = "sha256:7981c0e306799b4e637008fb82423ac282d7f5d386685204499d012603321706", size = 141347, upload-time = "2025-12-11T17:31:40.208Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/63/66317bf84022b1358483e935abec9fba676902f452b0aa8f5470b3f0b353/arize_phoenix_client-1.27.1.tar.gz", hash = "sha256:d1ccac2d54c0a53c23cb4278ff546a675be8bac174ecdcf3831919dc597ed503", size = 141360, upload-time = "2025-12-16T23:11:52.184Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/63/2ed6df30fb5a5cc28108c78307ba28b9a7e2307797e36247db2e85085847/arize_phoenix_client-1.27.0-py3-none-any.whl", hash = "sha256:7369a599f2214c51e0753bdbf0bdfeb232508543ab05d4cec2ef5772700e521e", size = 148442, upload-time = "2025-12-11T17:31:39.042Z" },
+    { url = "https://files.pythonhosted.org/packages/d2/44/72b72f2a6449dfd012990f46b8762a3d06a23eee50b966b7f4bc2a34e78a/arize_phoenix_client-1.27.1-py3-none-any.whl", hash = "sha256:e75e9b191327bf7c23b05fea3e3b21e4b3128e5d27cf9f3850ad3397f5bea1f4", size = 148461, upload-time = "2025-12-16T23:11:50.74Z" },
 ]
 
 [[package]]
@@ -572,6 +572,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/78/73/69dd9a024444489e22d86108e7b913f3528f56cfc312b5c5727a44188471/contourpy-1.3.2-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:e298e7e70cf4eb179cc1077be1c725b5fd131ebc81181bf0c03525c8abc297fd", size = 1372168, upload-time = "2025-04-15T17:44:33.43Z" },
     { url = "https://files.pythonhosted.org/packages/0f/1b/96d586ccf1b1a9d2004dd519b25fbf104a11589abfd05484ff12199cca21/contourpy-1.3.2-cp313-cp313t-win32.whl", hash = "sha256:d0e589ae0d55204991450bb5c23f571c64fe43adaa53f93fc902a84c96f52fe1", size = 189550, upload-time = "2025-04-15T17:44:37.092Z" },
     { url = "https://files.pythonhosted.org/packages/b0/e6/6000d0094e8a5e32ad62591c8609e269febb6e4db83a1c75ff8868b42731/contourpy-1.3.2-cp313-cp313t-win_amd64.whl", hash = "sha256:78e9253c3de756b3f6a5174d024c4835acd59eb3f8e2ca13e775dbffe1558f69", size = 238214, upload-time = "2025-04-15T17:44:40.827Z" },
+]
+
+[[package]]
+name = "cross-web"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/93/4f/bdb62e969649ee76d4741ef8eee34384ec2bc21cc66eb7fd244e6ad62be8/cross_web-0.4.0.tar.gz", hash = "sha256:4ae65619ddfcd06d6803432c0366342d7e8aeba10194b4e144d73a662e75370c", size = 157111, upload-time = "2025-12-25T20:45:21.989Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/d6/6c6a036655e5091b26b9f350dcf43821895325aa4727396b14c67679a957/cross_web-0.4.0-py3-none-any.whl", hash = "sha256:0c675bd26e91428cab31e3e927929b42da94aa96da92974e57c78f9a732d0e9b", size = 14200, upload-time = "2025-12-25T20:45:23.075Z" },
 ]
 
 [[package]]
@@ -2035,6 +2047,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/43/ac/96bd5464e3edbc61595d0d69989f5d9969ae411866427b2500a8e5b812c0/ldap3-2.9.1.tar.gz", hash = "sha256:f3e7fc4718e3f09dda568b57100095e0ce58633bcabbed8667ce3f8fbaa4229f", size = 398830, upload-time = "2021-07-18T06:34:21.786Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4e/f6/71d6ec9f18da0b2201287ce9db6afb1a1f637dedb3f0703409558981c723/ldap3-2.9.1-py2.py3-none-any.whl", hash = "sha256:5869596fc4948797020d3f03b7939da938778a0f9e2009f7a072ccf92b8e8d70", size = 432192, upload-time = "2021-07-18T06:34:12.905Z" },
+]
+
+[[package]]
+name = "lia-web"
+version = "0.3.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "cross-web" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/05/3d/7d574a7a5cf5fbc5fc09c07ea3696dd400353b7702bc009cf596b8c12035/lia_web-0.3.1.tar.gz", hash = "sha256:7f551269eddd729f1437e9341ad21622a849eb0c0975d9232ccbbaadbdc74c06", size = 2021, upload-time = "2025-12-25T20:41:51.195Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/8b/b628fc18658f94b3d094708a18b71083cf47628e85cbc6b9edba54d5b2d7/lia_web-0.3.1-py3-none-any.whl", hash = "sha256:e4e6e7a9381e228aca60a6f3d67dbae9a5f4638eced242d931f95797ddba3f8b", size = 5933, upload-time = "2025-12-25T20:41:52.289Z" },
 ]
 
 [[package]]
@@ -4321,17 +4345,18 @@ wheels = [
 
 [[package]]
 name = "strawberry-graphql"
-version = "0.270.1"
+version = "0.287.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "graphql-core", marker = "python_full_version < '4'" },
+    { name = "graphql-core" },
+    { name = "lia-web" },
     { name = "packaging" },
     { name = "python-dateutil" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/67/aa/9d8a53fbf0271e7a5c5155b76d256caf4b94f422676226253648871cc7c1/strawberry_graphql-0.270.1.tar.gz", hash = "sha256:d64524a943851d83252e39b82ef768ee494259edecf9510b37bad9a46b745db8", size = 207190, upload-time = "2025-05-22T12:29:28.617Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/45/5a466ecd7503ad165ed5050e694f3a871b4df085cfaff5c357259bef0ccc/strawberry_graphql-0.287.3.tar.gz", hash = "sha256:c81126cc75102aa32417048f074429d6c5c8d096424aa939fdb8827b8c5f84a9", size = 211998, upload-time = "2025-12-12T11:50:23.266Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/e0/c45d74578e7b8cb7e082697d998cebd8ef97afa3d7aedc22e4acd8ae7163/strawberry_graphql-0.270.1-py3-none-any.whl", hash = "sha256:3593086dc08614ae241cb88f7691e90f90b01cab6ee6351cb3838fc5ba8bfab0", size = 301232, upload-time = "2025-05-22T12:29:25.739Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/8e/ffd20e179cc8218465599922660323f453c7b955aca2b909e5b86ba61eb0/strawberry_graphql-0.287.3-py3-none-any.whl", hash = "sha256:2bb1f9b122ef1213f82f01cf27a095eb0776fda78e12af9e60c54de6e543797c", size = 309183, upload-time = "2025-12-12T11:50:20.574Z" },
 ]
 
 [[package]]
