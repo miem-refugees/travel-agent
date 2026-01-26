@@ -173,7 +173,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "12.30.0"
+version = "12.31.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -220,14 +220,14 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/14/e2/22424fd20253f1c59e3da71c94931a8c68dc554979bc84b4b98cf975fad7/arize_phoenix-12.30.0.tar.gz", hash = "sha256:8377197b2baf803a40fdf4c2845f9f06f2ec03ea1a716bccb9763d16f8f21b02", size = 2389288, upload-time = "2026-01-15T14:06:23.268Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/79/d3/547aabb852dcab24a03895dd7abdaee631be481268189bc8742642180b3d/arize_phoenix-12.31.2.tar.gz", hash = "sha256:93ae735a0fae47c1caad7fdf41749235573c4be5cf655207ed68564032055754", size = 2391098, upload-time = "2026-01-22T07:53:29.384Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b0/b0/81f78329766bacb5f77cee5d6ed72fb78cd9ff3b0bc6228b365f194ab6f7/arize_phoenix-12.30.0-py3-none-any.whl", hash = "sha256:a9f4234507dbac5e8c2c9912438a9d8feb593c8343c32334b4af9d397bc1adaa", size = 2614872, upload-time = "2026-01-15T14:06:19.933Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/72/383d733960de8de8bead1be169b1ccb0faa391589706ebc18356ee6c4305/arize_phoenix-12.31.2-py3-none-any.whl", hash = "sha256:1ffcd1f5c7dd88d20cc0ca2ac18c12823b1b0cae08a13880234c8d35220e85d3", size = 2617001, upload-time = "2026-01-22T07:53:26.907Z" },
 ]
 
 [[package]]
 name = "arize-phoenix-client"
-version = "1.27.2"
+version = "1.28.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -238,9 +238,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/76/16/fc82724016356a914f88e55f242c741f956b73eed170e89ba388778d2316/arize_phoenix_client-1.27.2.tar.gz", hash = "sha256:a4ab7eb474bf15f4c431d9b22d255901b8793025c077977996934b441b793c9a", size = 141389, upload-time = "2026-01-08T05:12:56.621Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/be/10/96f9dcb987630c21d376ab3c66307f11cb6d1f303e4dcbe56de3f8ad9ebb/arize_phoenix_client-1.28.0.tar.gz", hash = "sha256:014f3661e11d9adfbb1680278e9cfe01243e579a7c969a1fe178912afb3d58ee", size = 142706, upload-time = "2026-01-21T07:13:21.326Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cc/f6/687ee8d94141683a938312754ff2fec531761d8ad471901c81aea07609a5/arize_phoenix_client-1.27.2-py3-none-any.whl", hash = "sha256:30314eca082bb923b7985f2f7f139813b6f371d8790539c53a4373bdc9a2dcb5", size = 148242, upload-time = "2026-01-08T05:12:55.313Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/0d/b68db9a21d7ced1bfe89561bc2481bf5a427963b9f7aad730bcde7d78fd3/arize_phoenix_client-1.28.0-py3-none-any.whl", hash = "sha256:a69f0d7667a8c0ff194b0304ba9b05f59c7b3b4f8167fd43f2d7a3363e7b004b", size = 149498, upload-time = "2026-01-21T07:13:19.92Z" },
 ]
 
 [[package]]
