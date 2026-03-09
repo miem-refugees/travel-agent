@@ -173,7 +173,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "13.5.0"
+version = "13.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -225,14 +225,14 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8f/6c/c0ff07ee279bff4ea9f0ee220e7dfd18ca888332b226632b9accb8cf5a4d/arize_phoenix-13.5.0.tar.gz", hash = "sha256:d8b10050be82df90337e6e0370b87e6f1783f23e1f0d8034e1feb7af1e120bc1", size = 699269, upload-time = "2026-02-27T17:15:43.708Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fc/21/f326704bdffe77fcddd68683254c3c217f16c3623627c70cdb410a763d9e/arize_phoenix-13.11.0.tar.gz", hash = "sha256:920f92a5711649edc5906159676b867864974d73b754d55309acfb08d6a57ade", size = 2582167, upload-time = "2026-03-08T19:16:23.449Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/9f/90d323ccb43eed0042b8dea32d76554e1bef8f1c26d3d9460d14d5cf6059/arize_phoenix-13.5.0-py3-none-any.whl", hash = "sha256:18fb1194558ca46b9dff88c99aefacf355a6580afbca833a1d37b74885c76d38", size = 924590, upload-time = "2026-02-27T17:15:40.868Z" },
+    { url = "https://files.pythonhosted.org/packages/46/97/53910d5f90fb14b28434eaebaa3c26f2f88a62e683fb23a3a0838e6444e8/arize_phoenix-13.11.0-py3-none-any.whl", hash = "sha256:f278eebc33e8e1d4212068a58491ab12cc596c3cf5a4633c2e3bbf832c34494a", size = 2822147, upload-time = "2026-03-08T19:16:20.89Z" },
 ]
 
 [[package]]
 name = "arize-phoenix-client"
-version = "1.29.1"
+version = "1.31.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -243,9 +243,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a7/26/93748403fccd825085b06deb74c1d51211d55cf06d0441dfc443c8020281/arize_phoenix_client-1.29.1.tar.gz", hash = "sha256:e0a57f9f76e17a92fc306cef82bfb16ff7fe829bfbea5d55de763b7f571f0b2e", size = 143713, upload-time = "2026-02-24T17:58:21.483Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/fb/939f6036030f57f0fdc8218b9c73ca1356cd79e1542fbc07a234fc1984f3/arize_phoenix_client-1.31.0.tar.gz", hash = "sha256:15546c5552ab1e297de7dc7cd89728b24b7a00a1df6d6fbb37363230b467bd1e", size = 145170, upload-time = "2026-03-06T00:44:46.431Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ce/c7/a414c9240d49aab6f55821f9ecb34ab73b716a10043c31507cbfee6753f0/arize_phoenix_client-1.29.1-py3-none-any.whl", hash = "sha256:ede6cbbbeb8ce77b1b42e26315047ed3c3e2a729c6556619d0f4e1adad0e4e5a", size = 149771, upload-time = "2026-02-24T17:58:20.457Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/0b/f617a6c0cc78eaf6fb074f3e00399032d03ddc8ad1a444d973c7a9c32c16/arize_phoenix_client-1.31.0-py3-none-any.whl", hash = "sha256:930f0a0878135ed58fd29122a5569b08b2b762fa9787f5cb4f375e2a3406f278", size = 150735, upload-time = "2026-03-06T00:44:45.356Z" },
 ]
 
 [[package]]
@@ -270,7 +270,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix-otel"
-version = "0.14.0"
+version = "0.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "openinference-instrumentation" },
@@ -282,9 +282,9 @@ dependencies = [
     { name = "typing-extensions" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/7c/17/ebd502f1bd8a0a6087ea28be8de8b765bcf34fb1b9bc4d6fd6d91bd822f1/arize_phoenix_otel-0.14.0.tar.gz", hash = "sha256:ad1368f0f52c242591ec554cedeccf718abda81383cf8c8d3ade218a7b20b955", size = 20155, upload-time = "2025-11-19T19:48:29.447Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f5/f0/b254118db28a2a202573472be67cf61f09cb37912bfde45b27ddc1c5b71f/arize_phoenix_otel-0.15.0.tar.gz", hash = "sha256:56c7dae09aaaa80df9e9595b7384c1bd4054b69b6032ab18e3a110a59b488388", size = 20254, upload-time = "2026-03-02T20:19:04.112Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c0/be/e7ddb54c4ad6115d2d468b71e90d7a2718735fd217f05c50759799191bfe/arize_phoenix_otel-0.14.0-py3-none-any.whl", hash = "sha256:47bf5563b9342a931385a16609ca83ada44d56a00bf6ed3be199226792b9937f", size = 17708, upload-time = "2025-11-19T19:48:28.252Z" },
+    { url = "https://files.pythonhosted.org/packages/e4/4d/70d9c9d7137cc2e2aad819932172ef13ce21b4e60bf258910b9f15e426af/arize_phoenix_otel-0.15.0-py3-none-any.whl", hash = "sha256:5ff4d03b52d2dbd9c2a234417848f6b171cd220dc3c4020cf3568be84b89b88b", size = 17697, upload-time = "2026-03-02T20:19:03.242Z" },
 ]
 
 [[package]]
