@@ -173,7 +173,7 @@ wheels = [
 
 [[package]]
 name = "arize-phoenix"
-version = "13.11.0"
+version = "13.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aioitertools" },
@@ -225,14 +225,14 @@ dependencies = [
     { name = "uvicorn" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/fc/21/f326704bdffe77fcddd68683254c3c217f16c3623627c70cdb410a763d9e/arize_phoenix-13.11.0.tar.gz", hash = "sha256:920f92a5711649edc5906159676b867864974d73b754d55309acfb08d6a57ade", size = 2582167, upload-time = "2026-03-08T19:16:23.449Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/5b/5d/e37e7b78a54685b59d2be2e53d60d0e455b49208f20e54c631ace08d5487/arize_phoenix-13.15.0.tar.gz", hash = "sha256:1eb92cd2dd1ee0ee1772d2893c1bc439a250ef239572e858b3ee06afde7dc537", size = 2600747, upload-time = "2026-03-13T03:20:36.849Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/46/97/53910d5f90fb14b28434eaebaa3c26f2f88a62e683fb23a3a0838e6444e8/arize_phoenix-13.11.0-py3-none-any.whl", hash = "sha256:f278eebc33e8e1d4212068a58491ab12cc596c3cf5a4633c2e3bbf832c34494a", size = 2822147, upload-time = "2026-03-08T19:16:20.89Z" },
+    { url = "https://files.pythonhosted.org/packages/3d/7c/6bcc5298cf650c88ba64f3a0bf691924e969f04283b350939d656de8818c/arize_phoenix-13.15.0-py3-none-any.whl", hash = "sha256:bac5727fe1fc6bb5363b4372d1960f7844d198c2ad87c60b7dafe481c6c25224", size = 2839762, upload-time = "2026-03-13T03:20:35.214Z" },
 ]
 
 [[package]]
 name = "arize-phoenix-client"
-version = "1.31.0"
+version = "2.0.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
@@ -243,9 +243,9 @@ dependencies = [
     { name = "tqdm" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ad/fb/939f6036030f57f0fdc8218b9c73ca1356cd79e1542fbc07a234fc1984f3/arize_phoenix_client-1.31.0.tar.gz", hash = "sha256:15546c5552ab1e297de7dc7cd89728b24b7a00a1df6d6fbb37363230b467bd1e", size = 145170, upload-time = "2026-03-06T00:44:46.431Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/e6/a162ef522f99f6b4cf80b926cde2e7fa3550e7ac047cc77e5a266947dda2/arize_phoenix_client-2.0.1.tar.gz", hash = "sha256:65f2be65df597bf3eb78346033655b56cdbb3fc9de038aa58f8cad5126fab351", size = 152301, upload-time = "2026-03-14T07:02:09.784Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0a/0b/f617a6c0cc78eaf6fb074f3e00399032d03ddc8ad1a444d973c7a9c32c16/arize_phoenix_client-1.31.0-py3-none-any.whl", hash = "sha256:930f0a0878135ed58fd29122a5569b08b2b762fa9787f5cb4f375e2a3406f278", size = 150735, upload-time = "2026-03-06T00:44:45.356Z" },
+    { url = "https://files.pythonhosted.org/packages/c2/36/37de655f1f2ada75c4ad37634611c3a9fd625a914c49c341fcdbf482e0e3/arize_phoenix_client-2.0.1-py3-none-any.whl", hash = "sha256:602545750b363019a56c4607c06f56f4f8a6e95342ef07c1e43d1665d14a6934", size = 156698, upload-time = "2026-03-14T07:02:08.327Z" },
 ]
 
 [[package]]
@@ -4633,6 +4633,10 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/23/2c9fe0c9c27f7f6cb865abcea8a4568f29f00acaeadfc6a37f6801f84cb4/torch-2.10.0-2-cp313-none-macosx_11_0_arm64.whl", hash = "sha256:e521c9f030a3774ed770a9c011751fb47c4d12029a3d6522116e48431f2ff89e", size = 79498254, upload-time = "2026-02-10T21:44:44.095Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/c6/4dfe238342ffdcec5aef1c96c457548762d33c40b45a1ab7033bb26d2ff2/torch-2.10.0-3-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:80b1b5bfe38eb0e9f5ff09f206dcac0a87aadd084230d4a36eea5ec5232c115b", size = 915627275, upload-time = "2026-03-11T14:16:11.325Z" },
+    { url = "https://files.pythonhosted.org/packages/d8/f0/72bf18847f58f877a6a8acf60614b14935e2f156d942483af1ffc081aea0/torch-2.10.0-3-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:46b3574d93a2a8134b3f5475cfb98e2eb46771794c57015f6ad1fb795ec25e49", size = 915523474, upload-time = "2026-03-11T14:17:44.422Z" },
+    { url = "https://files.pythonhosted.org/packages/f4/39/590742415c3030551944edc2ddc273ea1fdfe8ffb2780992e824f1ebee98/torch-2.10.0-3-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:b1d5e2aba4eb7f8e87fbe04f86442887f9167a35f092afe4c237dfcaaef6e328", size = 915632474, upload-time = "2026-03-11T14:15:13.666Z" },
+    { url = "https://files.pythonhosted.org/packages/b6/8e/34949484f764dde5b222b7fe3fede43e4a6f0da9d7f8c370bb617d629ee2/torch-2.10.0-3-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:0228d20b06701c05a8f978357f657817a4a63984b0c90745def81c18aedfa591", size = 915523882, upload-time = "2026-03-11T14:14:46.311Z" },
     { url = "https://files.pythonhosted.org/packages/c9/6f/f2e91e34e3fcba2e3fc8d8f74e7d6c22e74e480bbd1db7bc8900fdf3e95c/torch-2.10.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:5c4d217b14741e40776dd7074d9006fd28b8a97ef5654db959d8635b2fe5f29b", size = 146004247, upload-time = "2026-01-21T16:24:29.335Z" },
     { url = "https://files.pythonhosted.org/packages/98/fb/5160261aeb5e1ee12ee95fe599d0541f7c976c3701d607d8fc29e623229f/torch-2.10.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:6b71486353fce0f9714ca0c9ef1c850a2ae766b409808acd58e9678a3edb7738", size = 915716445, upload-time = "2026-01-21T16:22:45.353Z" },
     { url = "https://files.pythonhosted.org/packages/6a/16/502fb1b41e6d868e8deb5b0e3ae926bbb36dab8ceb0d1b769b266ad7b0c3/torch-2.10.0-cp313-cp313-win_amd64.whl", hash = "sha256:c2ee399c644dc92ef7bc0d4f7e74b5360c37cdbe7c5ba11318dda49ffac2bc57", size = 113757050, upload-time = "2026-01-21T16:24:19.204Z" },
